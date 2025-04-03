@@ -4,25 +4,18 @@ import api from '../api/axiosDefaults'
 // Create a new context object
 const AuthContext = createContext()
 
-// Create a context provider component to wrap around your app
-export const AuthProvider = ({ children }) => {
-  // Store the logged-in user's info in state
-  const [user, setUser] = useState(null)
+export const AuthProvider = ({ children }) => { // Create a context provider component to wrap around your app
+  const [user, setUser] = useState(null) // Store the logged-in user's info in state
 
-  // Function to log in the user with username and password
-  const login = async (username, password) => {
-    // Send a POST request to the login endpoint with credentials
-    const res = await api.post('/dj-rest-auth/login/', {
+  const login = async (username, password) => { // Function to log in the user with username and password
+    const res = await api.post('/dj-rest-auth/login/', { // Send a POST request to the login endpoint with credentials
       username,
       password,
     })
 
-    // Destructure access token and user data from the response
-    const { access, user } = res.data
-    // Save the access token in localStorage to persist login
-    localStorage.setItem('access', access)
-    // Store the user object in state so the UI can access it
-    setUser(user)
+    const { access, user } = res.data // Destructure access token and user data from the response
+    localStorage.setItem('access', access) // Save the access token in localStorage to persist login
+    setUser(user) // Store the user object in state so the UI can access it
   }
 
   // Function to log out the user
@@ -35,42 +28,31 @@ export const AuthProvider = ({ children }) => {
       console.warn('Logout error:', err)
     }
 
-    // Remove the JWT from localStorage to log the user out
-    localStorage.removeItem('access')
-    // Clear the user from local state
-    setUser(null)
+    localStorage.removeItem('access') // Remove the JWT from localStorage to log the user out
+    setUser(null) // Clear the user from local state
   }
 
-  // Check if there's a valid token and fetch the logged-in user's data
-  const checkLoggedIn = async () => {
-    // Get the saved token from localStorage
-    const token = localStorage.getItem('access')
-
-    // If no token, skip
-    if (!token) return
+  const checkLoggedIn = async () => { // Check if there's a valid token and fetch the logged-in user's data
+    const token = localStorage.getItem('access') // Get the saved token from localStorage
+ 
+    if (!token) return // If no token, skip
 
     try {
-      // Fetch the current logged-in user's data using the token
-      const res = await api.get('/dj-rest-auth/user/')
-      // If valid, store user in state
-      setUser(res.data)
+      const res = await api.get('/dj-rest-auth/user/') // Fetch the current logged-in user's data using the token
+      setUser(res.data) // If valid, store user in state
     } catch {
-      // If the token is invalid/expired, log out the user
       logout()
     }
   }
 
-  // Run this once when the app first loads
   useEffect(() => {
     checkLoggedIn()
   }, [])
-  // Provide the user data and auth functions to the entire app
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}> 
       {children}
-    </AuthContext.Provider>
+    </AuthContext.Provider> // Provide the user data and auth functions to the entire app
   )
 }
 
-// Custom hook to access the auth context easily
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => useContext(AuthContext) // Custom hook to access the auth context easily
