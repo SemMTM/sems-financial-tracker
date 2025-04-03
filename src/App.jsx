@@ -1,17 +1,24 @@
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import CalendarView from './pages/CalendarView'
-import MonthlySummary from './pages/MonthlySummary'
-import WeeklySummary from './pages/WeeklySummary'
+import { useEffect, useState } from 'react'
 
 function App() {
+  const [result, setResult] = useState(null)
+
+  useEffect(() => {
+    const api = import.meta.env.VITE_API_BASE_URL
+
+    fetch(`${api}/api/`)
+      .then((res) => res.json())
+      .then((data) => setResult(data))
+      .catch((err) => setResult('❌ Failed to fetch'))
+
+
+  }, [])
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/calendar" element={<CalendarView />} />
-      <Route path="/summary/monthly" element={<MonthlySummary />} />
-      <Route path="/summary/weekly" element={<WeeklySummary />} />
-    </Routes>
+    <div>
+      <h1>API Test</h1>
+      <pre>{JSON.stringify(result, null, 2)}</pre>
+    </div>
   )
 }
 
