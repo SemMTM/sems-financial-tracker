@@ -1,77 +1,37 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import api from '../api/axiosDefaults'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 
+// Create a context to hold user authentication data
 const AuthContext = createContext()
 
+// Provide the context to the app
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null) // Only in state
-  const navigate = useNavigate()
+  const [user, setUser] = useState(null) // Store the logged-in user
 
-  // Handles login
+  // Log in the user by posting to dj-rest-auth login
   const login = async (username, password) => {
-    const res = await api.post('/dj-rest-auth/login/', { username, password })
-    const { access } = res.data
-    localStorage.setItem('access', access) // Only token saved
-    const userRes = await api.get('/dj-rest-auth/user/')
-    setUser(userRes.data)
+    await api.post('/dj-rest-auth/login/', { username, password }) // Send credentials
+    const res = await api.get('/dj-rest-auth/user/') // Fetch user after login
+    setUser(res.data) // Store user in state
   }
 
-  // Handles logout
+  // Log out the user by calling dj-rest-auth logout
   const logout = async () => {
-    try {
-      await api.post('/dj-rest-auth/logout/')
-    } catch {}
-    localStorage.removeItem('access')
-    setUser(null)
-    navigate('/signin') // Redirect to sign in
+    await api.post('/dj-rest-auth/logout/') // Log out on the backend
+    setUser(null) // Clear user state
   }
 
-  // Refresh token and get user info
-  const refreshTokenAndFetchUser = async () => {
-    try {
-      const res = await axios.post('/dj-rest-auth/token/refresh/')
-      localStorage.setItem('access', res.data.access)
-      const userRes = await api.get('/dj-rest-auth/user/')
-      setUser(userRes.data)
-    } catch (err) {
-      logout()
-    }
-  }
-
-  // Check token + fetch user on load
-  const checkLoggedIn = async () => {
-    const token = localStorage.getItem('access')
-    if (!token) return
-    try {
-      const userRes = await api.get('/dj-rest-auth/user/')
-      setUser(userRes.data)
-    } catch {
-      await refreshTokenAndFetchUser()
-    }
-  }
-
-  // Axios 401 response interceptor
+  // Check if the user is already logged in (on mount)
   useEffect(() => {
-    const responseInterceptor = api.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response?.status === 401) {
-          try {
-            await refreshTokenAndFetchUser() // Try to refresh and retry
-            return api(error.config) // Retry original request
-          } catch {
-            logout() // If refresh fails, logout
-          }
-        }
-        return Promise.reject(error)
+    const checkLoggedIn = async () => {
+      try {
+        const res = await api.get('/dj-rest-auth/user/') // Try to fetch the current user
+        setUser(res.data) // If successful, set user
+      } catch (err) {
+        setUser(null) // If not, clear user
       }
-    )
-    return () => api.interceptors.response.eject(responseInterceptor)
-  }, [])
+    }
 
-  useEffect(() => {
     checkLoggedIn()
   }, [])
 
@@ -82,4 +42,5 @@ export const AuthProvider = ({ children }) => {
   )
 }
 
+// Export a hook for accessing auth context in components
 export const useAuth = () => useContext(AuthContext)
