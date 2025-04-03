@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import '../../styles/SignInForm.module.css'
+import styles from '../../styles/SignInForm.module.css'
 
 export default function SignInForm() {
   const [username, setUsername] = useState('')
