@@ -1,58 +1,85 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import api from '../api/axiosDefaults'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
-// Create a new context object
 const AuthContext = createContext()
 
-export const AuthProvider = ({ children }) => { // Create a context provider component to wrap around your app
-  const [user, setUser] = useState(null) // Store the logged-in user's info in state
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null) // Only in state
+  const navigate = useNavigate()
 
-  const login = async (username, password) => { // Function to log in the user with username and password
-    const res = await api.post('/dj-rest-auth/login/', { // Send a POST request to the login endpoint with credentials
-      username,
-      password,
-    })
-
-    const { access, user } = res.data // Destructure access token and user data from the response
-    localStorage.setItem('access', access) // Save the access token in localStorage to persist login
-    setUser(user) // Store the user object in state so the UI can access it
+  // Handles login
+  const login = async (username, password) => {
+    const res = await api.post('/dj-rest-auth/login/', { username, password })
+    const { access } = res.data
+    localStorage.setItem('access', access) // Only token saved
+    const userRes = await api.get('/dj-rest-auth/user/')
+    setUser(userRes.data)
   }
 
-  // Function to log out the user
+  // Handles logout
   const logout = async () => {
     try {
-      // Make a POST request to logout (optional with JWT, but clean)
       await api.post('/dj-rest-auth/logout/')
-    } catch (err) {
-      // If the logout request fails, log the error (safe to ignore)
-      console.warn('Logout error:', err)
-    }
-
-    localStorage.removeItem('access') // Remove the JWT from localStorage to log the user out
-    setUser(null) // Clear the user from local state
+    } catch {}
+    localStorage.removeItem('access')
+    setUser(null)
+    navigate('/signin') // Redirect to sign in
   }
 
-  const checkLoggedIn = async () => { // Check if there's a valid token and fetch the logged-in user's data
-    const token = localStorage.getItem('access') // Get the saved token from localStorage
- 
-    if (!token) return // If no token, skip
-
+  // Refresh token and get user info
+  const refreshTokenAndFetchUser = async () => {
     try {
-      const res = await api.get('/dj-rest-auth/user/') // Fetch the current logged-in user's data using the token
-      setUser(res.data) // If valid, store user in state
-    } catch {
+      const res = await axios.post('/dj-rest-auth/token/refresh/')
+      localStorage.setItem('access', res.data.access)
+      const userRes = await api.get('/dj-rest-auth/user/')
+      setUser(userRes.data)
+    } catch (err) {
       logout()
     }
   }
 
+  // Check token + fetch user on load
+  const checkLoggedIn = async () => {
+    const token = localStorage.getItem('access')
+    if (!token) return
+    try {
+      const userRes = await api.get('/dj-rest-auth/user/')
+      setUser(userRes.data)
+    } catch {
+      await refreshTokenAndFetchUser()
+    }
+  }
+
+  // Axios 401 response interceptor
+  useEffect(() => {
+    const responseInterceptor = api.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error.response?.status === 401) {
+          try {
+            await refreshTokenAndFetchUser() // Try to refresh and retry
+            return api(error.config) // Retry original request
+          } catch {
+            logout() // If refresh fails, logout
+          }
+        }
+        return Promise.reject(error)
+      }
+    )
+    return () => api.interceptors.response.eject(responseInterceptor)
+  }, [])
+
   useEffect(() => {
     checkLoggedIn()
   }, [])
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}> 
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
-    </AuthContext.Provider> // Provide the user data and auth functions to the entire app
+    </AuthContext.Provider>
   )
 }
 
-export const useAuth = () => useContext(AuthContext) // Custom hook to access the auth context easily
+export const useAuth = () => useContext(AuthContext)
