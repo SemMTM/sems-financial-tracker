@@ -1,39 +1,78 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import api from '../api/axiosDefaults'
 
-// Create a context to hold user authentication data
 const AuthContext = createContext()
 
-// Provide the context to the app
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null) // Store the logged-in user
+  const [user, setUser] = useState(null)
+  const [accessToken, setAccessToken] = useState(null)
+  const [refreshToken, setRefreshToken] = useState(null)
 
-  // Log in the user by posting to dj-rest-auth login
   const login = async (username, password) => {
-    await api.post('/dj-rest-auth/login/', { username, password }) // Send credentials
-    const res = await api.get('/dj-rest-auth/user/') // Fetch user after login
-    setUser(res.data) // Store user in state
+    const res = await api.post('/dj-rest-auth/login/', { username, password })
+    setAccessToken(res.data.access)
+    setRefreshToken(res.data.refresh)
+    const userRes = await api.get('/dj-rest-auth/user/', {
+      headers: { Authorization: `Bearer ${res.data.access}` },
+    })
+    setUser(userRes.data)
   }
 
-  // Log out the user by calling dj-rest-auth logout
   const logout = async () => {
-    await api.post('/dj-rest-auth/logout/') // Log out on the backend
-    setUser(null) // Clear user state
+    try {
+      await api.post('/dj-rest-auth/logout/', null, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+    } catch (err) {
+      console.log('Logout error:', err)
+    }
+    setUser(null)
+    setAccessToken(null)
+    setRefreshToken(null)
   }
 
-  // Check if the user is already logged in (on mount)
+  // Auto-attach access token to every request
   useEffect(() => {
-    const checkLoggedIn = async () => {
-      try {
-        const res = await api.get('/dj-rest-auth/user/') // Try to fetch the current user
-        setUser(res.data) // If successful, set user
-      } catch (err) {
-        setUser(null) // If not, clear user
-      }
-    }
+    const requestInterceptor = api.interceptors.request.use(
+      (config) => {
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`
+        }
+        return config
+      },
+      (error) => Promise.reject(error)
+    )
 
-    checkLoggedIn()
-  }, [])
+    const responseInterceptor = api.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config
+        if (
+          error.response?.status === 401 &&
+          !originalRequest._retry &&
+          refreshToken
+        ) {
+          originalRequest._retry = true
+          try {
+            const refreshRes = await api.post('/dj-rest-auth/token/refresh/', {
+              refresh: refreshToken,
+            })
+            setAccessToken(refreshRes.data.access)
+            originalRequest.headers.Authorization = `Bearer ${refreshRes.data.access}`
+            return api(originalRequest)
+          } catch (refreshErr) {
+            logout()
+          }
+        }
+        return Promise.reject(error)
+      }
+    )
+
+    return () => {
+      api.interceptors.request.eject(requestInterceptor)
+      api.interceptors.response.eject(responseInterceptor)
+    }
+  }, [accessToken, refreshToken])
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
@@ -42,5 +81,4 @@ export const AuthProvider = ({ children }) => {
   )
 }
 
-// Export a hook for accessing auth context in components
 export const useAuth = () => useContext(AuthContext)

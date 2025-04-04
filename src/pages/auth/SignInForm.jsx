@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import styles from '../../styles/SignInForm.module.css'
 
 export default function SignInForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+
+  const navigate = useNavigate()
 
   // Grab the login function from context
   const { login } = useAuth()
@@ -16,6 +19,7 @@ export default function SignInForm() {
     try {
       await login(username, password) // Attempt login
       setError('') // Clear errors on success
+      navigate('/')
     } catch (err) {
       setError('Invalid username or password') // Show error
     }
