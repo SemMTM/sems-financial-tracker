@@ -4,20 +4,26 @@ import api from '../api/axiosDefaults'
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
+  // Load tokens from localStorage on mount
+  const [accessToken, setAccessToken] = useState(() => localStorage.getItem('accessToken'))
+  const [refreshToken, setRefreshToken] = useState(() => localStorage.getItem('refreshToken'))
   const [user, setUser] = useState(null)
-  const [accessToken, setAccessToken] = useState(null)
-  const [refreshToken, setRefreshToken] = useState(null)
 
+  // Login with credentials
   const login = async (username, password) => {
     const res = await api.post('/dj-rest-auth/login/', { username, password })
+
+    // Save tokens to state (and localStorage via effect)
     setAccessToken(res.data.access)
     setRefreshToken(res.data.refresh)
+
     const userRes = await api.get('/dj-rest-auth/user/', {
       headers: { Authorization: `Bearer ${res.data.access}` },
     })
     setUser(userRes.data)
   }
 
+  // Logout and clear everything
   const logout = async () => {
     try {
       await api.post('/dj-rest-auth/logout/', null, {
@@ -26,12 +32,29 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.log('Logout error:', err)
     }
-    setUser(null)
     setAccessToken(null)
     setRefreshToken(null)
+    setUser(null)
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
   }
 
-  // Auto-attach access token to every request
+  // Store tokens in localStorage on change
+  useEffect(() => {
+    if (accessToken) {
+      localStorage.setItem('accessToken', accessToken)
+    } else {
+      localStorage.removeItem('accessToken')
+    }
+
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken)
+    } else {
+      localStorage.removeItem('refreshToken')
+    }
+  }, [accessToken, refreshToken])
+
+  // Attach token to every request and refresh if expired
   useEffect(() => {
     const requestInterceptor = api.interceptors.request.use(
       (config) => {
@@ -58,6 +81,7 @@ export const AuthProvider = ({ children }) => {
               refresh: refreshToken,
             })
             setAccessToken(refreshRes.data.access)
+            localStorage.setItem('accessToken', refreshRes.data.access)
             originalRequest.headers.Authorization = `Bearer ${refreshRes.data.access}`
             return api(originalRequest)
           } catch (refreshErr) {
@@ -73,6 +97,25 @@ export const AuthProvider = ({ children }) => {
       api.interceptors.response.eject(responseInterceptor)
     }
   }, [accessToken, refreshToken])
+
+  // Check if logged in on first mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (accessToken) {
+        try {
+          const res = await api.get('/dj-rest-auth/user/', {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          })
+          setUser(res.data)
+        } catch (err) {
+          console.log('User restore failed:', err)
+          logout()
+        }
+      }
+    }
+
+    fetchUser()
+  }, [])
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
