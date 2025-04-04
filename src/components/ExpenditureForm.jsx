@@ -10,13 +10,21 @@ export default function ExpenditureForm({ onAdd }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      await api.post('/expenditures/', {
+    const formatAmount = parseFloat(amount).toFixed(2)
+    console.log({
         title,
         amount,
         date,
         type,
-        repeated: repeated || null, // Optional field
+        repeated: repeated || null,
+      })
+    try {
+      await api.post('/expenditures/', {
+        title,
+        amount: formatAmount,
+        date,
+        type,
+        repeated: repeated || 'NEVER', // Optional field
       })
       onAdd() // Trigger parent to refresh list
       // Clear form
