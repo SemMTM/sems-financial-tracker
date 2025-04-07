@@ -10,8 +10,8 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
     try {
       await api.post('/dj-rest-auth/password/change/', {
         old_password: currentPassword,
-        new_password1,
-        new_password2,
+        new_password1: newPassword1,
+        new_password2: newPassword2,
       })
 
       setSuccess('Password changed successfully.')

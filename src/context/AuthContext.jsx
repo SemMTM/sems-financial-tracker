@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import api from '../api/axiosDefaults'
+import { Navigate } from 'react-router-dom'
 
 const AuthContext = createContext()
 
@@ -37,8 +38,9 @@ export const AuthProvider = ({ children }) => {
     setUser(null)
   }
 
-  if (isLoading) return null // Or a loading spinner
-  if (!user) return <Navigate to="/signin" />
+  if (isLoading && location.pathname !== '/signin') {
+    return <div>Loading...</div>
+  }
 
   return (
     <AuthContext.Provider value={{ user, login, logout, setUser }}>
