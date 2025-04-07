@@ -18,6 +18,18 @@ export default function ExpenditureList() {
     }
   }
 
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
+    if (!confirmed) return
+  
+    try {
+      await api.delete(`/expenditures/${id}/`)
+      fetchExpenditures() // refresh list after delete
+    } catch (err) {
+      console.error('Failed to delete expenditure:', err)
+    }
+  }
+
   // Load expenditures on mount or when user is set
   useEffect(() => {
     if (user) fetchExpenditures()
@@ -44,6 +56,13 @@ export default function ExpenditureList() {
               {item.repeated && (
                 <div>Repeats: {item.repeated_display}</div>
               )}
+              <button
+                onClick={() => handleDelete(item.id)}
+                title="Delete"
+                style={{ marginLeft: '10px', cursor: 'pointer' }}
+              >
+                🗑️
+              </button>
             </li>
           ))}
         </ul>
