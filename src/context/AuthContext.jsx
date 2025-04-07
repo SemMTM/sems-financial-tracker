@@ -137,5 +137,4 @@ export const AuthProvider = ({ children }) => {
   )
 }
 
-// 10. Export a hook for components to access auth state
 export const useAuth = () => useContext(AuthContext)
