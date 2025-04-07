@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import api from '../api/axiosDefaults'
 import { useNavigate } from 'react-router-dom'
+import ChangePasswordModal from '../components/ChangePasswordModal'
 
 const SettingsPage = () => {
   const { user, logout, setUser } = useAuth()
@@ -9,6 +10,7 @@ const SettingsPage = () => {
   const [newUsername, setNewUsername] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false)
   const navigate = useNavigate()
 
   const handleUsernameChange = async () => {
@@ -47,13 +49,6 @@ const SettingsPage = () => {
 
       <button onClick={() => setShowPopup(true)}>Change Username</button>
 
-      <button
-        onClick={handleLogout}
-        className="bg-red-500 text-white py-2 px-4 rounded"
-      >
-        Log Out
-      </button>
-
       {success && <p style={{ color: 'green' }}>{success}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -74,6 +69,24 @@ const SettingsPage = () => {
           </div>
         </div>
       )}
+
+      <button onClick={() => setShowPasswordPopup(true)}>
+        Change Password
+      </button>
+
+      {showPasswordPopup && (
+        <ChangePasswordModal
+          onClose={() => setShowPasswordPopup(false)}
+          setSuccess={setSuccess}
+          setError={setError}
+        />
+      )}
+
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 text-white py-2 px-4 rounded"
+      >Log Out
+      </button>
     </div>
   )
 }
