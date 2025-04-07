@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import api from '../api/axiosDefaults'
 
 const SettingsPage = () => {
-  const { user, setUser, refreshToken, setAccessToken } = useAuth()
+  const { user, logout, setUser, refreshToken, setAccessToken } = useAuth()
   const [showPopup, setShowPopup] = useState(false)
   const [newUsername, setNewUsername] = useState('')
   const [error, setError] = useState('')
@@ -39,6 +39,15 @@ const SettingsPage = () => {
     }
   }
 
+  const handleLogout = async () => {
+    try {
+      await logout()
+      navigate('/') // redirect to homepage or /signin
+    } catch (err) {
+      console.log('Logout failed:', err)
+    }
+  }
+
 
     return (
       <div className="settings-page">
@@ -47,6 +56,13 @@ const SettingsPage = () => {
       <p><strong>Current username:</strong> {user?.username}</p>
 
       <button onClick={() => setShowPopup(true)}>Change Username</button>
+
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 text-white py-2 px-4 rounded"
+      >
+        Log Out
+      </button>
 
       {success && <p style={{ color: 'green' }}>{success}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
