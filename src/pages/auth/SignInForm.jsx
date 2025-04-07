@@ -7,21 +7,23 @@ export default function SignInForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
-
-  // Grab the login function from context
   const { login } = useAuth()
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault() // Prevent page reload on submit
+    e.preventDefault()
+    setLoading(true)
     try {
       await login(username, password) // Attempt login
       setError('') // Clear errors on success
       navigate('/')
-    } catch (err) {
+    } catch {
       setError('Invalid username or password') // Show error
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -46,7 +48,9 @@ export default function SignInForm() {
           required
         />
 
-        <button type="submit">Sign In</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Signing in...' : 'Sign In'}
+        </button>
 
         {error && <p className="error">{error}</p>}
       </form>

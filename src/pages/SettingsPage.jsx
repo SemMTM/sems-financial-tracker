@@ -1,35 +1,26 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import api from '../api/axiosDefaults'
+import { useNavigate } from 'react-router-dom'
 
 const SettingsPage = () => {
-  const { user, logout, setUser, refreshToken, setAccessToken } = useAuth()
+  const { user, logout, setUser } = useAuth()
   const [showPopup, setShowPopup] = useState(false)
   const [newUsername, setNewUsername] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const navigate = useNavigate()
 
   const handleUsernameChange = async () => {
     try {
-      // 1. Update the username
+      // 1. Update the username (cookie auth handles session)
       await api.patch('/dj-rest-auth/user/', { username: newUsername })
-  
-      // 2. Refresh the access token
-      const refreshResponse = await api.post('/dj-rest-auth/token/refresh/', {
-        refresh: refreshToken,
-      })
-      const newAccessToken = refreshResponse.data.access
-      setAccessToken(newAccessToken)
-  
-      // 3. Refetch user with new token
-      const userRes = await api.get('/dj-rest-auth/user/', {
-        headers: {
-          Authorization: `Bearer ${newAccessToken}`,
-        },
-      })
+
+      // 2. Refetch updated user info
+      const userRes = await api.get('/dj-rest-auth/user/')
       setUser(userRes.data)
-  
-      // 4. Update UI
+
+      // 3. Success feedback
       setSuccess('Username updated successfully.')
       setError('')
       setShowPopup(false)
@@ -42,15 +33,14 @@ const SettingsPage = () => {
   const handleLogout = async () => {
     try {
       await logout()
-      navigate('/') // redirect to homepage or /signin
+      navigate('/') // Redirect after logout
     } catch (err) {
       console.log('Logout failed:', err)
     }
   }
 
-
-    return (
-      <div className="settings-page">
+  return (
+    <div className="settings-page">
       <h2>Settings</h2>
 
       <p><strong>Current username:</strong> {user?.username}</p>
@@ -85,7 +75,7 @@ const SettingsPage = () => {
         </div>
       )}
     </div>
-    )
-  }
+  )
+}
 
-  export default SettingsPage
+export default SettingsPage
