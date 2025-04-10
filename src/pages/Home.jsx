@@ -16,7 +16,6 @@ const Home = () => {
         <Settings />
       </button>
       <div className="finance-list-section">
-        <h1>Welcome to your financial dashboard</h1>
         <ExpenditureList />
       </div>
     </div>

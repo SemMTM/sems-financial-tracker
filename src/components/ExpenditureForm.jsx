@@ -24,10 +24,9 @@ export default function ExpenditureForm({ onAdd }) {
         amount: formatAmount,
         date,
         type,
-        repeated: repeated || 'NEVER', // Optional field
+        repeated: repeated || 'NEVER',
       })
-      onAdd() // Trigger parent to refresh list
-      // Clear form
+      onAdd()
       setTitle('')
       setAmount('')
       setDate('')

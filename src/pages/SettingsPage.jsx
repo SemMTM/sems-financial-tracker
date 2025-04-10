@@ -10,7 +10,6 @@ const SettingsPage = () => {
   const { user, logout } = useAuth()
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [showCurrencyModal, setShowCurrencyModal] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
   const navigate = useNavigate()
@@ -52,7 +51,6 @@ const SettingsPage = () => {
     setShowModal(true)
   }
 
-
   const handleLogout = async () => {
     try {
       await logout()
@@ -67,10 +65,9 @@ const SettingsPage = () => {
       <h2>Settings</h2>
 
       {success && <p style={{ color: 'green' }}>{success}</p>}
-
+      
       <div>
         <p><strong>Current username:</strong> {user?.username}</p>
-
         <button onClick={openUsernameModal}>Change Username</button>
       </div>
 
@@ -88,7 +85,6 @@ const SettingsPage = () => {
           {modalContent}
         </Modal>
       )}
-
 
       <div>
         <button
