@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import ChangePasswordModal from '../components/ChangePasswordModal'
 import ChangeUsernameModal from '../components/ChangeUsernameModal'
+import CurrencySelector from '../components/CurrencySelector'
 
 const SettingsPage = () => {
   const { user, logout } = useAuth()
@@ -10,6 +11,7 @@ const SettingsPage = () => {
   const [showPasswordPopup, setShowPasswordPopup] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [showCurrencyModal, setShowCurrencyModal] = useState(false)
   const navigate = useNavigate()
 
 
@@ -26,33 +28,49 @@ const SettingsPage = () => {
     <div className="settings-page">
       <h2>Settings</h2>
 
-      <p><strong>Current username:</strong> {user?.username}</p>
-
-      <button onClick={() => setShowUsernamePopup(true)}>Change Username</button>
-      <button onClick={() => setShowPasswordPopup(true)}>Change Password</button>
-
       {success && <p style={{ color: 'green' }}>{success}</p>}
 
-      {showUsernamePopup && (
-        <ChangeUsernameModal
-          onClose={() => setShowUsernamePopup(false)}
-          setSuccess={setSuccess}
-          setError={setError}
-        />
-      )}
+      <div>
+        <p><strong>Current username:</strong> {user?.username}</p>
 
-      {showPasswordPopup && (
-        <ChangePasswordModal
-          onClose={() => setShowPasswordPopup(false)}
-          setSuccess={setSuccess}
-          setError={setError}
-        />
-      )}
+        <button onClick={() => setShowUsernamePopup(true)}>Change Username</button>
+        {showUsernamePopup && (
+          <ChangeUsernameModal
+            onClose={() => setShowUsernamePopup(false)}
+            setSuccess={setSuccess}
+            setError={setError}
+          />
+        )}
+      </div>
 
-      <button
-        onClick={handleLogout}
-      >Log Out
-      </button>
+      <div>
+        <button onClick={() => setShowPasswordPopup(true)}>Change Password</button>
+        {showPasswordPopup && (
+          <ChangePasswordModal
+            onClose={() => setShowPasswordPopup(false)}
+            setSuccess={setSuccess}
+            setError={setError}
+          />
+        )}
+      </div>
+
+      <div>
+        <button onClick={() => setShowCurrencyModal(true)}>Change Currency</button>
+        {showCurrencyModal && (
+          <CurrencySelector
+            onClose={() => setShowCurrencyModal(false)}
+            setSuccess={setSuccess}
+            setError={setError}
+          />
+        )}
+      </div>
+
+      <div>
+        <button
+          onClick={handleLogout}
+        >Log Out
+        </button>
+      </div>
     </div>
   )
 }
