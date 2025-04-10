@@ -46,25 +46,54 @@ export default function ExpenditureList() {
         <p>No expenditures for this month.</p>
       ) : (
         <ul>
-          {expenditures.map((item) => (
-            <li key={item.id} className="expenditure-item">
-              <div>
-                <strong>{item.title}</strong> ({item.type})
-              </div>
-              <div>{item.formatted_amount}</div>
-              <div>{item.readable_date}</div>
-              {item.repeated && (
-                <div>Repeats: {item.repeated_display}</div>
-              )}
-              <button
-                onClick={() => handleDelete(item.id)}
-                title="Delete"
-                style={{ marginLeft: '10px', cursor: 'pointer' }}
-              >
-                🗑️
-              </button>
-            </li>
-          ))}
+          <div>
+            <div className="list-titles-section">
+              <span className="list-item-section list-title">
+                Title
+              </span>
+              <span 
+                className="
+                  list-item-section 
+                  list-title
+                  list-item-section-2">
+                Amount
+              </span>
+              <span 
+                className="
+                  list-item-section
+                  list-title
+                  list-item-section-3">
+                Type
+              </span>
+              <span className="list-item-section list-title">
+                Date
+              </span>
+              <span className="list-item-section list-title"></span>
+            </div>
+            {expenditures.map((item) => (
+              <li key={item.id} className="list-item">
+                <span 
+                  className="list-item-section">
+                  {item.title}
+                  </span>
+                <span className="list-item-section
+                  list-item-section-2">
+                  {item.formatted_amount}
+                  </span>
+                <span 
+                  className="list-item-section
+                  list-item-section-3">
+                  {item.type}
+                </span>
+                <span className="list-item-section">
+                  {item.readable_date}
+                  </span>
+                <span className="btns-section">
+                  <button>Edit</button>
+                </span>
+              </li>
+            ))}
+          </div>
         </ul>
       )}
 

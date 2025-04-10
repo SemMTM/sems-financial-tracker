@@ -13,10 +13,12 @@ const Home = () => {
         className="settings-button"
         title="Settings"
       >
-        <Settings size={20} />
+        <Settings />
       </button>
-      <h1>Welcome to your financial dashboard</h1>
-      <ExpenditureList />
+      <div className="finance-list-section">
+        <h1>Welcome to your financial dashboard</h1>
+        <ExpenditureList />
+      </div>
     </div>
   )
 }

@@ -1,0 +1,27 @@
+.list-item {
+    list-style: none;
+    padding: 8px 0px;
+    display: flex;
+    width: 100%;
+  }
+
+.list-item-section {
+    width: 90px;
+    display: inline-block;
+}
+
+.list-item-section-2 {
+    width: 80px;
+}
+
+.list-item-section-3 {
+    width: 60px;
+}
+
+.finance-list-section {
+    padding: 10px;
+}
+
+.list-title {
+    text-decoration: underline;
+}
