@@ -1,3 +1,5 @@
+
+/* List Styles */
 .list-item {
     list-style: none;
     padding: 8px 0px;
@@ -44,4 +46,23 @@
 
 .add-btn {
     margin-top: 15px;
+}
+
+/* Form Styles */
+.input-title {
+    font-size: 17px;
+    text-decoration: underline;
+    margin-bottom: 10px;
+    display: block;
+    padding-left: 5px;
+}
+
+.form-input-con {
+    margin-bottom: 10px;
+}
+
+.add-button {
+    width: 90%;
+    margin-top: 18px;
+    padding: 7px 0;
 }

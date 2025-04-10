@@ -71,6 +71,22 @@ li {
   border-bottom: 1px solid white;
 }
 
+input {
+  height: 25px;
+  width: 90%;
+  border: none;
+  padding: 5px;
+  border-radius: 7px;
+}
+
+select {
+  height: 25px;
+  width: 90%;
+  border: none;
+  padding: 5px;
+  border-radius: 7px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

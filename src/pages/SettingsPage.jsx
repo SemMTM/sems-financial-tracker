@@ -4,21 +4,59 @@ import { useNavigate } from 'react-router-dom'
 import ChangePasswordModal from '../components/ChangePasswordModal'
 import ChangeUsernameModal from '../components/ChangeUsernameModal'
 import CurrencySelector from '../components/CurrencySelector'
+import Modal from '../components/Modal'
 
 const SettingsPage = () => {
   const { user, logout } = useAuth()
-  const [showUsernamePopup, setShowUsernamePopup] = useState(false)
-  const [showPasswordPopup, setShowPasswordPopup] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [showCurrencyModal, setShowCurrencyModal] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [modalContent, setModalContent] = useState(null)
   const navigate = useNavigate()
+
+
+  // 1. Open Change Username Modal
+  const openUsernameModal = () => {
+    setModalContent(
+      <ChangeUsernameModal
+        onClose={() => setShowModal(false)}
+        setSuccess={setSuccess}
+        setError={setError}
+      />
+    )
+    setShowModal(true)
+  }
+
+  // 2. Open Change Password Modal
+  const openPasswordModal = () => {
+    setModalContent(
+      <ChangePasswordModal
+        onClose={() => setShowModal(false)}
+        setSuccess={setSuccess}
+        setError={setError}
+      />
+    )
+    setShowModal(true)
+  }
+
+  // 2. Open Change Password Modal
+  const openCurrencyModal = () => {
+    setModalContent(
+      <CurrencySelector
+        onClose={() => setShowModal(false)}
+        setSuccess={setSuccess}
+        setError={setError}
+      />
+    )
+    setShowModal(true)
+  }
 
 
   const handleLogout = async () => {
     try {
       await logout()
-      navigate('/') // Redirect after logout
+      navigate('/')
     } catch (err) {
       console.log('Logout failed:', err)
     }
@@ -33,37 +71,24 @@ const SettingsPage = () => {
       <div>
         <p><strong>Current username:</strong> {user?.username}</p>
 
-        <button onClick={() => setShowUsernamePopup(true)}>Change Username</button>
-        {showUsernamePopup && (
-          <ChangeUsernameModal
-            onClose={() => setShowUsernamePopup(false)}
-            setSuccess={setSuccess}
-            setError={setError}
-          />
-        )}
+        <button onClick={openUsernameModal}>Change Username</button>
       </div>
 
       <div>
-        <button onClick={() => setShowPasswordPopup(true)}>Change Password</button>
-        {showPasswordPopup && (
-          <ChangePasswordModal
-            onClose={() => setShowPasswordPopup(false)}
-            setSuccess={setSuccess}
-            setError={setError}
-          />
-        )}
+        <button onClick={openPasswordModal}>Change Password</button>
       </div>
 
       <div>
-        <button onClick={() => setShowCurrencyModal(true)}>Change Currency</button>
-        {showCurrencyModal && (
-          <CurrencySelector
-            onClose={() => setShowCurrencyModal(false)}
-            setSuccess={setSuccess}
-            setError={setError}
-          />
-        )}
+      <button onClick={openCurrencyModal}>Change Currency</button>
       </div>
+
+      {/* Shared Modal */}
+      {showModal && (
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          {modalContent}
+        </Modal>
+      )}
+
 
       <div>
         <button
