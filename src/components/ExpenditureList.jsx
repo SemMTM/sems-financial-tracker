@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import api from '../api/axiosDefaults'
 import ExpenditureForm from './ExpenditureForm'
 import Modal from '../components/Modal'
+import EditExpenditureForm from '../components/EditExpenditureForm'
 
 export default function ExpenditureList() {
   const { user } = useAuth()
@@ -49,10 +50,11 @@ export default function ExpenditureList() {
   // 4. Handle edit s
   const handleEdit = (item) => {
     setModalContent(
-      <div>
-        <h3>Edit {item.title}</h3>
-        <p>Editing expenditure placeholder...</p>
-      </div>
+      <EditExpenditureForm
+        item={item}
+        onClose={() => setShowModal(false)}
+        onUpdate={fetchExpenditures}
+      />
     )
     setShowModal(true)
   }
