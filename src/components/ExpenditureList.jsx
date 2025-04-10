@@ -46,7 +46,7 @@ export default function ExpenditureList() {
     setShowModal(true)
   }
 
-  // 4. Handle edit (placeholder for now)
+  // 4. Handle edit s
   const handleEdit = (item) => {
     setModalContent(
       <div>
@@ -67,7 +67,7 @@ export default function ExpenditureList() {
 
   return (
     <div className="expenditure-list">
-      <h2>Monthly Expenditures</h2>
+      <h3>Monthly Expenditures</h3>
 
       {expenditures.length === 0 ? (
         <p>No expenditures for this month.</p>
@@ -99,25 +99,32 @@ export default function ExpenditureList() {
             </div>
             {expenditures.map((item) => (
               <li key={item.id} className="list-item expenditure-item">
+
                 <span 
                   className="list-item-section">
                   {item.title}
                   </span>
+
                 <span className="list-item-section
                   list-item-section-2">
                   - {item.formatted_amount}
                   </span>
+
                 <span 
                   className="list-item-section
                   list-item-section-3">
                   {item.type}
                 </span>
+
                 <span className="list-item-section">
                   {item.readable_date}
-                  </span>
-                <span className="btns-section">
-                <button onClick={() => handleEdit(item)}>Edit</button>
                 </span>
+                <span className="list-item-section btns-container">
+                  <button className="edit-btn" 
+                    onClick={() => handleEdit(item)}
+                    >Edit</button>
+                </span>
+
               </li>
             ))}
           </div>
@@ -125,7 +132,7 @@ export default function ExpenditureList() {
       )}
 
       <button onClick={handleAdd} className="add-btn">
-        Add a new expenditure
+        + Add a new expenditure
       </button>
       
       {showModal && (

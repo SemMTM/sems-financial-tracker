@@ -9,6 +9,12 @@
 .list-item-section {
     width: 90px;
     display: inline-block;
+    flex-grow: 0.2;
+}
+
+.btns-container {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .list-item-section-2 {
@@ -25,6 +31,7 @@
 
 .list-titles-section {
     height: 30px;
+    display: flex;
 }
 
 .list-title {
@@ -33,4 +40,8 @@
 
 .expenditure-item .list-item-section-2 {
     color: red;
+}
+
+.add-btn {
+    margin-top: 15px;
 }

@@ -14,7 +14,7 @@
   
   /* Centered modal box */
   .modal {
-    background: white;
+    background: rgb(61, 61, 61);
     padding: 2rem;
     border-radius: 8px;
     min-width: 300px;
