@@ -1,36 +1,17 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import api from '../api/axiosDefaults'
 import { useNavigate } from 'react-router-dom'
 import ChangePasswordModal from '../components/ChangePasswordModal'
+import ChangeUsernameModal from '../components/ChangeUsernameModal'
 
 const SettingsPage = () => {
-  const { user, logout, setUser } = useAuth()
-  const [showPopup, setShowPopup] = useState(false)
-  const [newUsername, setNewUsername] = useState('')
+  const { user, logout } = useAuth()
+  const [showUsernamePopup, setShowUsernamePopup] = useState(false)
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [showPasswordPopup, setShowPasswordPopup] = useState(false)
   const navigate = useNavigate()
 
-  const handleUsernameChange = async () => {
-    try {
-      // 1. Update the username (cookie auth handles session)
-      await api.patch('/dj-rest-auth/user/', { username: newUsername })
-
-      // 2. Refetch updated user info
-      const userRes = await api.get('/dj-rest-auth/user/')
-      setUser(userRes.data)
-
-      // 3. Success feedback
-      setSuccess('Username updated successfully.')
-      setError('')
-      setShowPopup(false)
-    } catch (err) {
-      console.error('Username update error:', err.response?.data || err.message)
-      setError('Failed to update username.')
-    }
-  }
 
   const handleLogout = async () => {
     try {
@@ -47,32 +28,19 @@ const SettingsPage = () => {
 
       <p><strong>Current username:</strong> {user?.username}</p>
 
-      <button onClick={() => setShowPopup(true)}>Change Username</button>
+      <button onClick={() => setShowUsernamePopup(true)}>Change Username</button>
+      <button onClick={() => setShowPasswordPopup(true)}>Change Password</button>
 
       {success && <p style={{ color: 'green' }}>{success}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {showPopup && (
-        <div className="popup">
-          <div className="popup-content">
-            <h3>Change Username</h3>
-            <input
-              type="text"
-              placeholder="New username"
-              value={newUsername}
-              onChange={(e) => setNewUsername(e.target.value)}
-            />
-            <div>
-              <button onClick={handleUsernameChange}>Save</button>
-              <button onClick={() => setShowPopup(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
+      {showUsernamePopup && (
+        <ChangeUsernameModal
+          onClose={() => setShowUsernamePopup(false)}
+          setSuccess={setSuccess}
+          setError={setError}
+        />
       )}
-
-      <button onClick={() => setShowPasswordPopup(true)}>
-        Change Password
-      </button>
 
       {showPasswordPopup && (
         <ChangePasswordModal
