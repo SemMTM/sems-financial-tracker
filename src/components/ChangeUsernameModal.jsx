@@ -67,7 +67,8 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
             )}
 
             <div>
-                <button onClick={handleChange}>Save</button>
+                <button onClick={handleChange} disabled={!newUsername.trim()}
+                >Save</button>
                 <button onClick={onClose}>Cancel</button>
             </div>
             </div>

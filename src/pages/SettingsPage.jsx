@@ -32,7 +32,6 @@ const SettingsPage = () => {
       <button onClick={() => setShowPasswordPopup(true)}>Change Password</button>
 
       {success && <p style={{ color: 'green' }}>{success}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {showUsernamePopup && (
         <ChangeUsernameModal
@@ -52,7 +51,6 @@ const SettingsPage = () => {
 
       <button
         onClick={handleLogout}
-        className="bg-red-500 text-white py-2 px-4 rounded"
       >Log Out
       </button>
     </div>

@@ -5,6 +5,7 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword1, setNewPassword1] = useState('')
   const [newPassword2, setNewPassword2] = useState('')
+  const [backendErrors, setBackendErrors] = useState([]);
 
   const handlePasswordChange = async () => {
     try {
@@ -16,10 +17,20 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
 
       setSuccess('Password changed successfully.')
       setError('')
+      setBackendErrors([]);
       onClose()
     } catch (err) {
-      console.error('Password change error:', err.response?.data || err.message)
-      setError('Failed to change password. Please check your inputs.')
+      const data = err.response?.data || {};
+      const combinedErrors = [];
+
+      if (data.old_password) combinedErrors.push(...data.old_password);
+      if (data.new_password1) combinedErrors.push(...data.new_password1);
+      if (data.new_password2) combinedErrors.push(...data.new_password2);
+      if (data.non_field_errors) combinedErrors.push(...data.non_field_errors);
+
+      setBackendErrors(combinedErrors);
+      setError('Failed to change password.');
+      setSuccess('');
     }
   }
 
@@ -45,6 +56,26 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
           value={newPassword2}
           onChange={(e) => setNewPassword2(e.target.value)}
         />
+
+        {/* Password Rules */}
+        <ul>
+          <li>At least 8 characters</li>
+          <li>Not too common or predictable</li>
+          <li>Not entirely numeric</li>
+          <li>Must match both password fields</li>
+        </ul>
+
+        {/* Backend validation errors */}
+        {backendErrors.length > 0 && (
+          <div style={{ color: 'red', marginTop: '10px' }}>
+            <ul>
+              {backendErrors.map((msg, index) => (
+                <li key={index}>{msg}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div>
           <button onClick={handlePasswordChange}>Save</button>
           <button onClick={onClose}>Cancel</button>
