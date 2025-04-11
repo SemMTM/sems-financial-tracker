@@ -97,7 +97,7 @@ export default function EditExpenditureForm({ item, onClose, onUpdate }) {
       </div>
 
       <button type="submit">Save Changes</button>
-      <button type="button" onClick={onClose}>
+      <button type="button" onClick={onClose} style={{ marginLeft: '10px' }}>
         Cancel
       </button>
 

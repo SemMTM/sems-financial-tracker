@@ -14,14 +14,15 @@
   
   /* Centered modal box */
   .modal {
-    background: rgb(61, 61, 61);
+    background: #252525;
     padding: 20px;
     border-radius: 8px;
-    min-width: 300px;
+    min-width: 270px;
     max-width: 90%;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    border: 1px solid #e9e9e925;
   }
   
   /* Close (X) button */
