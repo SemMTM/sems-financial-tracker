@@ -1,5 +1,9 @@
 
-/* List Styles */
+/* List Section Styles */
+.list-section {
+  width: 400px;
+}
+
 .list-item {
     list-style: none;
     padding: 8px 0px;
@@ -11,11 +15,12 @@
 .list-item-section {
     width: 90px;
     display: inline-block;
-    flex-grow: 0.2;
+    margin-right: 5px;
 }
 
 .btns-container {
     display: flex;
+    width: 60px;
     justify-content: flex-end;
 }
 
@@ -23,8 +28,8 @@
     width: 80px;
 }
 
-.list-item-section-3 {
-    width: 60px;
+.list-item-section-4 {
+  width: 60px;
 }
 
 .finance-list-section {

@@ -68,7 +68,7 @@ export default function ExpenditureList() {
   if (error) return <p>{error}</p>
 
   return (
-    <div className="expenditure-list">
+    <div className="expenditure-list list-section">
       <h3>Monthly Expenditures</h3>
 
       {expenditures.length === 0 ? (
@@ -114,14 +114,17 @@ export default function ExpenditureList() {
 
                 <span 
                   className="list-item-section
-                  list-item-section-3">
+                  list-item-section">
                   {item.type}
                 </span>
 
-                <span className="list-item-section">
-                  {item.readable_date}
+                <span className="list-item-section list-item-section-4">
+                {item.readable_date
+                  ?.split(',')[0] 
+                  .replace(/^\w{3}\w*/, (month) => month.slice(0, 3))
+                }
                 </span>
-                <span className="list-item-section btns-container">
+                <span className="btns-container">
                   <button className="edit-btn" 
                     onClick={() => handleEdit(item)}
                     >Edit</button>
