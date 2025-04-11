@@ -3,7 +3,7 @@ import api from '../api/axiosDefaults'
 import { useAuth } from '../context/AuthContext'
 
 const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
-    const { setUser } = useAuth()
+    const { user, setUser } = useAuth()
     const [newUsername, setNewUsername] = useState('')
     const [validationError, setValidationError] = useState('')
   
@@ -55,12 +55,19 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
         <div className="popup">
             <div className="popup-content">
             <h3>Change Username</h3>
-            <input
-                type="text"
-                placeholder="New username"
-                value={newUsername}
-                onChange={(e) => setNewUsername(e.target.value)}
-            />
+
+            <div className="form-input-con">
+            <p>Current username: <strong>{user?.username}</strong></p>
+            </div>
+
+            <div className="form-input-con">
+              <input
+                  type="text"
+                  placeholder="New username"
+                  value={newUsername}
+                  onChange={(e) => setNewUsername(e.target.value)}
+              />
+            </div>
 
             {validationError && (
             <p style={{ color: 'red' }}>{validationError}</p>
@@ -69,7 +76,8 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
             <div>
                 <button onClick={handleChange} disabled={!newUsername.trim()}
                 >Save</button>
-                <button onClick={onClose}>Cancel</button>
+                <button onClick={onClose} style={{ marginLeft: '10px' }}>
+                  Cancel</button>
             </div>
             </div>
         </div>

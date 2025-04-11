@@ -2,8 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import SignInForm from './pages/auth/SignInForm'
 import SignUpForm from './pages/auth/SignUpForm'
-import SettingsPage from './pages/SettingsPage'
 import ProtectedRoute from './components/ProtectedRoute'
+import SettingsDropdown from '../src/pages/SettingsDropdown'
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         path="/settings"
         element={
           <ProtectedRoute>
-            <SettingsPage />
+            <SettingsDropdown />
           </ProtectedRoute>
         }
       />

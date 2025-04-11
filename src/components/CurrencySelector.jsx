@@ -44,6 +44,7 @@ const CurrencyModal = ({ onClose, setSuccess }) => {
       setSuccess('Currency updated successfully.')
       setError('')
       onClose()
+      window.location.reload()
     } catch (err) {
       console.error('Currency update error:', err)
       setError('Failed to update currency. Please try again.')
