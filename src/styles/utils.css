@@ -1,4 +1,20 @@
 
+/* Btn styles */
+.add-btn {
+  margin-top: 15px;
+}
+
+.add-button {
+  width: 90%;
+  margin-top: 18px;
+  padding: 7px 0;
+}
+
+.delete-btn {
+background-color: rgba(255, 0, 0, 0.5);
+}
+
+
 /* List Section Styles */
 .list-section {
   width: 400px;
@@ -49,9 +65,10 @@
     color: rgba(255, 0, 0, 0.781);
 }
 
-.add-btn {
-    margin-top: 15px;
+.income-item .list-item-section-2 {
+  color: rgba(0, 255, 85, 0.781);
 }
+
 
 /* Form Styles */
 .input-title {
@@ -64,14 +81,4 @@
 
 .form-input-con {
     margin-bottom: 10px;
-}
-
-.add-button {
-    width: 90%;
-    margin-top: 18px;
-    padding: 7px 0;
-}
-
-.delete-btn {
-  background-color: rgba(255, 0, 0, 0.5);
 }

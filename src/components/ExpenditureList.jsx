@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import api from '../api/axiosDefaults'
 import ExpenditureForm from './ExpenditureForm'
-import Modal from '../components/Modal'
+import Modal from './Modal'
 import EditExpenditureForm from '../components/EditExpenditureForm'
 
 export default function ExpenditureList() {
@@ -22,7 +22,7 @@ export default function ExpenditureList() {
     }
   }
 
-  // 3. Handle add new expenditure
+  // Handle add new expenditure
   const handleAdd = () => {
     setModalContent(
       <ExpenditureForm
@@ -56,7 +56,7 @@ export default function ExpenditureList() {
   if (error) return <p>{error}</p>
 
   return (
-    <div className="expenditure-list list-section">
+    <div className="list-section">
       <h3>Monthly Expenditures</h3>
 
       {expenditures.length === 0 ? (
@@ -85,7 +85,6 @@ export default function ExpenditureList() {
               <span className="list-item-section list-title">
                 Date
               </span>
-              <span className="list-item-section list-title"></span>
             </div>
             {expenditures.map((item) => (
               <li key={item.id} className="list-item expenditure-item">
