@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
-
+import DisSpendForm from './DisSpendForm'
+import EditDisSpendForm from './EditDisSpendForm'
 
 export default function DisSpendList() {
   const { user } = useAuth()
@@ -24,7 +25,12 @@ export default function DisSpendList() {
   // Handle add new expenditure
     const handleAdd = () => {
       setModalContent(
-      
+        <DisSpendForm
+          onAdd={() => {
+            fetchDisSpend()
+            setShowModal(false)
+          }}
+        />
       )
       setShowModal(true)
     }
@@ -32,7 +38,11 @@ export default function DisSpendList() {
     // 4. Handle edit s
       const handleEdit = (item) => {
         setModalContent(
-          
+          <EditDisSpendForm
+            item={item}
+            onClose={() => setShowModal(false)}
+            onUpdate={fetchDisSpend}
+          />
         )
         setShowModal(true)
       }
