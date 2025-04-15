@@ -22,18 +22,6 @@ export default function ExpenditureList() {
     }
   }
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
-    if (!confirmed) return
-  
-    try {
-      await api.delete(`/expenditures/${id}/`)
-      fetchExpenditures() // refresh list after delete
-    } catch (err) {
-      console.error('Failed to delete expenditure:', err)
-    }
-  }
-
   // 3. Handle add new expenditure
   const handleAdd = () => {
     setModalContent(

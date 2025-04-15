@@ -1,7 +1,8 @@
 import { useState } from "react";
 import api from "../api/axiosDefaults";
 
-export default function EditExpenditureForm({ item, onClose, onUpdate }) {
+export default function EditExpenditureForm(
+  { item, onClose, onUpdate}) {
   const [title, setTitle] = useState(item.title);
   const [amount, setAmount] = useState(
     item.formatted_amount.replace(/[^0-9.]/g, "")
@@ -28,6 +29,18 @@ export default function EditExpenditureForm({ item, onClose, onUpdate }) {
       setError("Failed to update expenditure.");
     }
   };
+
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
+    if (!confirmed) return
+  
+    try {
+      await api.delete(`/expenditures/${item.id}/`)
+      onUpdate() // refresh list after delete
+    } catch (err) {
+      console.error('Failed to delete expenditure:', err)
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
@@ -100,6 +113,8 @@ export default function EditExpenditureForm({ item, onClose, onUpdate }) {
       <button type="button" onClick={onClose} style={{ marginLeft: '10px' }}>
         Cancel
       </button>
+      <button onClick={handleDelete} style={{ marginLeft: '10px' }}
+        className="delete-btn">Delete</button>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
