@@ -2,36 +2,29 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
-import IncomeForm from './IncomeForm'
-import EditIncomeForm from './EditIncomeForm'
 
 
-export default function IncomeList() {
+export default function DisSpendList() {
   const { user } = useAuth()
-  const [incomes, setIncomes] = useState([])
+  const [disSpend, setDisSpend] = useState([])
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
 
   // Fetch incomes from the backend
-  const fetchIncomes = async () => {
+  const fetchDisSpend = async () => {
     try {
-      const res = await api.get('/income/')
-      setIncomes(res.data)
+      const res = await api.get('/disposable-spending/')
+      setDisSpend(res.data)
     } catch (err) {
       setError('Failed to load incomes')
     }
   }
 
-  // Handle add new income
+  // Handle add new expenditure
     const handleAdd = () => {
       setModalContent(
-        <IncomeForm
-          onAdd={() => {
-            fetchIncomes()
-            setShowModal(false)
-          }}
-        />
+      
       )
       setShowModal(true)
     }
@@ -39,18 +32,14 @@ export default function IncomeList() {
     // 4. Handle edit s
       const handleEdit = (item) => {
         setModalContent(
-          <EditIncomeForm
-            item={item}
-            onClose={() => setShowModal(false)}
-            onUpdate={fetchIncomes}
-          />
+          
         )
         setShowModal(true)
       }
 
   // Load incomes on mount or when user is set
   useEffect(() => {
-    if (user) fetchIncomes()
+    if (user) fetchDisSpend()
   }, [user])
 
   if (!user) return <p>Please log in to view incomes.</p>
@@ -58,10 +47,10 @@ export default function IncomeList() {
 
   return (
     <div className="list-section">
-      <h3>Monthly Income</h3>
+      <h3>Disposable Income Spending</h3>
 
-      {incomes.length === 0 ? (
-        <p>No incomes for this month.</p>
+      {disSpend.length === 0 ? (
+        <p>No disposable spending for this month.</p>
       ) : (
         <ul>
           <div>
@@ -86,8 +75,8 @@ export default function IncomeList() {
                 Date
               </span>
             </div>
-            {incomes.map((item) => (
-              <li key={item.id} className="list-item income-item">
+            {disSpend.map((item) => (
+              <li key={item.id} className="list-item expenditure-item">
 
                 <span 
                   className="list-item-section">
@@ -96,7 +85,7 @@ export default function IncomeList() {
 
                 <span className="list-item-section
                   list-item-section-2">
-                  {item.formatted_amount}
+                  - {item.formatted_amount}
                   </span>
 
                 <span 
@@ -126,7 +115,7 @@ export default function IncomeList() {
       )}
 
       <button onClick={handleAdd} className="add-btn">
-        + Add a new income
+        + Add a new spending
       </button>
       
       {showModal && (
