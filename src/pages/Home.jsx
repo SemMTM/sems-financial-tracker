@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import ExpenditureList from '../components/expenditureSection/ExpenditureList'
 import SettingsDropdown from './SettingsDropdown'
 import IncomeList from '../components/incomeSection/IncomeList'
+import DisIncomeBudget from '../components/disposableIncomeSection/DisIncomeBudget'
 import DisIncomeSpendList from '../components/disposableIncomeSection/DisIncomeSpendList'
 
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
       <div className="finance-list-section">
         <ExpenditureList />
         <IncomeList />
+        <DisIncomeBudget />
         <DisIncomeSpendList />
       </div>
     </div>
