@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import api from '../api/axiosDefaults'
-import { Navigate } from 'react-router-dom'
+import useRefreshToken from '../hooks/useRefreshToken'
 
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
+  useRefreshToken()
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
