@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import api from '../api/axiosDefaults'
+import api from '../../api/axiosDefaults'
 
 const CurrencyModal = ({ onClose, setSuccess }) => {
   const [currency, setCurrency] = useState('')

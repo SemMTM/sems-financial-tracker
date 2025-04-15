@@ -1,49 +1,56 @@
 import { useState } from "react";
-import api from "../api/axiosDefaults";
+import api from "../../api/axiosDefaults";
 
-export default function EditIncomeForm(
+export default function EditExpenditureForm(
   { item, onClose, onUpdate}) {
   const [title, setTitle] = useState(item.title);
   const [amount, setAmount] = useState(
     item.formatted_amount.replace(/[^0-9.]/g, "")
   );
+  const [type, setType] = useState(item.type);
   const [date, setDate] = useState(item.date.slice(0, 10));
   const [repeated, setRepeated] = useState(item.repeated || "");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsSubmitting(true)
     try {
-      await api.put(`/income/${item.id}/`, {
+      await api.put(`/expenditures/${item.id}/`, {
         title,
         amount,
+        type,
         date,
         repeated: repeated || null,
       });
-      onUpdate();
-      onClose();
+      onUpdate(); // Refresh list
+      onClose(); // Close modal
     } catch (err) {
-      setError("Failed to update income.");
+      setError("Failed to update expenditure.");
+    } finally {
+      setIsSubmitting(false)
     }
   };
 
   const handleDelete = async () => {
-    const confirmed = window.confirm('Are you sure you want to delete this income?')
+    const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
     if (!confirmed) return
-  
+    setIsSubmitting(true)
     try {
-      await api.delete(`/income/${item.id}/`)
+      await api.delete(`/expenditures/${item.id}/`)
       onUpdate()
       onClose()
     } catch (err) {
-      console.error('Failed to delete income:', err)
+      setError('Failed to delete expenditure.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
-      <h3>Edit Income: {item.title}</h3>
+      <h3>Edit Expenditure: {item.title}</h3>
       
       <span className="input-title">
         Title
@@ -74,6 +81,17 @@ export default function EditIncomeForm(
       </div>
 
       <span className="input-title">
+        Type
+      </span>
+      <div className="form-input-con">
+        <select value={type} onChange={(e) => setType(e.target.value)}>
+          <option value="BILL">Bill</option>
+          <option value="SAVING">Savings</option>
+          <option value="INVESTMENT">Investment</option>
+        </select>
+      </div>
+
+      <span className="input-title">
         Date
       </span>
       <div className="form-input-con">
@@ -97,7 +115,7 @@ export default function EditIncomeForm(
       </select>
       </div>
 
-      <button type="submit">Save Changes</button>
+      <button type="submit" disabled={isSubmitting}>Save Changes</button>
       <button type="button" onClick={onClose} style={{ marginLeft: '10px' }}>
         Cancel
       </button>
@@ -106,6 +124,7 @@ export default function EditIncomeForm(
         onClick={handleDelete}
         style={{ marginLeft: '10px' }}
         className="delete-btn"
+        disabled={isSubmitting}
       >
         Delete
       </button>

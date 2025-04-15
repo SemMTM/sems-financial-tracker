@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import api from '../api/axiosDefaults'
+import api from '../../api/axiosDefaults'
 
 export default function ExpenditureForm({ onAdd }) {
   const [title, setTitle] = useState('')

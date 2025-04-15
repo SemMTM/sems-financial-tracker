@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import api from '../api/axiosDefaults'
+import api from '../../api/axiosDefaults'
 
 export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
   const [newPassword1, setNewPassword1] = useState('')

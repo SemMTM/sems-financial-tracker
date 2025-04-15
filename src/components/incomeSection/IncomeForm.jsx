@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import api from '../api/axiosDefaults'
+import api from '../../api/axiosDefaults'
 
 export default function IncomeForm({ onAdd }) {
   const [title, setTitle] = useState('')

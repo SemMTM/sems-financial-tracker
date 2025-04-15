@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '../context/AuthContext'
-import api from '../api/axiosDefaults'
-import Modal from './Modal'
+import { useAuth } from '../../context/AuthContext'
+import api from '../../api/axiosDefaults'
+import Modal from '../Modal'
 import IncomeForm from './IncomeForm'
 import EditIncomeForm from './EditIncomeForm'
 
@@ -106,9 +106,11 @@ export default function IncomeList() {
                 </span>
 
                 <span className="list-item-section list-item-section-4">
-                {item.readable_date
-                  ?.split(',')[0] 
-                  .replace(/^\w{3}\w*/, (month) => month.slice(0, 3))
+                {new Date(item.date).toLocaleDateString('en-GB', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                  })
                 }
                 </span>
                 <span className="btns-container">

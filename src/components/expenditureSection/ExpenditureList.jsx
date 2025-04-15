@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '../context/AuthContext'
-import api from '../api/axiosDefaults'
+import { useAuth } from '../../context/AuthContext'
+import api from '../../api/axiosDefaults'
 import ExpenditureForm from './ExpenditureForm'
-import Modal from './Modal'
-import EditExpenditureForm from '../components/EditExpenditureForm'
+import Modal from '../Modal'
+import EditExpenditureForm from './EditExpenditureForm'
 
 export default function ExpenditureList() {
   const { user } = useAuth()
@@ -106,9 +106,11 @@ export default function ExpenditureList() {
                 </span>
 
                 <span className="list-item-section list-item-section-4">
-                {item.readable_date
-                  ?.split(',')[0] 
-                  .replace(/^\w{3}\w*/, (month) => month.slice(0, 3))
+                {new Date(item.date).toLocaleDateString('en-GB', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                  })
                 }
                 </span>
                 <span className="btns-container">

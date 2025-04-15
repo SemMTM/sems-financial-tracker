@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import api from '../api/axiosDefaults'
-import { useAuth } from '../context/AuthContext'
+import api from '../../api/axiosDefaults'
+import { useAuth } from '../../context/AuthContext'
 
 const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
     const { user, setUser } = useAuth()

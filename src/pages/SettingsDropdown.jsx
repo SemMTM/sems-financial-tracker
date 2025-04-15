@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import ChangePasswordModal from '../components/ChangePasswordModal'
-import ChangeUsernameModal from '../components/ChangeUsernameModal'
-import CurrencySelector from '../components/CurrencySelector'
+import ChangePasswordModal from '../components/settingsPage/ChangePasswordModal'
+import ChangeUsernameModal from '../components/settingsPage/ChangeUsernameModal'
+import CurrencySelector from '../components/settingsPage/CurrencySelector'
 import Modal from '../components/Modal'
 import styles from '../styles/SettingsDropdown.module.css'
 
