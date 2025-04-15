@@ -6,9 +6,11 @@ export default function IncomeForm({ onAdd }) {
   const [amount, setAmount] = useState('')
   const [date, setDate] = useState('')
   const [repeated, setRepeated] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     const formatAmount = parseFloat(amount).toFixed(2)
     console.log({
         title,
@@ -30,6 +32,8 @@ export default function IncomeForm({ onAdd }) {
       setRepeated('NEVER')
     } catch (err) {
       console.error('Failed to add income:', err)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -88,6 +92,7 @@ export default function IncomeForm({ onAdd }) {
       </div>
 
       <button className="add-button" 
+        disabled={isSubmitting}
         type="submit">Add Income</button>
     </form>
   )

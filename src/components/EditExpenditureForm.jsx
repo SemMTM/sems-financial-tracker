@@ -11,10 +11,11 @@ export default function EditExpenditureForm(
   const [date, setDate] = useState(item.date.slice(0, 10));
   const [repeated, setRepeated] = useState(item.repeated || "");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsSubmitting(true)
     try {
       await api.put(`/expenditures/${item.id}/`, {
         title,
@@ -27,19 +28,23 @@ export default function EditExpenditureForm(
       onClose(); // Close modal
     } catch (err) {
       setError("Failed to update expenditure.");
+    } finally {
+      setIsSubmitting(false)
     }
   };
 
   const handleDelete = async () => {
     const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
     if (!confirmed) return
-  
+    setIsSubmitting(true)
     try {
       await api.delete(`/expenditures/${item.id}/`)
       onUpdate()
       onClose()
     } catch (err) {
       setError('Failed to delete expenditure.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -110,7 +115,7 @@ export default function EditExpenditureForm(
       </select>
       </div>
 
-      <button type="submit">Save Changes</button>
+      <button type="submit" disabled={isSubmitting}>Save Changes</button>
       <button type="button" onClick={onClose} style={{ marginLeft: '10px' }}>
         Cancel
       </button>
@@ -119,6 +124,7 @@ export default function EditExpenditureForm(
         onClick={handleDelete}
         style={{ marginLeft: '10px' }}
         className="delete-btn"
+        disabled={isSubmitting}
       >
         Delete
       </button>

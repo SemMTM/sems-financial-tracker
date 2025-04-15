@@ -7,9 +7,11 @@ export default function ExpenditureForm({ onAdd }) {
   const [date, setDate] = useState('')
   const [type, setType] = useState('BILL')
   const [repeated, setRepeated] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     const formatAmount = parseFloat(amount).toFixed(2)
     console.log({
         title,
@@ -34,6 +36,8 @@ export default function ExpenditureForm({ onAdd }) {
       setRepeated('NEVER')
     } catch (err) {
       console.error('Failed to add expenditure:', err)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -103,6 +107,7 @@ export default function ExpenditureForm({ onAdd }) {
       </div>
 
       <button className="add-button" 
+        disabled={isSubmitting}
         type="submit">Add Expenditure</button>
     </form>
   )
