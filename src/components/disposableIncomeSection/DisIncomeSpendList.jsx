@@ -5,7 +5,7 @@ import Modal from '../Modal'
 import DisSpendForm from './DisSpendForm'
 import EditDisSpendForm from './EditDisSpendForm'
 
-export default function DisSpendList() {
+export default function DisSpendList({ onSpendingChange }) {
   const { user } = useAuth()
   const [disSpend, setDisSpend] = useState([])
   const [error, setError] = useState('')
@@ -17,6 +17,7 @@ export default function DisSpendList() {
     try {
       const res = await api.get('/disposable-spending/')
       setDisSpend(res.data)
+      onSpendingChange()
     } catch (err) {
       setError('Failed to load incomes')
     }
@@ -28,6 +29,7 @@ export default function DisSpendList() {
         <DisSpendForm
           onAdd={() => {
             fetchDisSpend()
+            onSpendingChange()
             setShowModal(false)
           }}
         />

@@ -4,7 +4,7 @@ import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import EditDisBudgetForm from './EditDisBudgetForm'
 
-export default function DisSpendList() {
+export default function DisIncomeBudget({ spendingChanged }) {
   const { user } = useAuth()
   const [disBudget, setDisBudget] = useState([])
   const [error, setError] = useState('')
@@ -36,7 +36,7 @@ export default function DisSpendList() {
   // Load incomes on mount or when user is set
   useEffect(() => {
     if (user) fetchDisBudget()
-  }, [user])
+  }, [user, spendingChanged])
 
   if (!user) return <p>Please log in to view budget.</p>
   if (error) return <p>{error}</p>
@@ -53,16 +53,27 @@ export default function DisSpendList() {
             {disBudget.map((item) => (
               <li key={item.id} className="list-item">
 
-                <span className="list-item-section
-                  list-item-section-2"
-                  >
+                <span className="list-item-section"
+                  style={{ 
+                    fontSize: "18px",
+                    paddingRight: "10px"
+                   }}
+                >
                   {item.formatted_amount}
-                  </span>
+                </span>
 
                 <span className="btns-container">
                   <button className="edit-btn"
                     onClick={() => handleEdit(item)}
                     >Edit</button>
+                </span>
+
+                <span className=""
+                  style={{ 
+                    fontSize: "18px",
+                    paddingRight: "10px"
+                    }}
+                > Remaining: {item.remaining_formatted}
                 </span>
               </li>
             ))}

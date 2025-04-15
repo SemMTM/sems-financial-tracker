@@ -11,11 +11,6 @@ export default function DisSpendForm({ onAdd }) {
     e.preventDefault()
     setIsSubmitting(true)
     const formatAmount = parseFloat(amount).toFixed(2)
-    console.log({
-        title,
-        amount,
-        date,
-      })
     try {
       await api.post('/disposable-spending/', {
         title,
