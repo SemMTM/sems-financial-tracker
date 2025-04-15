@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import api from '../api/axiosDefaults'
 import Modal from './Modal'
 import IncomeForm from './IncomeForm'
+import EditIncomeForm from './EditIncomeForm'
 
 
 export default function IncomeList() {
@@ -35,6 +36,17 @@ export default function IncomeList() {
       setShowModal(true)
     }
   
+    // 4. Handle edit s
+      const handleEdit = (item) => {
+        setModalContent(
+          <EditIncomeForm
+            item={item}
+            onClose={() => setShowModal(false)}
+            onUpdate={fetchIncomes}
+          />
+        )
+        setShowModal(true)
+      }
 
   // Load incomes on mount or when user is set
   useEffect(() => {
@@ -100,7 +112,8 @@ export default function IncomeList() {
                 }
                 </span>
                 <span className="btns-container">
-                  <button className="edit-btn" 
+                  <button className="edit-btn"
+                    onClick={() => handleEdit(item)}
                     >Edit</button>
                 </span>
 

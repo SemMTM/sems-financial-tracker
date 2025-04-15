@@ -35,7 +35,19 @@ export default function ExpenditureList() {
     setShowModal(true)
   }
 
-  // 4. Handle edit s
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
+    if (!confirmed) return
+  
+    try {
+      await api.delete(`/expenditures/${id}/`)
+      onUpdate() // refresh list after delete
+    } catch (err) {
+      console.error('Failed to delete expenditure:', err)
+    }
+  }
+
+  // Handle edit s
   const handleEdit = (item) => {
     setModalContent(
       <EditExpenditureForm

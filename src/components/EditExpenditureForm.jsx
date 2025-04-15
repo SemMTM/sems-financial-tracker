@@ -8,7 +8,7 @@ export default function EditExpenditureForm(
     item.formatted_amount.replace(/[^0-9.]/g, "")
   );
   const [type, setType] = useState(item.type);
-  const [date, setDate] = useState(item.date.slice(0, 10)); // ISO date
+  const [date, setDate] = useState(item.date.slice(0, 10));
   const [repeated, setRepeated] = useState(item.repeated || "");
   const [error, setError] = useState("");
 
@@ -30,15 +30,16 @@ export default function EditExpenditureForm(
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
     if (!confirmed) return
   
     try {
       await api.delete(`/expenditures/${item.id}/`)
-      onUpdate() // refresh list after delete
+      onUpdate()
+      onClose()
     } catch (err) {
-      console.error('Failed to delete expenditure:', err)
+      setError('Failed to delete expenditure.')
     }
   }
 
@@ -113,8 +114,14 @@ export default function EditExpenditureForm(
       <button type="button" onClick={onClose} style={{ marginLeft: '10px' }}>
         Cancel
       </button>
-      <button onClick={handleDelete} style={{ marginLeft: '10px' }}
-        className="delete-btn">Delete</button>
+      <button
+        type="button"
+        onClick={handleDelete}
+        style={{ marginLeft: '10px' }}
+        className="delete-btn"
+      >
+        Delete
+      </button>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
