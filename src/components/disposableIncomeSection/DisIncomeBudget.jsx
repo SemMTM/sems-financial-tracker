@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import EditDisBudgetForm from './EditDisBudgetForm'
+import styles from '../../styles/DisIncomeBudget.module.css'
 
 export default function DisIncomeBudget({ spendingChanged }) {
   const { user } = useAuth()
@@ -68,11 +69,7 @@ export default function DisIncomeBudget({ spendingChanged }) {
                     >Edit</button>
                 </span>
 
-                <span className=""
-                  style={{ 
-                    fontSize: "18px",
-                    paddingRight: "10px"
-                    }}
+                <span className={styles.remaining}
                 > Remaining: {item.remaining_formatted}
                 </span>
               </li>
