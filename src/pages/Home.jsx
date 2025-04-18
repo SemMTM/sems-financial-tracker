@@ -12,8 +12,10 @@ const Home = () => {
   return (
     <div className="home-page">
         <SettingsDropdown />
+        <div className="summary-section">
+          <MonthlySummary />
+        </div>
       <div className="finance-list-section">
-        <MonthlySummary />
         <ExpenditureList />
         <IncomeList />
         <DisIncomeBudget spendingChanged={spendingChanged}/>

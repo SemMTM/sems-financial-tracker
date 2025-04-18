@@ -29,17 +29,28 @@ export default function IncomeList() {
   if (error) return <p>{error}</p>
 
   return (
-    <div className="list-section">
-      <h3>Monthly Summary</h3>
+    <div className="summary-sec-inner">
+      <div className="summary-title-sec">
+        <h3 className="summary-title">Monthly Summary</h3>
+        <button>Weekly</button>
+      </div>
 
-      <ul>
-        <div>
-          <li>{monthlySummary.income}</li>
-          <li>{monthlySummary.bills}</li>
-          <li>{monthlySummary.saving}</li>
-          <li>{monthlySummary.investment}</li>
-        </div>
-      </ul>
+      <div className="">
+        <ul>
+          <li><span>Monthly Income</span>
+            <span className="income-summary">
+              + {monthlySummary.formatted_income}</span></li>
+          <li><span>Bills</span>
+            <span className="expenditure-summary">
+              - {monthlySummary.formatted_bills}</span></li>
+          <li><span>Saving</span>
+            <span className="expenditure-summary">
+              - {monthlySummary.formatted_saving}</span></li>
+          <li><span>Investment</span> 
+            <span className="expenditure-summary">
+              - {monthlySummary.formatted_investment}</span></li>
+        </ul>
+      </div>
     </div>
   )
 }
