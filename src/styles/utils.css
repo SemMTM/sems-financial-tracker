@@ -1,3 +1,6 @@
+.flex {
+  display: flex;
+}
 
 /* Btn styles */
 .add-btn {
@@ -26,6 +29,7 @@ background-color: rgba(255, 0, 0, 0.5);
     display: flex;
     width: 100%;
     align-items: center;
+    justify-content: space-between;
   }
 
 .list-item-section {

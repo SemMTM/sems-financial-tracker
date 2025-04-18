@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
-import Modal from '../Modal'
+import styles from '../../styles/MonthlySummary.module.css'
 
 
 export default function IncomeList() {
@@ -35,20 +35,59 @@ export default function IncomeList() {
         <button>Weekly</button>
       </div>
 
-      <div className="">
-        <ul>
-          <li><span>Monthly Income</span>
+      <div className={styles['monthly-summary-sec-inner']}>
+        <ul className={styles['month-sum-list']}>
+          <li className="list-item">
+            <span>Monthly Income</span>
             <span className="income-summary">
-              + {monthlySummary.formatted_income}</span></li>
-          <li><span>Bills</span>
+              + {monthlySummary.formatted_income}
+            </span>
+          </li>
+
+          <li className="list-item sum-li-item">
+            <span>Bills</span>
             <span className="expenditure-summary">
-              - {monthlySummary.formatted_bills}</span></li>
-          <li><span>Saving</span>
+              - {monthlySummary.formatted_bills}
+            </span>
+          </li>
+
+          <li className="list-item sum-li-item">
+            <span>Saving</span>
             <span className="expenditure-summary">
-              - {monthlySummary.formatted_saving}</span></li>
-          <li><span>Investment</span> 
+              - {monthlySummary.formatted_saving}
+            </span>
+          </li>
+
+          <li className="list-item sum-li-item">
+            <span>Investment</span> 
             <span className="expenditure-summary">
-              - {monthlySummary.formatted_investment}</span></li>
+              - {monthlySummary.formatted_investment}
+            </span>
+          </li>
+
+          <li className="list-item sum-li-item">
+            <strong><span>Total</span></strong> 
+            <span className="expenditure-summary">
+              - {monthlySummary.formatted_total}
+            </span>
+          </li>
+
+          <div >
+            <div>
+              <div>Disposable Income Budget</div> 
+              <div className="">
+                {monthlySummary.formatted_budget}
+              </div>
+            </div>
+
+            <div>
+              <div>Remaining Disposable Income</div> 
+              <div className="">
+                {monthlySummary.formatted_remaining_disposable}
+              </div>
+            </div>
+          </div>
+
         </ul>
       </div>
     </div>
