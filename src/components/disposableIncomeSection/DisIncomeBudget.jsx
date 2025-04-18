@@ -4,13 +4,15 @@ import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import EditDisBudgetForm from './EditDisBudgetForm'
 import styles from '../../styles/DisIncomeBudget.module.css'
+import { useFinancialData } from '../../context/FinancialDataContext'
 
-export default function DisIncomeBudget({ spendingChanged }) {
+export default function DisIncomeBudget() {
   const { user } = useAuth()
   const [disBudget, setDisBudget] = useState([])
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
+  const { dataVersion } = useFinancialData();
 
   // Fetch incomes from the backend
   const fetchDisBudget = async () => {
@@ -37,7 +39,7 @@ export default function DisIncomeBudget({ spendingChanged }) {
   // Load incomes on mount or when user is set
   useEffect(() => {
     if (user) fetchDisBudget()
-  }, [user, spendingChanged])
+  }, [user, dataVersion])
 
   if (!user) return <p>Please log in to view budget.</p>
   if (error) return <p>{error}</p>

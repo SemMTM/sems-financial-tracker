@@ -6,7 +6,7 @@ import DisSpendForm from './DisSpendForm'
 import EditDisSpendForm from './EditDisSpendForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
 
-export default function DisSpendList({ onSpendingChange }) {
+export default function DisSpendList() {
   const { user } = useAuth()
   const [disSpend, setDisSpend] = useState([])
   const [error, setError] = useState('')
@@ -19,7 +19,6 @@ export default function DisSpendList({ onSpendingChange }) {
     try {
       const res = await api.get('/disposable-spending/')
       setDisSpend(res.data)
-      onSpendingChange()
       notifyChange()
     } catch (err) {
       setError('Failed to load incomes')

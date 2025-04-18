@@ -1,4 +1,4 @@
-import { React,useState } from 'react'
+import { React } from 'react'
 import ExpenditureList from '../components/expenditureSection/ExpenditureList'
 import SettingsDropdown from './SettingsDropdown'
 import IncomeList from '../components/incomeSection/IncomeList'
@@ -7,8 +7,6 @@ import DisIncomeSpendList from '../components/disposableIncomeSection/DisIncomeS
 import MonthlySummary from '../components/summaryViews/MonthlySummary'
 
 const Home = () => {
-  const [spendingChanged, setSpendingChanged] = useState(false)
-
   return (
     <div className="home-page">
       <SettingsDropdown />
@@ -18,8 +16,8 @@ const Home = () => {
       <div className="finance-list-section">
         <ExpenditureList />
         <IncomeList />
-        <DisIncomeBudget spendingChanged={spendingChanged}/>
-        <DisIncomeSpendList onSpendingChange={() => setSpendingChanged(prev => !prev)}/>
+        <DisIncomeBudget />
+        <DisIncomeSpendList />
       </div>
     </div>
   )
