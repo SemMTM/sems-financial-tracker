@@ -4,6 +4,7 @@ import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import IncomeForm from './IncomeForm'
 import EditIncomeForm from './EditIncomeForm'
+import { useFinancialData } from '../../context/FinancialDataContext'
 
 
 export default function IncomeList() {
@@ -12,12 +13,14 @@ export default function IncomeList() {
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
+  const { notifyChange } = useFinancialData();
 
   // Fetch incomes from the backend
   const fetchIncomes = async () => {
     try {
       const res = await api.get('/income/')
       setIncomes(res.data)
+      notifyChange()
     } catch (err) {
       setError('Failed to load incomes')
     }

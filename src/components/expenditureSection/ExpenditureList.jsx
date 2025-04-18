@@ -4,6 +4,7 @@ import api from '../../api/axiosDefaults'
 import ExpenditureForm from './ExpenditureForm'
 import Modal from '../Modal'
 import EditExpenditureForm from './EditExpenditureForm'
+import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function ExpenditureList() {
   const { user } = useAuth()
@@ -11,12 +12,14 @@ export default function ExpenditureList() {
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
+  const { notifyChange } = useFinancialData();
 
   // Fetch expenditures from the backend
   const fetchExpenditures = async () => {
     try {
       const res = await api.get('/expenditures/')
       setExpenditures(res.data)
+      notifyChange()
     } catch (err) {
       setError('Failed to load expenditures')
     }

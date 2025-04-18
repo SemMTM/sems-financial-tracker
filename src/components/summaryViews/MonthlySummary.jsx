@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import styles from '../../styles/MonthlySummary.module.css'
+import { useFinancialData } from '../../context/FinancialDataContext'
 
 
-export default function IncomeList() {
+export default function MonthlySummary() {
   const { user } = useAuth()
   const [monthlySummary, setSummary] = useState([])
+  const { dataVersion } = useFinancialData();
   const [error, setError] = useState('')
-  const [showModal, setShowModal] = useState(false)
 
   // Fetch incomes from the backend
   const fetchSummary = async () => {
@@ -23,7 +24,7 @@ export default function IncomeList() {
   // Load incomes on mount or when user is set
   useEffect(() => {
     if (user) fetchSummary()
-  }, [user])
+  }, [dataVersion])
 
   if (!user) return <p>Please log in to view incomes.</p>
   if (error) return <p>{error}</p>
@@ -101,14 +102,14 @@ export default function IncomeList() {
                 className={
                   monthlySummary.formatted_remaining_disposable.includes('-')
                     ? 'expenditure-summary'
-                    : 'income-summary'
+                    : ''
                 }
               >
                 {monthlySummary.formatted_remaining_disposable.includes('-')
                   ? monthlySummary.formatted_remaining_disposable
-                  : `+${monthlySummary.formatted_remaining_disposable}`}
+                  : `${monthlySummary.formatted_remaining_disposable}`}
               </div>
-            )}
+              )}
             
             </div>
           </div>

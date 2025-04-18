@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../../api/axiosDefaults";
+import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function EditExpenditureForm(
   { item, onClose, onUpdate}) {
@@ -12,6 +13,7 @@ export default function EditExpenditureForm(
   const [repeated, setRepeated] = useState(item.repeated || "");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { notifyChange } = useFinancialData();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +27,7 @@ export default function EditExpenditureForm(
         repeated: repeated || null,
       });
       onUpdate(); // Refresh list
+      notifyChange()
       onClose(); // Close modal
     } catch (err) {
       setError("Failed to update expenditure.");
@@ -40,6 +43,7 @@ export default function EditExpenditureForm(
     try {
       await api.delete(`/expenditures/${item.id}/`)
       onUpdate()
+      notifyChange()
       onClose()
     } catch (err) {
       setError('Failed to delete expenditure.')

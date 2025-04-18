@@ -4,6 +4,7 @@ import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import DisSpendForm from './DisSpendForm'
 import EditDisSpendForm from './EditDisSpendForm'
+import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function DisSpendList({ onSpendingChange }) {
   const { user } = useAuth()
@@ -11,6 +12,7 @@ export default function DisSpendList({ onSpendingChange }) {
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
+  const { notifyChange } = useFinancialData();
 
   // Fetch incomes from the backend
   const fetchDisSpend = async () => {
@@ -18,6 +20,7 @@ export default function DisSpendList({ onSpendingChange }) {
       const res = await api.get('/disposable-spending/')
       setDisSpend(res.data)
       onSpendingChange()
+      notifyChange()
     } catch (err) {
       setError('Failed to load incomes')
     }
@@ -29,7 +32,6 @@ export default function DisSpendList({ onSpendingChange }) {
         <DisSpendForm
           onAdd={() => {
             fetchDisSpend()
-            onSpendingChange()
             setShowModal(false)
           }}
         />
