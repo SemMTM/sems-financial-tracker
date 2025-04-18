@@ -7,3 +7,12 @@
 .month-sum-list > li {
   border-bottom: 0;
 }
+
+.disp-sec-sum > div{
+  padding-top: 20px;
+}
+
+.disp-sec-sum > div > div{
+  padding-top: 10px;
+  font-size: 15px;
+}

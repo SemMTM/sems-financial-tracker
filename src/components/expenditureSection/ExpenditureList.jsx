@@ -96,7 +96,7 @@ export default function ExpenditureList() {
 
                 <span className="list-item-section
                   list-item-section-2">
-                  - {item.formatted_amount}
+                  -{item.formatted_amount}
                   </span>
 
                 <span 

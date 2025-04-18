@@ -40,39 +40,52 @@ export default function IncomeList() {
           <li className="list-item">
             <span>Monthly Income</span>
             <span className="income-summary">
-              + {monthlySummary.formatted_income}
+              +{monthlySummary.formatted_income}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <span>Bills</span>
             <span className="expenditure-summary">
-              - {monthlySummary.formatted_bills}
+              -{monthlySummary.formatted_bills}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <span>Saving</span>
             <span className="expenditure-summary">
-              - {monthlySummary.formatted_saving}
+              -{monthlySummary.formatted_saving}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <span>Investment</span> 
             <span className="expenditure-summary">
-              - {monthlySummary.formatted_investment}
+              -{monthlySummary.formatted_investment}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <strong><span>Total</span></strong> 
-            <span className="expenditure-summary">
-              - {monthlySummary.formatted_total}
-            </span>
-          </li>
 
-          <div >
+            {monthlySummary?.formatted_total && (
+              <span
+                className={
+                  monthlySummary.formatted_total.includes('-')
+                    ? 'expenditure-summary'
+                    : 'income-summary'
+                }
+              >
+                {monthlySummary.formatted_total.includes('-')
+                  ? monthlySummary.formatted_total
+                  : `+${monthlySummary.formatted_total}`}
+              </span>
+            )}
+
+          </li>
+        </ul>
+
+        <div className={styles['disp-sec-sum']}>
             <div>
               <div>Disposable Income Budget</div> 
               <div className="">
@@ -82,13 +95,23 @@ export default function IncomeList() {
 
             <div>
               <div>Remaining Disposable Income</div> 
-              <div className="">
-                {monthlySummary.formatted_remaining_disposable}
+
+              {monthlySummary?.formatted_remaining_disposable && (
+              <div
+                className={
+                  monthlySummary.formatted_remaining_disposable.includes('-')
+                    ? 'expenditure-summary'
+                    : 'income-summary'
+                }
+              >
+                {monthlySummary.formatted_remaining_disposable.includes('-')
+                  ? monthlySummary.formatted_remaining_disposable
+                  : `+${monthlySummary.formatted_remaining_disposable}`}
               </div>
+            )}
+            
             </div>
           </div>
-
-        </ul>
       </div>
     </div>
   )
