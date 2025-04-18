@@ -4,6 +4,7 @@ import SettingsDropdown from './SettingsDropdown'
 import IncomeList from '../components/incomeSection/IncomeList'
 import DisIncomeBudget from '../components/disposableIncomeSection/DisIncomeBudget'
 import DisIncomeSpendList from '../components/disposableIncomeSection/DisIncomeSpendList'
+import MonthlySummary from '../components/summaryViews/MonthlySummary'
 
 const Home = () => {
   const [spendingChanged, setSpendingChanged] = useState(false)
@@ -12,6 +13,7 @@ const Home = () => {
     <div className="home-page">
         <SettingsDropdown />
       <div className="finance-list-section">
+        <MonthlySummary />
         <ExpenditureList />
         <IncomeList />
         <DisIncomeBudget spendingChanged={spendingChanged}/>
