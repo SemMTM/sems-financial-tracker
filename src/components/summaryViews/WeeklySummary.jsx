@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import styles from '../../styles/WeeklySummary.module.css'
@@ -7,18 +8,26 @@ import styles from '../../styles/WeeklySummary.module.css'
 
 export default function WeeklySummary({ setViewMode }) {
   const { user } = useAuth()
-  const [weeklySummary, setSummary] = useState({ weeks: [] })
+  const queryClient = useQueryClient();
+
   const { dataVersion } = useFinancialData();
-  const [error, setError] = useState('')
+
+  const {
+    data: weeklySummary = { weeks: [] },
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['weeklySummary'],
+    queryFn: async () => {
+      const res = await api.get('/weekly-summary/');
+      return res.data;
+    },
+    enabled: !!user,
+  });
 
   // Fetch incomes from the backend
-  const fetchSummary = async () => {
-    try {
-      const res = await api.get('/weekly-summary/')
-      setSummary(res.data)
-    } catch (err) {
-      setError('Failed to load weekly summary')
-    }
+  const fetchSummary = () => {
+    queryClient.invalidateQueries({ queryKey: ['weeklySummary'] })
   }
 
   useEffect(() => {
@@ -27,6 +36,7 @@ export default function WeeklySummary({ setViewMode }) {
 
   if (!user) return <p>Please log in to view summaries.</p>
   if (error) return <p>{error}</p>
+  if (isLoading) return <p>Loading summary...</p>;
 
   return (
     <div className="summary-sec-inner">
