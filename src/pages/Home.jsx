@@ -11,7 +11,7 @@ const Home = () => {
   const [viewMode, setViewMode] = useState('monthly');
 
   return (
-    <div className="home-page">
+    <div className="home-page"> 
       <SettingsDropdown />
       <div className="summary-section">
         {viewMode === 'monthly' ? (

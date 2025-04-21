@@ -1,30 +1,37 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import IncomeForm from './IncomeForm'
 import EditIncomeForm from './EditIncomeForm'
-import { useFinancialData } from '../../context/FinancialDataContext'
 
 
 export default function IncomeList() {
   const { user } = useAuth()
-  const [incomes, setIncomes] = useState([])
-  const [error, setError] = useState('')
+  const queryClient = useQueryClient();
+
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const { notifyChange } = useFinancialData();
 
   // Fetch incomes from the backend
-  const fetchIncomes = async () => {
-    try {
-      const res = await api.get('/income/')
-      setIncomes(res.data)
-      notifyChange()
-    } catch (err) {
-      setError('Failed to load incomes')
-    }
-  }
+  const {
+    data: incomes = [],
+    isLoading,
+    isFetching,
+    error
+  } = useQuery({
+    queryKey: ['incomes'],
+    queryFn: async () => {
+      const res = await api.get('/income/');
+      return res.data;
+    },
+    enabled: !!user,
+  });
+
+  const fetchIncomes = () => {
+    queryClient.invalidateQueries({ queryKey: ['incomes'] });
+  };
 
   // Handle add new income
     const handleAdd = () => {
@@ -51,17 +58,15 @@ export default function IncomeList() {
         setShowModal(true)
       }
 
-  // Load incomes on mount or when user is set
-  useEffect(() => {
-    if (user) fetchIncomes()
-  }, [user])
-
-  if (!user) return <p>Please log in to view incomes.</p>
-  if (error) return <p>{error}</p>
+  if (!user) return <p>Please log in to view incomes.</p>;
+  if (isLoading) return <p>Loading incomes...</p>;
+  if (error) return <p>Failed to load incomes.</p>;
 
   return (
     <div className="list-section">
       <h3>Monthly Income</h3>
+
+      {isFetching && <p className="subtle-loading">Checking for updates...</p>}
 
       {incomes.length === 0 ? (
         <p>No incomes for this month.</p>

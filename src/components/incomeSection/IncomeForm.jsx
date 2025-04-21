@@ -5,19 +5,13 @@ export default function IncomeForm({ onAdd }) {
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
   const [date, setDate] = useState('')
-  const [repeated, setRepeated] = useState('')
+  const [repeated, setRepeated] = useState('NEVER')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     const formatAmount = parseFloat(amount).toFixed(2)
-    console.log({
-        title,
-        amount,
-        date,
-        repeated: repeated || null,
-      })
     try {
       await api.post('/income/', {
         title,
@@ -26,10 +20,6 @@ export default function IncomeForm({ onAdd }) {
         repeated: repeated || 'NEVER',
       })
       onAdd()
-      setTitle('')
-      setAmount('')
-      setDate('')
-      setRepeated('NEVER')
     } catch (err) {
       console.error('Failed to add income:', err)
     } finally {
@@ -63,6 +53,7 @@ export default function IncomeForm({ onAdd }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           step="0.01"
+          min="0.01"
           required
         />
       </div>
