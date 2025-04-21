@@ -5,6 +5,7 @@ import IncomeList from '../components/incomeSection/IncomeList'
 import DisIncomeBudget from '../components/disposableIncomeSection/DisIncomeBudget'
 import DisIncomeSpendList from '../components/disposableIncomeSection/DisIncomeSpendList'
 import MonthlySummary from '../components/summaryViews/MonthlySummary'
+import WeeklySummary from '../components/summaryViews/WeeklySummary'
 
 const Home = () => {
   return (
@@ -12,6 +13,9 @@ const Home = () => {
       <SettingsDropdown />
       <div className="summary-section">
         <MonthlySummary />
+      </div>
+      <div className="summary-section">
+        <WeeklySummary />
       </div>
       <div className="finance-list-section">
         <ExpenditureList />

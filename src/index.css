@@ -90,6 +90,22 @@ select {
   border-radius: 7px;
 }
 
+table {
+  border-collapse: collapse;
+}
+
+td {
+  text-align: center;
+}
+
+th, td {
+  padding: 15px 10px;
+  border: 1px solid #e9e9e96e;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

@@ -24,17 +24,17 @@ export default function DisIncomeBudget() {
     }
   }
   
-    // 4. Handle edit s
-      const handleEdit = (item) => {
-        setModalContent(
-          <EditDisBudgetForm
-            item={item}
-            onClose={() => setShowModal(false)}
-            onUpdate={fetchDisBudget}
-          />
-        )
-        setShowModal(true)
-      }
+  // 4. Handle edit s
+    const handleEdit = (item) => {
+      setModalContent(
+        <EditDisBudgetForm
+          item={item}
+          onClose={() => setShowModal(false)}
+          onUpdate={fetchDisBudget}
+        />
+      )
+      setShowModal(true)
+    }
 
   // Load incomes on mount or when user is set
   useEffect(() => {
