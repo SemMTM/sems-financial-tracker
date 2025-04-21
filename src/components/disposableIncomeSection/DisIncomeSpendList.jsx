@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import DisSpendForm from './DisSpendForm'
@@ -8,21 +9,29 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function DisSpendList() {
   const { user } = useAuth()
-  const [disSpend, setDisSpend] = useState([])
-  const [error, setError] = useState('')
+  const queryClient = useQueryClient();
+
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
   const { notifyChange } = useFinancialData();
 
+  const {
+    data: disSpend = [],
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['disSpend'],
+    queryFn: async () => {
+      const res = await api.get('/disposable-spending/');
+      return res.data;
+    },
+    enabled: !!user,
+  });
+
   // Fetch incomes from the backend
-  const fetchDisSpend = async () => {
-    try {
-      const res = await api.get('/disposable-spending/')
-      setDisSpend(res.data)
-      notifyChange()
-    } catch (err) {
-      setError('Failed to load incomes')
-    }
+  const fetchDisSpend = () => {
+    queryClient.invalidateQueries({ queryKey: ['disSpend'] })
+    notifyChange()
   }
 
   // Handle add new expenditure
@@ -50,13 +59,9 @@ export default function DisSpendList() {
         setShowModal(true)
       }
 
-  // Load incomes on mount or when user is set
-  useEffect(() => {
-    if (user) fetchDisSpend()
-  }, [user])
-
   if (!user) return <p>Please log in to view incomes.</p>
   if (error) return <p>{error}</p>
+  if (isLoading) return <p>Loading spending...</p>;
 
   return (
     <div className="list-section">
