@@ -1,0 +1,30 @@
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-grid > div {
+    text-align: center;
+}
+
+.cal-day {
+    border: 1px solid #e9e9e925;
+    height: 90.2px;
+}
+
+.cal-day-expen, .cal-day-income {
+    padding: 7px 0;
+}
+
+.cal-day-num {
+    padding-bottom: 4px;
+    font-size: 10px;
+}
+
+.cal-day-income {
+    padding-bottom: 14px;
+}
+
+.weekday-title-sec > div {
+    height: 22px;
+}

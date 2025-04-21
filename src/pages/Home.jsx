@@ -6,6 +6,7 @@ import DisIncomeBudget from '../components/disposableIncomeSection/DisIncomeBudg
 import DisIncomeSpendList from '../components/disposableIncomeSection/DisIncomeSpendList'
 import MonthlySummary from '../components/summaryViews/MonthlySummary'
 import WeeklySummary from '../components/summaryViews/WeeklySummary'
+import CalendarView from '../components/CalendarView'
 
 const Home = () => {
   const [viewMode, setViewMode] = useState('monthly');
@@ -14,6 +15,7 @@ const Home = () => {
     <div className="home-page"> 
       <SettingsDropdown />
       <div className="summary-section">
+      <CalendarView />
         {viewMode === 'monthly' ? (
           <MonthlySummary setViewMode={setViewMode} />
         ) : (
