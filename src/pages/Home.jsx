@@ -20,6 +20,7 @@ const Home = () => {
           <WeeklySummary setViewMode={setViewMode} />
         )}
       </div>
+      <button>Change to calendar view</button>
       <div className="finance-list-section">
         <ExpenditureList />
         <IncomeList />
