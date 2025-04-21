@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import api from '../../api/axiosDefaults'
+import { useQueryClient } from '@tanstack/react-query';
 
 const CurrencyModal = ({ onClose, setSuccess }) => {
   const [currency, setCurrency] = useState('')
   const [currencyId, setCurrencyId] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const queryClient = useQueryClient();
 
   const options = [
     ['USD', 'US Dollar $'],
@@ -41,10 +43,16 @@ const CurrencyModal = ({ onClose, setSuccess }) => {
     setSaving(true)
     try {
       await api.put(`/currency/${currencyId}/`, { currency })
+
+      queryClient.invalidateQueries({ queryKey: ['incomes'] });
+      queryClient.invalidateQueries({ queryKey: ['expenditures'] });
+      queryClient.invalidateQueries({ queryKey: ['disSpend'] });
+      queryClient.invalidateQueries({ queryKey: ['monthlySummary'] });
+      queryClient.invalidateQueries({ queryKey: ['weeklySummary'] });
+
       setSuccess('Currency updated successfully.')
       setError('')
       onClose()
-      window.location.reload()
     } catch (err) {
       console.error('Currency update error:', err)
       setError('Failed to update currency. Please try again.')

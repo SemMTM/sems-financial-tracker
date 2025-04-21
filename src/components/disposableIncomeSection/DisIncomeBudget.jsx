@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import EditDisBudgetForm from './EditDisBudgetForm'
@@ -8,41 +9,53 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function DisIncomeBudget() {
   const { user } = useAuth()
-  const [disBudget, setDisBudget] = useState([])
-  const [error, setError] = useState('')
+  const queryClient = useQueryClient();
+
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const { dataVersion } = useFinancialData();
+  const { dataVersion, notifyChange } = useFinancialData();
 
-  // Fetch incomes from the backend
-  const fetchDisBudget = async () => {
-    try {
-      const res = await api.get('/disposable-budget/')
-      setDisBudget(res.data)
-    } catch (err) {
-      setError('Failed to load budget')
-    }
+
+  const {
+    data: disBudget = [],
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['disBudget'],
+    queryFn: async () => {
+      const res = await api.get('/disposable-budget/');
+      return res.data;
+    },
+    enabled: !!user,
+  });
+
+  const fetchDisBudget = () => {
+    queryClient.invalidateQueries({ queryKey: ['disBudget'] })
   }
   
   // 4. Handle edit s
-    const handleEdit = (item) => {
-      setModalContent(
-        <EditDisBudgetForm
-          item={item}
-          onClose={() => setShowModal(false)}
-          onUpdate={fetchDisBudget}
-        />
-      )
-      setShowModal(true)
-    }
+  const handleEdit = (item) => {
+    setModalContent(
+      <EditDisBudgetForm
+        item={item}
+        onClose={() => setShowModal(false)}
+        onUpdate={() => {
+          fetchDisBudget();
+          notifyChange();
+        }}
+      />
+    )
+    setShowModal(true)
+  }
 
   // Load incomes on mount or when user is set
   useEffect(() => {
     if (user) fetchDisBudget()
-  }, [user, dataVersion])
+  }, [dataVersion])
 
   if (!user) return <p>Please log in to view budget.</p>
   if (error) return <p>{error}</p>
+  if (isLoading) return <p>Loading budget...</p>;
 
   return (
     <div className="list-section">

@@ -76,6 +76,13 @@ export default function MonthlySummary({ setViewMode }) {
           </li>
 
           <li className="list-item sum-li-item">
+            <span>Disposable budget spending</span> 
+            <span className="expenditure-summary">
+              -{monthlySummary.formatted_disposable_spending}
+            </span>
+          </li>
+
+          <li className="list-item sum-li-item">
             <strong><span>Total</span></strong> 
 
             {monthlySummary?.formatted_total && (
