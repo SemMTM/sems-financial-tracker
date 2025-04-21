@@ -5,7 +5,7 @@ import styles from '../../styles/MonthlySummary.module.css'
 import { useFinancialData } from '../../context/FinancialDataContext'
 
 
-export default function MonthlySummary() {
+export default function MonthlySummary({ setViewMode }) {
   const { user } = useAuth()
   const [monthlySummary, setSummary] = useState([])
   const { dataVersion } = useFinancialData();
@@ -33,7 +33,7 @@ export default function MonthlySummary() {
     <div className="summary-sec-inner">
       <div className="summary-title-sec">
         <h3 className="summary-title">Monthly Summary</h3>
-        <button>Weekly</button>
+        <button onClick={() => setViewMode('weekly')}>Weekly</button>
       </div>
 
       <div className={styles['monthly-summary-sec-inner']}>

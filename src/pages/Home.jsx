@@ -1,4 +1,4 @@
-import { React } from 'react'
+import { React, useState } from 'react'
 import ExpenditureList from '../components/expenditureSection/ExpenditureList'
 import SettingsDropdown from './SettingsDropdown'
 import IncomeList from '../components/incomeSection/IncomeList'
@@ -8,14 +8,17 @@ import MonthlySummary from '../components/summaryViews/MonthlySummary'
 import WeeklySummary from '../components/summaryViews/WeeklySummary'
 
 const Home = () => {
+  const [viewMode, setViewMode] = useState('monthly');
+
   return (
     <div className="home-page">
       <SettingsDropdown />
       <div className="summary-section">
-        <MonthlySummary />
-      </div>
-      <div className="summary-section">
-        <WeeklySummary />
+        {viewMode === 'monthly' ? (
+          <MonthlySummary setViewMode={setViewMode} />
+        ) : (
+          <WeeklySummary setViewMode={setViewMode} />
+        )}
       </div>
       <div className="finance-list-section">
         <ExpenditureList />
