@@ -42,7 +42,7 @@ export default function MonthlySummary({ setViewMode }) {
     <div className="summary-sec-inner">
       <div className="summary-title-sec">
         <h3 className="summary-title">Monthly Summary</h3>
-        <button onClick={() => setViewMode('weekly')}>Weekly</button>
+        <button onClick={() => setViewMode('weekly')}>Change to weekly</button>
       </div>
 
       <div className={styles['monthly-summary-sec-inner']}>
