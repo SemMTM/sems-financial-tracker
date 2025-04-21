@@ -5,6 +5,7 @@ import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import IncomeForm from './IncomeForm'
 import EditIncomeForm from './EditIncomeForm'
+import { useFinancialData } from '../../context/FinancialDataContext'
 
 
 export default function IncomeList() {
@@ -13,12 +14,12 @@ export default function IncomeList() {
 
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
+  const { notifyChange } = useFinancialData();
 
   // Fetch incomes from the backend
   const {
     data: incomes = [],
     isLoading,
-    isFetching,
     error
   } = useQuery({
     queryKey: ['incomes'],
@@ -31,6 +32,7 @@ export default function IncomeList() {
 
   const fetchIncomes = () => {
     queryClient.invalidateQueries({ queryKey: ['incomes'] });
+    notifyChange()
   };
 
   // Handle add new income
@@ -65,8 +67,6 @@ export default function IncomeList() {
   return (
     <div className="list-section">
       <h3>Monthly Income</h3>
-
-      {isFetching && <p className="subtle-loading">Checking for updates...</p>}
 
       {incomes.length === 0 ? (
         <p>No incomes for this month.</p>
