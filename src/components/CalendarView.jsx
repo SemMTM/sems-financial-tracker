@@ -50,7 +50,7 @@ export default function CalendarView() {
       {/* Weekday Header */}
       <div className={`${styles['calendar-grid']} ${styles['weekday-title-sec']}`}>
         {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
-          <div key={i} className={styles['cal-day']}>
+          <div key={i} className={styles['cal-day-title']}>
             <span>{day}</span>
           </div>
         ))}
