@@ -41,6 +41,12 @@ export default function CalendarView() {
   
     const merged = grid.map(cell => {
       if (cell.type !== 'day') return cell;
+
+      const localDate = cell.date;
+      localDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      const isPast = localDate < today;
   
       const iso = cell.date.toLocaleDateString('en-CA');
       const match = summary.find(item => item.date === iso);
@@ -50,12 +56,14 @@ export default function CalendarView() {
         income: match?.income,
         expenditure: match?.expenditure,
         symbol: match?.currency_symbol,
+        isPast,
       };
     });
   
     setCalendarData(merged);
   }, [summary]);
 
+  // Loading spinner
   if (loading) {
     return <div className='spinner'></div>
   }
@@ -83,6 +91,7 @@ export default function CalendarView() {
             className={`
               ${styles['cal-day']}
               ${cell.isToday ? styles['today'] : ''}
+              ${cell.isPast ? styles['past-day'] : ''}
             `}
             >
             {cell.type === 'day' ? (

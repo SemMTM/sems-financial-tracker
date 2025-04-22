@@ -19,6 +19,7 @@ const Home = () => {
       {summaryMode === 'calendar' ? (
         <div className="summary-section">
         <CalendarView />
+          <button onClick={() => setSummaryMode('summary')}>Change to summary view</button>
         </div>
       ) : (
         <div className="summary-section">
@@ -27,12 +28,8 @@ const Home = () => {
         ) : (
           <WeeklySummary setViewMode={setViewMode} />
         )}
+          <button onClick={() => setSummaryMode('calendar')}>Change to calendar view</button>
         </div>
-      )}
-      {summaryMode === 'calendar' ? (
-        <button onClick={() => setSummaryMode('summary')}>Change to summary view</button>
-      ) : (
-        <button onClick={() => setSummaryMode('calendar')}>Change to calendar view</button>
       )}
 
       <div className="finance-list-section">
