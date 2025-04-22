@@ -8,6 +8,7 @@ export default function CalendarView() {
   const [calendarData, setCalendarData] = useState([]);
   const [summary, setSummary] = useState([]);
 
+  // fetches calendar data from API
   useEffect(() => {
     const fetchSummary = async () => {
       try {
@@ -21,6 +22,7 @@ export default function CalendarView() {
     fetchSummary();
   }, []);
 
+  // Merges data into generated calendar grid
   useEffect(() => {
     const year = today.getFullYear();
     const month = today.getMonth();
@@ -34,8 +36,9 @@ export default function CalendarView() {
   
       return {
         ...cell,
-        income: match ? parseFloat(match.formatted_income.replace(/[^\d.-]/g, '')) : 0,
-        expenditure: match ? parseFloat(match.formatted_expenditure.replace(/[^\d.-]/g, '')) : 0,
+        income: match?.income,
+        expenditure: match?.expenditure,
+        symbol: match?.currency_symbol,
       };
     });
   
@@ -68,18 +71,18 @@ export default function CalendarView() {
                 <div className={styles['cal-day-num']}>
                   {cell.date.getDate()}
                 </div>
-                {cell.expenditure !== 0 ? (
+                {cell.expenditure !== '0.00' ? (
                   <div className={`${styles['cal-day-expen']} expenditure-summary`}>
-                    -£{cell.expenditure}
+                    {cell.symbol}{cell.expenditure}
                   </div>
                 ) : (
                   <div className={`${styles['cal-day-expen']} expenditure-summary`}>
                     
                   </div>
                 )}
-                {cell.income !== 0 ? (
+                {cell.income !== '0.00' ? (
                   <div className={`${styles['cal-day-income']} income-summary`}>
-                    +£{cell.income}
+                    {cell.symbol}{cell.income}
                   </div>
                 ) : (
                   <div className={`${styles['cal-day-income']} income-summary`}>
