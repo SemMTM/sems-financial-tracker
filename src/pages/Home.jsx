@@ -10,19 +10,31 @@ import CalendarView from '../components/CalendarView'
 
 const Home = () => {
   const [viewMode, setViewMode] = useState('monthly');
+  const [summaryMode, setSummaryMode] = useState('calendar');
 
   return (
     <div className="home-page"> 
       <SettingsDropdown />
-      <div className="summary-section">
-      <CalendarView />
+
+      {summaryMode === 'calendar' ? (
+        <div className="summary-section">
+        <CalendarView />
+        </div>
+      ) : (
+        <div className="summary-section">
         {viewMode === 'monthly' ? (
           <MonthlySummary setViewMode={setViewMode} />
         ) : (
           <WeeklySummary setViewMode={setViewMode} />
         )}
-      </div>
-      <button>Change to calendar view</button>
+        </div>
+      )}
+      {summaryMode === 'calendar' ? (
+        <button onClick={() => setSummaryMode('summary')}>Change to summary view</button>
+      ) : (
+        <button onClick={() => setSummaryMode('calendar')}>Change to calendar view</button>
+      )}
+
       <div className="finance-list-section">
         <ExpenditureList />
         <IncomeList />
