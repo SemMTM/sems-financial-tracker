@@ -14,7 +14,7 @@ export default function WeeklySummary({ setViewMode }) {
 
   const {
     data: weeklySummary = { weeks: [] },
-    isLoading,
+    loading,
     error
   } = useQuery({
     queryKey: ['weeklySummary'],
@@ -36,7 +36,9 @@ export default function WeeklySummary({ setViewMode }) {
 
   if (!user) return <p>Please log in to view summaries.</p>
   if (error) return <p>{error}</p>
-  if (isLoading) return <p>Loading summary...</p>;
+  if (loading) {
+    return <div className='spinner'></div>
+  }
 
   return (
     <div className="summary-sec-inner">

@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import api from '../api/axiosDefaults'
 import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
 import styles from "../styles/CalendarView.module.css";
+import { useFinancialData } from '../context/FinancialDataContext'
 
 export default function CalendarView() {
   const today = new Date();
   const [calendarData, setCalendarData] = useState([]);
   const [summary, setSummary] = useState([]);
+  const [loading, setLoading] = useState(true)
+  const { dataVersion } = useFinancialData();
 
   // fetches calendar data from API
   useEffect(() => {
@@ -16,11 +19,13 @@ export default function CalendarView() {
         setSummary(res.data);
       } catch (err) {
         console.error('Failed to load calendar summary', err);
+      } finally {
+        setLoading(false)
       }
     };
   
     fetchSummary();
-  }, []);
+  }, [dataVersion]);
 
   // Merges data into generated calendar grid
   useEffect(() => {
@@ -31,7 +36,7 @@ export default function CalendarView() {
     const merged = grid.map(cell => {
       if (cell.type !== 'day') return cell;
   
-      const iso = cell.date.toISOString().split('T')[0];
+      const iso = cell.date.toLocaleDateString('en-CA');
       const match = summary.find(item => item.date === iso);
   
       return {
@@ -44,6 +49,10 @@ export default function CalendarView() {
   
     setCalendarData(merged);
   }, [summary]);
+
+  if (loading) {
+    return <div className='spinner'></div>
+  }
 
   return (
     <div>
@@ -71,7 +80,7 @@ export default function CalendarView() {
                 <div className={styles['cal-day-num']}>
                   {cell.date.getDate()}
                 </div>
-                {cell.expenditure !== '0.00' ? (
+                {Number(cell.expenditure) > 0 ? (
                   <div className={`${styles['cal-day-expen']} expenditure-summary`}>
                     {cell.symbol}{cell.expenditure}
                   </div>

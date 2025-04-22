@@ -14,7 +14,7 @@ export default function MonthlySummary({ setViewMode }) {
 
   const {
     data: monthlySummary = [],
-    isLoading,
+    loading,
     error
   } = useQuery({
     queryKey: ['monthlySummary'],
@@ -36,7 +36,9 @@ export default function MonthlySummary({ setViewMode }) {
 
   if (!user) return <p>Please log in to view summary.</p>
   if (error) return <p>{error}</p>
-  if (isLoading) return <p>Loading summary...</p>;
+  if (loading) {
+    return <div className='spinner'></div>
+  }
 
   return (
     <div className="summary-sec-inner">
