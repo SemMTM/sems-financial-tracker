@@ -40,3 +40,10 @@
   height: 100%;
   width: 100%;
 }
+
+.today {
+  outline: 2px solid #2e89ff;
+  outline-offset: -2px;
+  background-color: rgba(46, 137, 255, 0.08);
+  border-radius: 4px;
+}

@@ -6,6 +6,8 @@ export function generateCalendarGrid(year, month) {
   const daysInMonth = endDate.getDate();
   const totalSlots = 35;
 
+  const today = new Date();
+
   const calendar = [];
 
   // Add leading blank cells
@@ -15,11 +17,16 @@ export function generateCalendarGrid(year, month) {
 
   // Add all days of the month
   for (let i = 1; i <= daysInMonth; i++) {
+    const currentDate = new Date(year, month, i);
     calendar.push({
       type: 'day',
       date: new Date(year, month, i),
       income: 300,
       expenditure: 120,
+      isToday:
+        currentDate.getDate() === today.getDate() &&
+        currentDate.getMonth() === today.getMonth() &&
+        currentDate.getFullYear() === today.getFullYear(),
     });
   }
 

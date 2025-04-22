@@ -27,7 +27,13 @@ export default function CalendarView() {
       {/* Calendar Body */}
       <div className={`${styles['calendar-grid']}`}>
         {calendarData.map((cell, index) => (
-          <div key={index} className={styles['cal-day']}>
+          <div
+            key={index}
+            className={`
+              ${styles['cal-day']}
+              ${cell.isToday ? styles['today'] : ''}
+            `}
+            >
             {cell.type === 'day' ? (
               <>
                 <div className={styles['cal-day-num']}>
