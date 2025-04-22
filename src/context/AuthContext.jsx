@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   if (isLoading && location.pathname !== '/signin') {
-    return <div>Loading...</div>
+    return <div className='spinner'></div>
   }
 
   return (
