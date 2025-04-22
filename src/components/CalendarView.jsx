@@ -1,17 +1,46 @@
 import { useState, useEffect } from 'react';
+import api from '../api/axiosDefaults'
 import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
 import styles from "../styles/CalendarView.module.css";
 
 export default function CalendarView() {
   const today = new Date();
   const [calendarData, setCalendarData] = useState([]);
+  const [summary, setSummary] = useState([]);
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        const res = await api.get('/calendar-summary/');
+        setSummary(res.data);
+      } catch (err) {
+        console.error('Failed to load calendar summary', err);
+      }
+    };
+  
+    fetchSummary();
+  }, []);
 
   useEffect(() => {
     const year = today.getFullYear();
-    const month = today.getMonth(); // 0-indexed
-    const data = generateCalendarGrid(year, month);
-    setCalendarData(data);
-  }, []);
+    const month = today.getMonth();
+    const grid = generateCalendarGrid(year, month);
+  
+    const merged = grid.map(cell => {
+      if (cell.type !== 'day') return cell;
+  
+      const iso = cell.date.toISOString().split('T')[0];
+      const match = summary.find(item => item.date === iso);
+  
+      return {
+        ...cell,
+        income: match ? parseFloat(match.formatted_income.replace(/[^\d.-]/g, '')) : 0,
+        expenditure: match ? parseFloat(match.formatted_expenditure.replace(/[^\d.-]/g, '')) : 0,
+      };
+    });
+  
+    setCalendarData(merged);
+  }, [summary]);
 
   return (
     <div>
@@ -39,12 +68,24 @@ export default function CalendarView() {
                 <div className={styles['cal-day-num']}>
                   {cell.date.getDate()}
                 </div>
-                <div className={`${styles['cal-day-expen']} expenditure-summary`}>
-                  -£{cell.expenditure}
-                </div>
-                <div className={styles['cal-day-income']}>
-                  +£{cell.income}
-                </div>
+                {cell.expenditure !== 0 ? (
+                  <div className={`${styles['cal-day-expen']} expenditure-summary`}>
+                    -£{cell.expenditure}
+                  </div>
+                ) : (
+                  <div className={`${styles['cal-day-expen']} expenditure-summary`}>
+                    
+                  </div>
+                )}
+                {cell.income !== 0 ? (
+                  <div className={`${styles['cal-day-income']} income-summary`}>
+                    +£{cell.income}
+                  </div>
+                ) : (
+                  <div className={`${styles['cal-day-income']} income-summary`}>
+                    
+                  </div>
+                )}
               </>
             ) : (
               <div className={styles['placeholder']}></div>
