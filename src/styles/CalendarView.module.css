@@ -55,3 +55,11 @@
   background-color: rgba(46, 137, 255, 0.08);
   border-radius: 4px;
 }
+
+.calendar-month-title {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
