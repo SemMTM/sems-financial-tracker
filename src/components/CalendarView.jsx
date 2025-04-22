@@ -1,203 +1,51 @@
-import styles from '../styles/CalendarView.module.css'
-
+import { useState, useEffect } from 'react';
+import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
+import styles from "../styles/CalendarView.module.css";
 
 export default function CalendarView() {
+  const today = new Date();
+  const [calendarData, setCalendarData] = useState([]);
 
+  useEffect(() => {
+    const year = today.getFullYear();
+    const month = today.getMonth(); // 0-indexed
+    const data = generateCalendarGrid(year, month);
+    setCalendarData(data);
+  }, []);
 
   return (
-    <div className="summary-sec-inner">
-        <div>
-            {/* Calendar Weekday titles */}
-            <div className={`${styles['calendar-grid']} 
-                ${styles['weekday-title-sec']}`}>
-                <div className={styles['cal-day']}>
-                    <span>M</span>
-                </div>
-                <div className={styles['cal-day']}>
-                    <span>T</span>
-                </div>
-                <div className={styles['cal-day']}>
-                    <span>W</span>
-                </div>
-                <div className={styles['cal-day']}>
-                    <span>T</span>
-                </div>
-                <div className={styles['cal-day']}>
-                    <span>F</span>
-                </div>
-                <div className={styles['cal-day']}>
-                    <span>S</span>
-                </div>
-                <div className={styles['cal-day']}>
-                    <span>S</span>
-                </div>
-            </div>
+    <div>
+      {/* Weekday Header */}
+      <div className={`${styles['calendar-grid']} ${styles['weekday-title-sec']}`}>
+        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
+          <div key={i} className={styles['cal-day']}>
+            <span>{day}</span>
+          </div>
+        ))}
+      </div>
 
-            {/* Week 1 */}
-            <div className={`${styles['calendar-grid']} 
-                ${styles['week-section']}`}>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        1
-                    </div>
-                    <div className={`${styles['cal-day-expen']} expenditure-summary`}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
+      {/* Calendar Body */}
+      <div className={`${styles['calendar-grid']}`}>
+        {calendarData.map((cell, index) => (
+          <div key={index} className={styles['cal-day']}>
+            {cell.type === 'day' ? (
+              <>
+                <div className={styles['cal-day-num']}>
+                  {cell.date.getDate()}
                 </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        2
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
+                <div className={`${styles['cal-day-expen']} expenditure-summary`}>
+                  -£{cell.expenditure}
                 </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        3
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
+                <div className={styles['cal-day-income']}>
+                  +£{cell.income}
                 </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        4
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        5
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        6
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        7
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-            </div>
-
-            {/* Week 2 */}
-            <div className={`${styles['calendar-grid']} 
-                ${styles['week-section']}`}>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        1
-                    </div>
-                    <div className={`${styles['cal-day-expen']} expenditure-summary`}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        2
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        3
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        4
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        5
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        6
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-                <div className={styles['cal-day']}>
-                    <div className={styles['cal-day-num']}>
-                        7
-                    </div>
-                    <div className={styles['cal-day-expen']}>
-                        -£120
-                    </div>
-                    <div className={styles['cal-day-income']}>
-                        +£300
-                    </div>
-                </div>
-            </div>
-        </div>
-      
+              </>
+            ) : (
+              <div className={styles['placeholder']}></div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
-  )
+  );
 }
