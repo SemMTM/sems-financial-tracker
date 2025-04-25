@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import api from '../api/axiosDefaults'
-// import useRefreshToken from '../hooks/useRefreshToken'
 import { jwtDecode } from 'jwt-decode'
 
 const AuthContext = createContext()
@@ -9,70 +8,88 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // 1. Store tokens in localStorage
+  // 1. Store tokens in localStorage + apply to Axios
   const setTokens = (access, refresh) => {
     localStorage.setItem('accessToken', access)
     localStorage.setItem('refreshToken', refresh)
     api.defaults.headers.common['Authorization'] = `Bearer ${access}`
   }
 
-  // 2. Remove tokens + auth header
+  // 2. Clear all token state
   const clearTokens = () => {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     delete api.defaults.headers.common['Authorization']
   }
 
-  // 3. Login
+  // 3. Login and store tokens
   const login = async (username, password) => {
-    const res = await api.post('/dj-rest-auth/login/', {
-      username,
-      password,
-    })
+    const res = await api.post('/api/token/', { username, password })
     const { access, refresh } = res.data
     setTokens(access, refresh)
     const userRes = await api.get('/dj-rest-auth/user/')
     setUser(userRes.data)
   }
 
-  // 4. Logout
+  // 4. Logout user and reset state
   const logout = async () => {
     clearTokens()
     setUser(null)
   }
 
-  // 5. Refresh token manually
+  // 5. Try to refresh access token
   const refreshAccessToken = async () => {
     try {
       const refresh = localStorage.getItem('refreshToken')
-      const res = await api.post('/dj-rest-auth/token/refresh/', { refresh })
+      const res = await api.post('/api/token/refresh/', { refresh })
       const { access } = res.data
       setTokens(access, refresh)
+      return access
     } catch (err) {
-      console.warn('Token refresh failed. Logging out...')
+      console.warn('Token refresh failed, logging out')
       logout()
+      return null
     }
   }
 
-  // 6. Check token validity on load
+  // 6. On load, restore session using valid access or refresh
   useEffect(() => {
     const loadUser = async () => {
       const access = localStorage.getItem('accessToken')
       const refresh = localStorage.getItem('refreshToken')
-      if (!access || !refresh) return setIsLoading(false)
+
+      if (!refresh) {
+        setIsLoading(false)
+        return
+      }
 
       try {
-        const { exp } = jwtDecode(access)
-        const now = Math.floor(Date.now() / 1000)
-        if (exp < now) {
-          await refreshAccessToken()
+        let finalAccess = access
+
+        // Case 1: Access exists and is still valid
+        if (access) {
+          const { exp } = jwtDecode(access)
+          const now = Math.floor(Date.now() / 1000)
+          if (exp > now) {
+            api.defaults.headers.common['Authorization'] = `Bearer ${access}`
+          } else {
+            // Access expired — try refreshing
+            finalAccess = await refreshAccessToken()
+          }
         } else {
-          api.defaults.headers.common['Authorization'] = `Bearer ${access}`
+          // No access token — try to refresh anyway
+          finalAccess = await refreshAccessToken()
         }
 
-        const res = await api.get('/dj-rest-auth/user/')
-        setUser(res.data)
+        // Now try to fetch the user if we have a valid token
+        if (finalAccess) {
+          const res = await api.get('/dj-rest-auth/user/')
+          setUser(res.data)
+        } else {
+          setUser(null)
+        }
       } catch (err) {
+        console.warn('Failed to restore user from token:', err)
         clearTokens()
         setUser(null)
       } finally {
@@ -84,7 +101,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   if (isLoading && location.pathname !== '/signin') {
-    return <div className='spinner'></div>
+    return <div className="spinner"></div>
   }
 
   return (
@@ -95,62 +112,3 @@ export const AuthProvider = ({ children }) => {
 }
 
 export const useAuth = () => useContext(AuthContext)
-
-/* JWT Cookie based AuthContext
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  // 2. Login using credentials — cookie is returned by backend
-  const login = async (username, password) => {
-    await api.post('/dj-rest-auth/login/', 
-      { username, password },
-      { withCredentials: true }
-    )
-    const res = await api.get('/dj-rest-auth/user/')
-    setUser(res.data)
-  }
-
-  // 3. Logout — backend clears the cookie
-  const logout = async () => {
-    try {
-      await api.post('/dj-rest-auth/logout/')
-    } catch (err) {
-      console.warn('Logout failed (possibly already expired)', err)
-    } finally {
-      setUser(null)
-    }
-  }
-
-  useRefreshToken(logout)
-
-  // 1. Try to fetch current user on load (uses cookies automatically)
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get('/dj-rest-auth/user/')
-        setUser(res.data)
-      } catch {
-        console.log('User not authenticated')
-        setUser(null)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchUser()
-  }, [])
-
-  if (isLoading && location.pathname !== '/signin') {
-    return <div className='spinner'></div>
-  }
-
-  return (
-    <AuthContext.Provider value={{ user, login, logout, setUser }}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
-
-export const useAuth = () => useContext(AuthContext)
-*/

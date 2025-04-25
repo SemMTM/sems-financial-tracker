@@ -4,10 +4,8 @@ import SignInForm from './pages/auth/SignInForm'
 import SignUpForm from './pages/auth/SignUpForm'
 import ProtectedRoute from './components/ProtectedRoute'
 import SettingsDropdown from '../src/pages/SettingsDropdown'
-import useRefreshToken from './hooks/useRefreshToken'
 
 function App() {
-  useRefreshToken()
   return (
     <Routes>
       <Route path="/signin" element={<SignInForm />} />
