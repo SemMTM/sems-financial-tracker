@@ -8,7 +8,6 @@ export default function EditIncomeForm(
     item.formatted_amount.replace(/[^0-9.]/g, "")
   );
   const [date, setDate] = useState(item.date.slice(0, 10));
-  const [repeated, setRepeated] = useState(item.repeated || "");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -19,7 +18,6 @@ export default function EditIncomeForm(
         title,
         amount,
         date,
-        repeated: repeated || null,
       });
       onUpdate();
       onClose();
@@ -83,18 +81,6 @@ export default function EditIncomeForm(
         onChange={(e) => setDate(e.target.value)}
         required
       />
-      </div>
-
-      <span className="input-title">
-        Repeat
-      </span>
-      <div className="form-input-con">
-      <select value={repeated} onChange={(e) => setRepeated(e.target.value)}>
-        <option value="NEVER">No Repeat</option>
-        <option value="DAILY">Daily</option>
-        <option value="WEEKLY">Weekly</option>
-        <option value="MONTHLY">Monthly</option>
-      </select>
       </div>
 
       <button type="submit">Save Changes</button>

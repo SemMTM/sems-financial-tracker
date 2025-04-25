@@ -10,7 +10,6 @@ export default function EditExpenditureForm(
   );
   const [type, setType] = useState(item.type);
   const [date, setDate] = useState(item.date.slice(0, 10));
-  const [repeated, setRepeated] = useState(item.repeated || "");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { notifyChange } = useFinancialData();
@@ -24,7 +23,6 @@ export default function EditExpenditureForm(
         amount,
         type,
         date,
-        repeated: repeated || null,
       });
       onUpdate(); // Refresh list
       notifyChange()
@@ -105,18 +103,6 @@ export default function EditExpenditureForm(
         onChange={(e) => setDate(e.target.value)}
         required
       />
-      </div>
-
-      <span className="input-title">
-        Repeat
-      </span>
-      <div className="form-input-con">
-      <select value={repeated} onChange={(e) => setRepeated(e.target.value)}>
-        <option value="NEVER">No Repeat</option>
-        <option value="DAILY">Daily</option>
-        <option value="WEEKLY">Weekly</option>
-        <option value="MONTHLY">Monthly</option>
-      </select>
       </div>
 
       <button type="submit" disabled={isSubmitting}>Save Changes</button>
