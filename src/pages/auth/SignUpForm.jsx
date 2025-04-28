@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import api from '../../api/axiosDefaults'
 import styles from '../../styles/SignInForm.module.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 export default function SignUpForm() {
   // Store form inputs
@@ -9,12 +10,18 @@ export default function SignUpForm() {
   const [password1, setPassword1] = useState('')
   const [password2, setPassword2] = useState('')
   const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
+  const [backendErrors, setBackendErrors] = useState([])
   const [success, setSuccess] = useState(false)
+
+  const navigate = useNavigate()
+  const { login } = useAuth()
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    setBackendErrors([])
+    setSuccess(false)
 
     // Basic client-side check
     if (password1 !== password2) {
@@ -31,13 +38,24 @@ export default function SignUpForm() {
         password2,
       })
 
-      // Handle successful signup (auto-login or show message)
-      console.log('User created:', response.data)
       setSuccess(true)
-      setError('')
+      setBackendErrors([])
+
+      await login(username, password1)
+      navigate('/')
+
     } catch (err) {
-      console.error('Signup error:', err.response?.data)
-      setError('Signup failed. Please check your input.')
+      const data = err.response?.data || {}
+      const collectedErrors = []
+
+      if (data.username) collectedErrors.push(...data.username)
+      if (data.email) collectedErrors.push(...data.email)
+      if (data.password1) collectedErrors.push(...data.password1)
+      if (data.password2) collectedErrors.push(...data.password2)
+      if (data.non_field_errors) collectedErrors.push(...data.non_field_errors)
+
+      setBackendErrors(collectedErrors.length ? collectedErrors : ['Signup failed. Please check your input.'])
+      setSuccess(false)
     }
   }
 
@@ -45,7 +63,7 @@ export default function SignUpForm() {
     <div className={styles['signin-container']} >
       <div className={styles['signin-form-outer']}>
         <form onSubmit={handleSubmit} className={styles['signin-form']}>
-          <h2>Sign Up</h2>
+          <h2>Sign Up</h2> 
 
           <input
             type="text"
@@ -83,9 +101,28 @@ export default function SignUpForm() {
             required
           />
 
+          <div className="form-input-con">
+            {/* Password Rules */}
+            <ul>
+              <li>At least 8 characters</li>
+              <li>Not too common or predictable</li>
+              <li>Not entirely numeric</li>
+              <li>Must match both password fields</li>
+            </ul>
+          </div>
+
           <button type="submit">Register</button>
 
-          {error && <p className="error">{error}</p>}
+          {/* Backend Validation Errors */}
+          {backendErrors.length > 0 && (
+            <div className="error">
+              <ul>
+                {backendErrors.map((msg, index) => (
+                  <li key={index}>{msg}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           {success && <p className="success">Account created! You can now sign in.</p>}
           
           <p className={styles.altlink}>Already have an account?
