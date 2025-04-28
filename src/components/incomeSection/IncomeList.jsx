@@ -19,6 +19,7 @@ export default function IncomeList() {
 
   const fetchIncomes = async () => {
     if (!user) return
+
     setError('')
 
     try {
@@ -65,9 +66,15 @@ export default function IncomeList() {
         setShowModal(true)
       }
 
-  if (!user) return <p>Please log in to view incomes.</p>;
-  if (isLoading) return <div className='spinner'></div>;
+  if (!user) return <p>Please log in to view incomes.</p>
   if (error) return <p>Failed to load incomes.</p>;
+  if (isLoading)
+    return (
+      <div className="list-section">
+        <h3>Monthly Expenditures</h3>
+        <div className='spinner'></div>;
+      </div>
+    )
 
   return (
     <div className="list-section">

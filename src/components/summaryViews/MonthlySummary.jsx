@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import styles from '../../styles/MonthlySummary.module.css'
 import { useFinancialData } from '../../context/FinancialDataContext'
@@ -8,31 +7,30 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function MonthlySummary({ setViewMode }) {
   const { user } = useAuth()
-  const queryClient = useQueryClient();
+  const [monthlySummary, setMonthlySummary] = useState([])
+  const [loading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
   const { dataVersion } = useFinancialData();
 
-  const {
-    data: monthlySummary = [],
-    loading,
-    error
-  } = useQuery({
-    queryKey: ['monthlySummary'],
-    queryFn: async () => {
-      const res = await api.get('/monthly-summary/');
-      return res.data;
-    },
-    enabled: !!user,
-  });
-
   const fetchSummary = async () => {
-    queryClient.invalidateQueries({ queryKey: ['monthlySummary'] })
+    if (!user) return
+    setError('')
+    try {
+      const res = await api.get('/monthly-summary/')
+      setMonthlySummary(res.data)
+    } catch (err) {
+      console.error('Failed to fetch monthly summary:', err)
+      setError('Failed to load monthly summary.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  // Load incomes on mount or when user is set
+  // Load summary on mount or when user is set
   useEffect(() => {
-    if (user) fetchSummary()
-  }, [dataVersion])
+     fetchSummary()
+  }, [user, dataVersion])
 
   if (!user) return <p>Please log in to view summary.</p>
   if (error) return <p>{error}</p>

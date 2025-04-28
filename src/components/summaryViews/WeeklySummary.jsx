@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import styles from '../../styles/WeeklySummary.module.css'
@@ -8,31 +7,30 @@ import styles from '../../styles/WeeklySummary.module.css'
 
 export default function WeeklySummary({ setViewMode }) {
   const { user } = useAuth()
-  const queryClient = useQueryClient();
-
   const { dataVersion } = useFinancialData();
+  const [weeklySummary, setWeeklySummary] = useState({ weeks: [] })
+  const [loading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const {
-    data: weeklySummary = { weeks: [] },
-    loading,
-    error
-  } = useQuery({
-    queryKey: ['weeklySummary'],
-    queryFn: async () => {
-      const res = await api.get('/weekly-summary/');
-      return res.data;
-    },
-    enabled: !!user,
-  });
 
   // Fetch incomes from the backend
-  const fetchSummary = () => {
-    queryClient.invalidateQueries({ queryKey: ['weeklySummary'] })
+  const fetchSummary = async () => {
+    if (!user) return
+    setError('')
+    try {
+      const res = await api.get('/weekly-summary/')
+      setWeeklySummary(res.data)
+    } catch (err) {
+      console.error('Failed to fetch incomes:', err)
+      setError('Failed to load incomes.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
-    if (user) fetchSummary()
-  }, [dataVersion])
+    fetchSummary()
+  }, [user, dataVersion])
 
   if (!user) return <p>Please log in to view summaries.</p>
   if (error) return <p>{error}</p>

@@ -75,7 +75,6 @@ export default function DisSpendList() {
         <div className='spinner'></div>;
       </div>
     ) 
-  
 
   return (
     <div className="list-section">
