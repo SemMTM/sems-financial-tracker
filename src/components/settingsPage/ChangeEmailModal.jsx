@@ -20,15 +20,15 @@ const ChangeEmailModal = ({ onClose, setSuccess }) => {
     setError('');
     
     try {
-      // 1. Send PATCH request to update email
-      const response = await api.put('/change-email', { email: email });
-      setUser(response.data)
+      await api.put('/change-email', { email: email });
       setSuccess('Email successfully changed!');
       onClose();
     } catch (err) {
       setError('Failed to change email. Please try again.');
       console.error(err)
     } finally {
+      const res = await api.get('/dj-rest-auth/user/')
+      setUser(res.data)
       setIsSubmitting(false);
     }
   };
