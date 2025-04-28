@@ -20,7 +20,6 @@ export default function ExpenditureList() {
   const fetchExpenditures = async () => {
     if (!user) return
 
-    setIsLoading(true)
     setError('')
 
     try {

@@ -19,8 +19,7 @@ export default function DisIncomeBudget() {
 
   const fetchDisBudget = async () => {
     if (!user) return
-
-    setIsLoading(true)
+    
     setError('')
 
     try {
@@ -55,7 +54,7 @@ export default function DisIncomeBudget() {
 
   if (!user) return <p>Please log in to view budget.</p>
   if (error) return <p>{error}</p>
-  if (isLoading) return <p>Loading budget...</p>;
+  if (isLoading) return <div className='spinner'></div>;
 
   return (
     <div className="list-section">

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import DisSpendForm from './DisSpendForm'
@@ -9,30 +8,34 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function DisSpendList() {
   const { user } = useAuth()
-  const queryClient = useQueryClient();
+  const [disSpend, setDisSpend] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
   const { notifyChange } = useFinancialData();
 
-  const {
-    data: disSpend = [],
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['disSpend', user?.id],
-    queryFn: async () => {
-      const res = await api.get('/disposable-spending/');
-      return res.data;
-    },
-    enabled: !!user,
-  });
+  const fetchDisSpend = async () => {
+    if (!user) return
+    
+    setError('')
 
-  // Fetch incomes from the backend
-  const fetchDisSpend = () => {
-    queryClient.invalidateQueries({ queryKey: ['disSpend', user?.id] })
-    notifyChange()
+    try {
+      const res = await api.get('/disposable-spending/')
+      setDisSpend(res.data)
+    } catch (err) {
+      console.error('Failed to fetch spending:', err)
+      setError('Failed to load spending.')
+    } finally {
+      setIsLoading(false)
+    }
   }
+
+  useEffect(() => {
+    fetchDisSpend()
+  }, [user])
+
 
   // Handle add new expenditure
     const handleAdd = () => {
@@ -40,6 +43,7 @@ export default function DisSpendList() {
         <DisSpendForm
           onAdd={() => {
             fetchDisSpend()
+            notifyChange()
             setShowModal(false)
           }}
         />
@@ -53,7 +57,10 @@ export default function DisSpendList() {
           <EditDisSpendForm
             item={item}
             onClose={() => setShowModal(false)}
-            onUpdate={fetchDisSpend}
+            onUpdate={() => {
+              fetchDisSpend()
+              notifyChange()
+            }}
           />
         )
         setShowModal(true)
@@ -61,7 +68,14 @@ export default function DisSpendList() {
 
   if (!user) return <p>Please log in to view incomes.</p>
   if (error) return <p>{error}</p>
-  if (isLoading) return <p>Loading spending...</p>;
+  if (isLoading) 
+    return (
+      <div className="list-section">
+        <h3>Disposable Income Spending</h3>
+        <div className='spinner'></div>;
+      </div>
+    ) 
+  
 
   return (
     <div className="list-section">

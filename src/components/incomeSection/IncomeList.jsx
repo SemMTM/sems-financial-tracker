@@ -19,8 +19,6 @@ export default function IncomeList() {
 
   const fetchIncomes = async () => {
     if (!user) return
-
-    setIsLoading(true)
     setError('')
 
     try {
