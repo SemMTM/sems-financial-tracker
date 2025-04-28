@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
 import IncomeForm from './IncomeForm'
@@ -10,30 +9,34 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function IncomeList() {
   const { user } = useAuth()
-  const queryClient = useQueryClient();
+  const [incomes, setIncomes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
   const { notifyChange } = useFinancialData();
 
-  // Fetch incomes from the backend
-  const {
-    data: incomes = [],
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['incomes', user?.id],
-    queryFn: async () => {
-      const res = await api.get('/income/');
-      return res.data;
-    },
-    enabled: !!user,
-  });
+  const fetchIncomes = async () => {
+    if (!user) return
 
-  const fetchIncomes = () => {
-    queryClient.invalidateQueries({ queryKey: ['incomes', user?.id] });
-    notifyChange()
-  };
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const res = await api.get('/income/')
+      setIncomes(res.data)
+    } catch (err) {
+      console.error('Failed to fetch incomes:', err)
+      setError('Failed to load incomes.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchIncomes()
+  }, [user])
 
   // Handle add new income
     const handleAdd = () => {
@@ -41,6 +44,7 @@ export default function IncomeList() {
         <IncomeForm
           onAdd={() => {
             fetchIncomes()
+            notifyChange()
             setShowModal(false)
           }}
         />
@@ -54,7 +58,10 @@ export default function IncomeList() {
           <EditIncomeForm
             item={item}
             onClose={() => setShowModal(false)}
-            onUpdate={fetchIncomes}
+            onUpdate={() => {
+              fetchIncomes()
+              notifyChange()
+            }}
           />
         )
         setShowModal(true)
