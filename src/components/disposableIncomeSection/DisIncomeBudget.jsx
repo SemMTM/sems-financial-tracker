@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults' 
 import Modal from '../Modal'
 import EditDisBudgetForm from './EditDisBudgetForm'
@@ -9,29 +8,35 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function DisIncomeBudget() {
   const { user } = useAuth()
-  const queryClient = useQueryClient();
+  const [disBudget, setDisBudget] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
   const { dataVersion, notifyChange } = useFinancialData();
 
 
-  const {
-    data: disBudget = [],
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['disBudget', user?.id],
-    queryFn: async () => {
-      const res = await api.get('/disposable-budget/');
-      return res.data;
-    },
-    enabled: !!user,
-  });
+  const fetchDisBudget = async () => {
+    if (!user) return
 
-  const fetchDisBudget = () => {
-    queryClient.invalidateQueries({ queryKey: ['disBudget', user?.id] })
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const res = await api.get('/disposable-budget/')
+      setDisBudget(res.data)
+    } catch (err) {
+      console.error('Failed to fetch budget:', err)
+      setError('Failed to load budget.')
+    } finally {
+      setIsLoading(false)
+    }
   }
+
+  useEffect(() => {
+    fetchDisBudget()
+  }, [user, dataVersion])
   
   // 4. Handle edit s
   const handleEdit = (item) => {
@@ -47,11 +52,6 @@ export default function DisIncomeBudget() {
     )
     setShowModal(true)
   }
-
-  // Load incomes on mount or when user is set
-  useEffect(() => {
-    if (user) fetchDisBudget()
-  }, [dataVersion])
 
   if (!user) return <p>Please log in to view budget.</p>
   if (error) return <p>{error}</p>

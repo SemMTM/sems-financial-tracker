@@ -68,7 +68,7 @@ export default function IncomeList() {
       }
 
   if (!user) return <p>Please log in to view incomes.</p>;
-  if (isLoading) return <p>Loading incomes...</p>;
+  if (isLoading) return <div className='spinner'></div>;
   if (error) return <p>Failed to load incomes.</p>;
 
   return (

@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axiosDefaults'
 import ExpenditureForm from './ExpenditureForm'
 import Modal from '../Modal'
@@ -9,30 +8,35 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 
 export default function ExpenditureList() {
   const { user } = useAuth()
-  const queryClient = useQueryClient();
+  const [expenditures, setExpenditures] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
   const { notifyChange } = useFinancialData();
 
-  const {
-    data: expenditures = [],
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['expenditures', user?.id],
-    queryFn: async () => {
-      const res = await api.get('/expenditures/');
-      return res.data;
-    },
-    enabled: !!user,
-  });
-
   // Fetch expenditures from the backend
-  const fetchExpenditures = () => {
-    queryClient.invalidateQueries({ queryKey: ['expenditures', user?.id] })
-    notifyChange()
+  const fetchExpenditures = async () => {
+    if (!user) return
+
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const res = await api.get('/expenditures/')
+      setExpenditures(res.data)
+    } catch (err) {
+      console.error('Failed to fetch expenditures:', err)
+      setError('Failed to load expenditures.')
+    } finally {
+      setIsLoading(false)
+    }
   }
+
+  useEffect(() => {
+      fetchExpenditures()
+    }, [user])
 
   // Handle add new expenditure
   const handleAdd = () => {
@@ -41,6 +45,7 @@ export default function ExpenditureList() {
         onAdd={() => {
           fetchExpenditures()
           setShowModal(false)
+          notifyChange()
         }}
       />
     )
@@ -53,7 +58,10 @@ export default function ExpenditureList() {
       <EditExpenditureForm
         item={item}
         onClose={() => setShowModal(false)}
-        onUpdate={fetchExpenditures}
+        onUpdate={() => {
+          fetchExpenditures()
+          notifyChange()
+        }}
       />
     )
     setShowModal(true)
@@ -61,7 +69,7 @@ export default function ExpenditureList() {
 
   if (!user) return <p>Please log in to view expenditures.</p>
   if (error) return <p>{error}</p>
-  if (isLoading) return <p>Loading expenditures...</p>;
+  if (isLoading) return <div className='spinner'></div>;
 
   return (
     <div className="list-section">
