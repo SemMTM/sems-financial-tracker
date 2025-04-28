@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import api from '../../api/axiosDefaults'
-import styles from '../../styles/SignUpForm.module.css'
+import styles from '../../styles/SignInForm.module.css'
+import { Link } from 'react-router-dom'
 
 export default function SignUpForm() {
   // Store form inputs
@@ -41,47 +42,53 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className={styles.signupContainer} >
-      <form onSubmit={handleSubmit} className="signup-form">
-        <h2>Sign Up</h2>
+    <div className={styles['signin-container']} >
+      <div className={styles['signin-form-outer']}>
+        <form onSubmit={handleSubmit} className={styles['signin-form']}>
+          <h2>Sign Up</h2>
 
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
 
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password1}
-          onChange={(e) => setPassword1(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password1}
+            onChange={(e) => setPassword1(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Confirm password"
-          value={password2}
-          onChange={(e) => setPassword2(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Confirm password"
+            value={password2}
+            onChange={(e) => setPassword2(e.target.value)}
+            required
+          />
 
-        <button type="submit">Register</button>
+          <button type="submit">Register</button>
 
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">Account created! You can now sign in.</p>}
-      </form>
+          {error && <p className="error">{error}</p>}
+          {success && <p className="success">Account created! You can now sign in.</p>}
+          
+          <p className={styles.altlink}>Already have an account?
+            <Link to="/signin"> Sign-in</Link>
+          </p>
+        </form>
+      </div>
     </div>
   )
 }

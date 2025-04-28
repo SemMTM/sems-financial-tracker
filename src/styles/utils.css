@@ -2,6 +2,19 @@
   display: flex;
 }
 
+/* Messages */
+.success {
+  color: #28a745;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 /* Btn styles */
 .add-btn {
   margin-top: 15px;
