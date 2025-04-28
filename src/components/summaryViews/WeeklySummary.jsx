@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import styles from '../../styles/WeeklySummary.module.css'
+import getMonthWeeklyRanges from '../../utils/getFixedWeeklyRanges'
 
 
 export default function WeeklySummary({ setViewMode }) {
@@ -12,6 +13,10 @@ export default function WeeklySummary({ setViewMode }) {
   const [loading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const weeklyRanges = useMemo(() => getMonthWeeklyRanges(today), [today]);
 
   // Fetch incomes from the backend
   const fetchSummary = async () => {
@@ -58,9 +63,14 @@ export default function WeeklySummary({ setViewMode }) {
           <tbody>
           {[0, 1, 2, 3, 4].map((i) => {
             const week = weeklySummary.weeks[i];
+            const range = weeklyRanges[i];
             return (
               <tr key={i}>
-                <td>{i + 1}</td>
+                <td>
+                {range
+                  ? `${today.toLocaleString('en-GB', { month: 'short' })} ${range.start} - ${range.end}`
+                  : `Week ${i + 1}`}
+                </td>
                 <td className="income-summary">+{week?.income || 'N/A'}</td>
                 <td className="expenditure-summary">-{week?.cost || 'N/A'}</td>
                 <td className={week?.summary?.includes('-') ? 'expenditure-summary' : 'income-summary'

@@ -9,7 +9,6 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 export default function DisSpendList() {
   const { user } = useAuth()
   const [disSpend, setDisSpend] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
   const [showModal, setShowModal] = useState(false)
@@ -27,8 +26,6 @@ export default function DisSpendList() {
     } catch (err) {
       console.error('Failed to fetch spending:', err)
       setError('Failed to load spending.')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -68,13 +65,6 @@ export default function DisSpendList() {
 
   if (!user) return <p>Please log in to view incomes.</p>
   if (error) return <p>{error}</p>
-  if (isLoading) 
-    return (
-      <div className="list-section">
-        <h3>Disposable Income Spending</h3>
-        <div className='spinner'></div>;
-      </div>
-    ) 
 
   return (
     <div className="list-section">
