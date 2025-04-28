@@ -54,31 +54,33 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
         return (
         <div className="popup">
             <div className="popup-content">
-            <h3>Change Username</h3>
+              <h3>Change Username</h3>
 
-            <div className="form-input-con">
-            <p>Current username: <strong>{user?.username}</strong></p>
-            </div>
+              <div className="form-input-con">
+                <p>Current username: <strong>{user?.username}</strong></p>
+              </div>
 
-            <div className="form-input-con">
-              <input
+              <div className="form-input-con">
+                <label htmlFor="new-username" className="hidden">new username</label>
+                <input
                   type="text"
+                  id="new-username"
                   placeholder="New username"
                   value={newUsername}
                   onChange={(e) => setNewUsername(e.target.value)}
-              />
-            </div>
+                />
+              </div>
 
-            {validationError && (
-            <p style={{ color: 'red' }}>{validationError}</p>
-            )}
+              {validationError && (
+              <p style={{ color: 'red' }}>{validationError}</p>
+              )}
 
-            <div>
-                <button onClick={handleChange} disabled={!newUsername.trim()}
-                >Save</button>
-                <button onClick={onClose} style={{ marginLeft: '10px' }}>
-                  Cancel</button>
-            </div>
+              <div>
+                  <button onClick={handleChange} disabled={!newUsername.trim()}
+                  >Save</button>
+                  <button onClick={onClose} style={{ marginLeft: '10px' }}>
+                    Cancel</button>
+              </div>
             </div>
         </div>
         )

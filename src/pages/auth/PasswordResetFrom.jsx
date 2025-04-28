@@ -33,7 +33,7 @@ const ResetPasswordForm = () => {
           {message && <p>{message}</p>}
         </form>
 
-        <p>
+        <p className={styles.altlink}>
           Back to <Link to="/signin"> Sign-in</Link>
         </p>
 

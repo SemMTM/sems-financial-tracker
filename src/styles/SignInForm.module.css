@@ -51,6 +51,10 @@
   margin-bottom: 15px;
 }
 
+.forgot-pass-btn:hover {
+  background-color: #5b6879;
+}
+
 .signin-form button:hover {
   background-color: #0056b3;
 }
@@ -63,4 +67,12 @@
 
 .altlink {
   opacity: 0.8;
+  align-self: flex-start;
+}
+
+.note {
+  opacity: 0.8;
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }

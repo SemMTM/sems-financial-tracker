@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import ChangePasswordModal from '../components/settingsPage/ChangePasswordModal'
 import ChangeUsernameModal from '../components/settingsPage/ChangeUsernameModal'
 import CurrencySelector from '../components/settingsPage/CurrencySelector'
+import ChangeEmailModal from '../components/settingsPage/ChangeEmailModal'
 import Modal from '../components/Modal'
 import styles from '../styles/SettingsDropdown.module.css'
 
@@ -72,6 +73,13 @@ export default function SettingsDropdown() {
             <button className={styles['settings-btn']}
               onClick={() => openModal(ChangeUsernameModal)}>
               Change Username
+            </button>
+          </div>
+
+          <div>
+          <button className={styles['settings-btn']}
+              onClick={() => openModal(ChangeEmailModal)}>
+              Change Email Address
             </button>
           </div>
   

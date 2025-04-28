@@ -55,6 +55,10 @@ export default function SignUpForm() {
             required
           />
 
+          <p className={styles.note}>
+            Email address is just for password reset and is 
+            not required to create an account.
+          </p>
           <input
             type="email"
             placeholder="Email address"

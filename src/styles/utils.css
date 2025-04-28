@@ -2,6 +2,10 @@
   display: flex;
 }
 
+.hidden {
+  display: none;
+}
+
 /* Messages */
 .success {
   color: #28a745;
