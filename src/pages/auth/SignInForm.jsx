@@ -28,8 +28,8 @@ export default function SignInForm() {
   }
 
   return (
-    <div className="signin-container">
-      <form onSubmit={handleSubmit} className="signin-form">
+    <div className={styles['signin-container']}>
+      <form onSubmit={handleSubmit} className={styles['signin-form']}>
         <h2>Sign In</h2>
 
         <input
@@ -52,7 +52,7 @@ export default function SignInForm() {
           {loading ? 'Signing in...' : 'Sign In'}
         </button>
 
-        {error && <p className="error">{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
       </form>
     </div>
   )

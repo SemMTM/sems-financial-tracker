@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axiosDefaults'
 import { jwtDecode } from 'jwt-decode'
 
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     clearTokens()
     setUser(null)
+    navigate('/signin');
   }
 
   // 5. Try to refresh access token
