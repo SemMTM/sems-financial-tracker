@@ -20,7 +20,7 @@ export default function ExpenditureList() {
     isLoading,
     error
   } = useQuery({
-    queryKey: ['expenditures'],
+    queryKey: ['expenditures', user?.id],
     queryFn: async () => {
       const res = await api.get('/expenditures/');
       return res.data;
@@ -30,7 +30,7 @@ export default function ExpenditureList() {
 
   // Fetch expenditures from the backend
   const fetchExpenditures = () => {
-    queryClient.invalidateQueries({ queryKey: ['expenditures'] })
+    queryClient.invalidateQueries({ queryKey: ['expenditures', user?.id] })
     notifyChange()
   }
 

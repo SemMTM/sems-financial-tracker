@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import api from '../../api/axiosDefaults'
+import api from '../../api/axiosDefaults' 
 import Modal from '../Modal'
 import EditDisBudgetForm from './EditDisBudgetForm'
 import styles from '../../styles/DisIncomeBudget.module.css'
@@ -21,7 +21,7 @@ export default function DisIncomeBudget() {
     isLoading,
     error
   } = useQuery({
-    queryKey: ['disBudget'],
+    queryKey: ['disBudget', user?.id],
     queryFn: async () => {
       const res = await api.get('/disposable-budget/');
       return res.data;
@@ -30,7 +30,7 @@ export default function DisIncomeBudget() {
   });
 
   const fetchDisBudget = () => {
-    queryClient.invalidateQueries({ queryKey: ['disBudget'] })
+    queryClient.invalidateQueries({ queryKey: ['disBudget', user?.id] })
   }
   
   // 4. Handle edit s

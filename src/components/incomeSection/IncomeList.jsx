@@ -22,7 +22,7 @@ export default function IncomeList() {
     isLoading,
     error
   } = useQuery({
-    queryKey: ['incomes'],
+    queryKey: ['incomes', user?.id],
     queryFn: async () => {
       const res = await api.get('/income/');
       return res.data;
@@ -31,7 +31,7 @@ export default function IncomeList() {
   });
 
   const fetchIncomes = () => {
-    queryClient.invalidateQueries({ queryKey: ['incomes'] });
+    queryClient.invalidateQueries({ queryKey: ['incomes', user?.id] });
     notifyChange()
   };
 

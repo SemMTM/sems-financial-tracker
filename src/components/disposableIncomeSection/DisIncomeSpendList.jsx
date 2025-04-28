@@ -20,7 +20,7 @@ export default function DisSpendList() {
     isLoading,
     error
   } = useQuery({
-    queryKey: ['disSpend'],
+    queryKey: ['disSpend', user?.id],
     queryFn: async () => {
       const res = await api.get('/disposable-spending/');
       return res.data;
@@ -30,7 +30,7 @@ export default function DisSpendList() {
 
   // Fetch incomes from the backend
   const fetchDisSpend = () => {
-    queryClient.invalidateQueries({ queryKey: ['disSpend'] })
+    queryClient.invalidateQueries({ queryKey: ['disSpend', user?.id] })
     notifyChange()
   }
 
