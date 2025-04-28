@@ -6,6 +6,10 @@
   display: none;
 }
 
+.greyed-out {
+  opacity: 0.65;
+}
+
 /* Messages */
 .success {
   color: #28a745;

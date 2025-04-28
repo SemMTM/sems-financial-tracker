@@ -16,6 +16,8 @@ export default function ExpenditureList() {
   const [modalContent, setModalContent] = useState(null)
   const { notifyChange } = useFinancialData();
 
+  const today = new Date();
+
   // Fetch expenditures from the backend
   const fetchExpenditures = async () => {
     if (!user) return
@@ -108,7 +110,13 @@ export default function ExpenditureList() {
               </span>
             </div>
             {expenditures.map((item) => (
-              <li key={item.id} className="list-item expenditure-item">
+              <li 
+                key={item.id} 
+                className={`list-item expenditure-item ${
+                  new Date(item.date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0) 
+                      ? 'greyed-out' 
+                      : ''
+                }`}>
 
                 <span 
                   className="list-item-section">

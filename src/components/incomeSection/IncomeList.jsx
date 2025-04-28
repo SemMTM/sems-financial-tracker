@@ -19,9 +19,7 @@ export default function IncomeList() {
 
   const fetchIncomes = async () => {
     if (!user) return
-
     setError('')
-
     try {
       const res = await api.get('/income/')
       setIncomes(res.data)
@@ -107,7 +105,13 @@ export default function IncomeList() {
               </span>
             </div>
             {incomes.map((item) => (
-              <li key={item.id} className="list-item income-item">
+              <li 
+                key={item.id} 
+                className={`list-item income-item ${
+                  new Date(item.date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0) 
+                      ? 'greyed-out' 
+                      : ''
+                }`}>
 
                 <span 
                   className="list-item-section">
