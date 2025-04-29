@@ -5,23 +5,26 @@ import Modal from '../Modal'
 import IncomeForm from './IncomeForm'
 import EditIncomeForm from './EditIncomeForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
+import { useCalendar } from '../../context/CalendarContext';
 
 
 export default function IncomeList() {
   const { user } = useAuth()
+  const { notifyChange } = useFinancialData();
+  const { getSelectedMonthParam, selectedDate } = useCalendar();
+
   const [incomes, setIncomes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
-
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const { notifyChange } = useFinancialData();
+
 
   const fetchIncomes = async () => {
     if (!user) return
     setError('')
     try {
-      const res = await api.get('/income/')
+      const res = await api.get(`/income/?month=${getSelectedMonthParam()}`)
       setIncomes(res.data)
     } catch (err) {
       console.error('Failed to fetch incomes:', err)
@@ -33,7 +36,7 @@ export default function IncomeList() {
 
   useEffect(() => {
     fetchIncomes()
-  }, [user])
+  }, [user, selectedDate])
 
   // Handle add new income
     const handleAdd = () => {
