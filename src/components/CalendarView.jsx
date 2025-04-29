@@ -6,10 +6,6 @@ import { useFinancialData } from '../context/FinancialDataContext'
 
 export default function CalendarView() {
   const today = new Date();
-  const currentMonthTitle = today.toLocaleString('default', {
-    month: 'long',
-    year: 'numeric',
-  });
 
   const [calendarData, setCalendarData] = useState([]);
   const [summary, setSummary] = useState([]);
@@ -70,10 +66,6 @@ export default function CalendarView() {
 
   return (
     <div>
-      <h3 className={styles['calendar-month-title']}>
-        {currentMonthTitle}
-      </h3>
-
       {/* Weekday Header */}
       <div className={`${styles['calendar-grid']} ${styles['weekday-title-sec']}`}>
         {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (

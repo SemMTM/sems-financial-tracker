@@ -7,14 +7,28 @@ import DisIncomeSpendList from '../components/disposableIncomeSection/DisIncomeS
 import MonthlySummary from '../components/summaryViews/MonthlySummary'
 import WeeklySummary from '../components/summaryViews/WeeklySummary'
 import CalendarView from '../components/CalendarView'
+import { useCalendar } from '../context/CalendarContext';
 
 const Home = () => {
   const [viewMode, setViewMode] = useState('monthly');
   const [summaryMode, setSummaryMode] = useState('calendar');
+  const { selectedDate, goToPreviousMonth, goToNextMonth } = useCalendar();
 
   return (
     <div className="home-page"> 
       <SettingsDropdown />
+
+      {/* Month Switcher Section */}
+      <div className="month-switcher">
+        <button onClick={goToPreviousMonth}>←</button>
+
+        <span className="current-month">
+          {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+          {/* Example: "April 2025" */}
+        </span>
+
+        <button onClick={goToNextMonth}>→</button>
+      </div>
 
       {summaryMode === 'calendar' ? (
         <div className="summary-section">

@@ -5,6 +5,7 @@ import SignUpForm from './pages/auth/SignUpForm'
 import PasswordResetForm from './pages/auth/PasswordResetFrom'
 import ProtectedRoute from './components/ProtectedRoute'
 import SettingsDropdown from '../src/pages/SettingsDropdown'
+import { CalendarProvider } from '../src/context/CalendarContext';
 
 function App() {
   return (
@@ -18,7 +19,9 @@ function App() {
         path="/"
         element={
           <ProtectedRoute>
-            <Home />
+            <CalendarProvider>  
+              <Home />
+            </CalendarProvider>  
           </ProtectedRoute>
         }
       />

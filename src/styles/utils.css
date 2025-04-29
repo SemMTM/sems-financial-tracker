@@ -158,3 +158,17 @@ background-color: rgba(255, 0, 0, 0.5);
     transform: rotate(360deg);
   }
 }
+
+/* Month Switcher */
+.month-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 20px;
+}
+
+.current-month {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
