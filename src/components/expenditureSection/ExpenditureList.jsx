@@ -5,18 +5,20 @@ import ExpenditureForm from './ExpenditureForm'
 import Modal from '../Modal'
 import EditExpenditureForm from './EditExpenditureForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
+import { useCalendar } from '../../context/CalendarContext';
+
 
 export default function ExpenditureList() {
   const { user } = useAuth()
+  const { notifyChange } = useFinancialData();
+  const { getSelectedMonthParam, selectedDate } = useCalendar();
+
   const [expenditures, setExpenditures] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
-
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const { notifyChange } = useFinancialData();
 
-  const today = new Date();
 
   // Fetch expenditures from the backend
   const fetchExpenditures = async () => {
@@ -25,7 +27,7 @@ export default function ExpenditureList() {
     setError('')
 
     try {
-      const res = await api.get('/expenditures/')
+      const res = await api.get(`/expenditures/?month=${getSelectedMonthParam()}`)
       setExpenditures(res.data)
     } catch (err) {
       console.error('Failed to fetch expenditures:', err)
@@ -37,7 +39,7 @@ export default function ExpenditureList() {
 
   useEffect(() => {
       fetchExpenditures()
-    }, [user])
+    }, [user, selectedDate])
 
   // Handle add new expenditure
   const handleAdd = () => {

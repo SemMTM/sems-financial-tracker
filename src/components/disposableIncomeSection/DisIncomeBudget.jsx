@@ -5,16 +5,19 @@ import Modal from '../Modal'
 import EditDisBudgetForm from './EditDisBudgetForm'
 import styles from '../../styles/DisIncomeBudget.module.css'
 import { useFinancialData } from '../../context/FinancialDataContext'
+import { useCalendar } from '../../context/CalendarContext';
+
 
 export default function DisIncomeBudget() {
   const { user } = useAuth()
+  const { getSelectedMonthParam, selectedDate } = useCalendar();
+  const { dataVersion } = useFinancialData();
+
   const [disBudget, setDisBudget] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
-
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const { dataVersion, notifyChange } = useFinancialData();
 
 
   const fetchDisBudget = async () => {
@@ -23,7 +26,8 @@ export default function DisIncomeBudget() {
     setError('')
 
     try {
-      const res = await api.get('/disposable-budget/')
+      const res = await api.get(
+        `/disposable-budget/?month=${getSelectedMonthParam()}`)
       setDisBudget(res.data)
     } catch (err) {
       console.error('Failed to fetch budget:', err)
@@ -35,7 +39,7 @@ export default function DisIncomeBudget() {
 
   useEffect(() => {
     fetchDisBudget()
-  }, [user, dataVersion])
+  }, [user, dataVersion, selectedDate])
   
   // 4. Handle edit s
   const handleEdit = (item) => {

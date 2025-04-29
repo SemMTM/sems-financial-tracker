@@ -5,15 +5,18 @@ import Modal from '../Modal'
 import DisSpendForm from './DisSpendForm'
 import EditDisSpendForm from './EditDisSpendForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
+import { useCalendar } from '../../context/CalendarContext';
+
 
 export default function DisSpendList() {
   const { user } = useAuth()
+  const { notifyChange } = useFinancialData();
+  const { getSelectedMonthParam, selectedDate } = useCalendar();
+
   const [disSpend, setDisSpend] = useState([])
   const [error, setError] = useState('')
-
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const { notifyChange } = useFinancialData();
 
   const fetchDisSpend = async () => {
     if (!user) return
@@ -21,7 +24,7 @@ export default function DisSpendList() {
     setError('')
 
     try {
-      const res = await api.get('/disposable-spending/')
+      const res = await api.get(`/disposable-spending/?month=${getSelectedMonthParam()}`)
       setDisSpend(res.data)
     } catch (err) {
       console.error('Failed to fetch spending:', err)
@@ -31,7 +34,7 @@ export default function DisSpendList() {
 
   useEffect(() => {
     fetchDisSpend()
-  }, [user])
+  }, [user, selectedDate])
 
 
   // Handle add new expenditure
