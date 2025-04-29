@@ -3,21 +3,23 @@ import api from '../api/axiosDefaults'
 import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
 import styles from "../styles/CalendarView.module.css";
 import { useFinancialData } from '../context/FinancialDataContext'
+import { useCalendar } from '../context/CalendarContext';
 
 export default function CalendarView() {
   const today = new Date();
+  const { getSelectedMonthParam, selectedDate } = useCalendar();
+  const { dataVersion } = useFinancialData();
 
   const [calendarData, setCalendarData] = useState([]);
   const [summary, setSummary] = useState([]);
   const [loading, setLoading] = useState(true)
 
-  const { dataVersion } = useFinancialData();
-
   // fetches calendar data from API
   useEffect(() => {
     const fetchSummary = async () => {
+      setLoading(true);
       try {
-        const res = await api.get('/calendar-summary/');
+        const res = await api.get(`/calendar-summary/?month=${getSelectedMonthParam()}`);
         setSummary(res.data);
       } catch (err) {
         console.error('Failed to load calendar summary', err);
@@ -27,13 +29,11 @@ export default function CalendarView() {
     };
   
     fetchSummary();
-  }, [dataVersion]);
+  }, [dataVersion, getSelectedMonthParam]);
 
   // Merges data into generated calendar grid
-  useEffect(() => {
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const grid = generateCalendarGrid(year, month);
+  useEffect(() => {;
+    const grid = generateCalendarGrid(selectedDate);
   
     const merged = grid.map(cell => {
       if (cell.type !== 'day') return cell;
@@ -57,7 +57,7 @@ export default function CalendarView() {
     });
   
     setCalendarData(merged);
-  }, [summary]);
+  }, [summary, selectedDate]);
 
   // Loading spinner
   if (loading) {

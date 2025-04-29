@@ -1,4 +1,7 @@
-export function generateCalendarGrid(year, month) {
+export function generateCalendarGrid(selectedDate) {
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+
   const startDate = new Date(year, month, 1);
   const endDate = new Date(year, month + 1, 0);
   const startDay = (startDate.getDay() + 6) % 7; // Convert Sunday=0 to Monday=0
@@ -7,6 +10,7 @@ export function generateCalendarGrid(year, month) {
   const totalSlots = 35;
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const calendar = [];
 
@@ -18,15 +22,14 @@ export function generateCalendarGrid(year, month) {
   // Add all days of the month
   for (let i = 1; i <= daysInMonth; i++) {
     const currentDate = new Date(year, month, i);
+    currentDate.setHours(0, 0, 0, 0);
+
     calendar.push({
       type: 'day',
-      date: new Date(year, month, i),
-      income: 300,
-      expenditure: 120,
-      isToday:
-        currentDate.getDate() === today.getDate() &&
-        currentDate.getMonth() === today.getMonth() &&
-        currentDate.getFullYear() === today.getFullYear(),
+      date: currentDate,
+      income: null,
+      expenditure: null,
+      isToday: currentDate.getTime() === today.getTime(),
     });
   }
 
