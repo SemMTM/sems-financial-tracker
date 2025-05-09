@@ -23,9 +23,7 @@ export default function ExpenditureList() {
   // Fetch expenditures from the backend
   const fetchExpenditures = async () => {
     if (!user) return
-
     setError('')
-
     try {
       const res = await api.get(`/expenditures/?month=${getSelectedMonthParam()}`)
       setExpenditures(res.data)

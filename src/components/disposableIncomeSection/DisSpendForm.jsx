@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import api from '../../api/axiosDefaults'
+import { useCalendar } from '../../context/CalendarContext';
 
 export default function DisSpendForm({ onAdd }) {
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
-  const [date, setDate] = useState('')
+  const { selectedDate } = useCalendar();
+  const [date, setDate] = useState(
+    selectedDate.toISOString().split('T')[0]
+  )
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {

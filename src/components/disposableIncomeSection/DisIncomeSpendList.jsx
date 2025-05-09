@@ -17,18 +17,19 @@ export default function DisSpendList() {
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchDisSpend = async () => {
     if (!user) return
-    
     setError('')
-
     try {
       const res = await api.get(`/disposable-spending/?month=${getSelectedMonthParam()}`)
       setDisSpend(res.data)
     } catch (err) {
       console.error('Failed to fetch spending:', err)
       setError('Failed to load spending.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -68,6 +69,14 @@ export default function DisSpendList() {
 
   if (!user) return <p>Please log in to view incomes.</p>
   if (error) return <p>{error}</p>
+  if (isLoading) 
+    return (
+      <div className="list-section">
+        <h3>Monthly Expenditures</h3>
+        <div className='spinner'></div>;
+      </div>
+    )
+
 
   return (
     <div className="list-section">

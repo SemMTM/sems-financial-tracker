@@ -11,7 +11,7 @@ import { useCalendar } from '../../context/CalendarContext';
 export default function DisIncomeBudget() {
   const { user } = useAuth()
   const { getSelectedMonthParam, selectedDate } = useCalendar();
-  const { dataVersion } = useFinancialData();
+  const { dataVersion, notifyChange } = useFinancialData();
 
   const [disBudget, setDisBudget] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -22,9 +22,7 @@ export default function DisIncomeBudget() {
 
   const fetchDisBudget = async () => {
     if (!user) return
-
     setError('')
-
     try {
       const res = await api.get(
         `/disposable-budget/?month=${getSelectedMonthParam()}`)

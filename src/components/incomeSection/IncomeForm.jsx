@@ -1,10 +1,16 @@
 import { useState } from 'react'
 import api from '../../api/axiosDefaults'
+import { useCalendar } from '../../context/CalendarContext';
 
 export default function IncomeForm({ onAdd }) {
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState('') 
   const [amount, setAmount] = useState('')
-  const [date, setDate] = useState('')
+
+  const { selectedDate } = useCalendar();
+  const [date, setDate] = useState(
+    selectedDate.toISOString().split('T')[0]
+  );
+  
   const [repeated, setRepeated] = useState('NEVER')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
