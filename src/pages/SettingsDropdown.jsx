@@ -60,7 +60,7 @@ export default function SettingsDropdown() {
   return (
     <div className={styles['settings-wrapper']} ref={dropdownRef}>
       <button onClick={() => setShowDropdown((prev) => !prev)}>
-        ⚙️
+        Settings
       </button>
   
       {/* 6. Dropdown Panel */}

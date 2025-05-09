@@ -2,6 +2,10 @@
   transition: background-color 1s ease;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: var(--calendar-icon-filter);
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
@@ -21,6 +25,9 @@
   --button-bg: #353535;
   --opacity: 1;
   --income-text-color: rgba(0, 255, 85, 0.781);
+  --modal-bg-color: #252525;
+  --input-color: black;
+  --calendar-icon-filter: invert(0);
 }
 
 /* Light mode colors */
@@ -31,6 +38,9 @@
   --button-bg: #bdbdbd;
   --opacity: 0.4;
   --income-text-color: rgb(0 209 35 / 78%);
+  --modal-bg-color: #e2e2e2;
+  --input-color: white;
+  --calendar-icon-filter: invert(1);
 }
 
 a {
@@ -98,6 +108,8 @@ input {
   border: none;
   padding: 5px;
   border-radius: 7px;
+  background-color: var(--input-color);
+  color: var(--text-color);
 }
 
 select {
@@ -106,6 +118,8 @@ select {
   border: none;
   padding: 5px;
   border-radius: 7px;
+  background-color: var(--input-color);
+  color: var(--text-color);
 }
 
 table {
