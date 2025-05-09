@@ -7,6 +7,7 @@ import CurrencySelector from '../components/settingsPage/CurrencySelector'
 import ChangeEmailModal from '../components/settingsPage/ChangeEmailModal'
 import Modal from '../components/Modal'
 import styles from '../styles/SettingsDropdown.module.css'
+import { useTheme } from '../context/ThemeContext'
 
 
 export default function SettingsDropdown() {
@@ -20,6 +21,7 @@ export default function SettingsDropdown() {
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
   const dropdownRef = useRef()
+  const { theme, toggleTheme } = useTheme()
 
   // 2. Close dropdown when clicking outside
   useEffect(() => {
@@ -68,6 +70,16 @@ export default function SettingsDropdown() {
   
           {success && <p className={styles['success-msg']}>{success}</p>}
           {error && <p className={styles['error-msg']}>{error}</p>}
+
+          <div>
+            <label htmlFor="theme-toggle">Dark Mode</label>
+            <input
+              type="checkbox"
+              id="theme-toggle"
+              checked={theme === 'dark'}
+              onChange={toggleTheme}
+            />
+          </div>
   
           <div>
             <button className={styles['settings-btn']}

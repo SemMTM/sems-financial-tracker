@@ -8,7 +8,7 @@
 }
 
 .cal-day {
-    border: 1px solid #e9e9e925;
+    border: 1px solid var(--border);
     min-height: 90.2px;
     height: auto;
 }
@@ -33,7 +33,7 @@
 }
 
 .cal-day-title {
-  border: 1px solid #e9e9e925;
+  border: 1px solid var(--border);
   font-weight: 500;
 }
 
@@ -47,6 +47,7 @@
   );
   height: 100%;
   width: 100%;
+  opacity: var(--opacity)
 }
 
 .today {

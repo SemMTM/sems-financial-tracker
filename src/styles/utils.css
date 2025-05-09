@@ -12,7 +12,7 @@
 
 /* Messages */
 .success {
-  color: #28a745;
+  color: var(--income-text-color);
   font-size: 0.9rem;
   text-align: center;
 }
@@ -96,7 +96,7 @@ background-color: rgba(255, 0, 0, 0.5);
 }
 
 .income-item .list-item-section-2 {
-  color: rgba(0, 255, 85, 0.781);
+  color: var(--income-text-color);
 }
 
 
@@ -139,7 +139,7 @@ background-color: rgba(255, 0, 0, 0.5);
 }
 
 .income-summary {
-  color: rgba(0, 255, 85, 0.781);
+  color: var(--income-text-color);
 }
 
 /* Spinner styles */

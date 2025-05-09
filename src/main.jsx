@@ -14,6 +14,7 @@ import './index.css'
 import { AuthProvider } from './context/AuthContext'
 import { FinancialDataProvider } from '../src/context/FinancialDataContext'
 import './styles/utils.css'
+import { ThemeProvider } from './context/ThemeContext'
 
 
 // Create query client with background refetching
@@ -46,7 +47,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <AuthProvider>
           <FinancialDataProvider>
-            <App />
+            <ThemeProvider>
+              <App />
+            </ThemeProvider>  
           </FinancialDataProvider>
         </AuthProvider>
       </BrowserRouter>
