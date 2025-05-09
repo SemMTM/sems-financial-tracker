@@ -7,17 +7,19 @@ const api = axios.create({
 
 // Automatically refresh the token if access is expired
 api.interceptors.response.use( // Registers a response interceptor.
-  response => response, // If the response is successful, just pass it through unchanged.
-  async error => {
+  (response) => response, // If the response is successful, just pass it through unchanged.
+  async (error) => {
     const originalRequest = error.config // If there's an error, extract the original request config
 
     // Check if token expired and not already retried
     if (
-      error.response &&
       error.response.status === 401 &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !originalRequest.url.includes('/dj-rest-auth/login/') &&
+      !originalRequest.url.includes('/dj-rest-auth/token/refresh/')
     ) {
-      originalRequest._retry = true // Flags this request so if it fails again, we don’t retry it a second time.
+      originalRequest._retry = true; // Flags this request so if it fails again, we don’t retry it a second time.
+      
       try {
         // Attempt to refresh token
         await api.post('/dj-rest-auth/token/refresh/')
