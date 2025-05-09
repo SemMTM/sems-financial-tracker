@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import styles from '../../styles/MonthlySummary.module.css'
 import { useFinancialData } from '../../context/FinancialDataContext'
+import { useCalendar } from '../../context/CalendarContext'
 
 
 export default function MonthlySummary({ setViewMode }) {
@@ -12,12 +13,14 @@ export default function MonthlySummary({ setViewMode }) {
   const [error, setError] = useState('')
 
   const { dataVersion } = useFinancialData();
+  const { selectedDate, getSelectedMonthParam } = useCalendar()
 
   const fetchSummary = async () => {
     if (!user) return
     setError('')
     try {
-      const res = await api.get('/monthly-summary/')
+      const res = await api.get(
+        `/monthly-summary/?month=${getSelectedMonthParam()}`)
       setMonthlySummary(res.data)
     } catch (err) {
       console.error('Failed to fetch monthly summary:', err)
@@ -30,7 +33,7 @@ export default function MonthlySummary({ setViewMode }) {
   // Load summary on mount or when user is set
   useEffect(() => {
      fetchSummary()
-  }, [user, dataVersion])
+  }, [user, dataVersion, selectedDate])
 
   if (!user) return <p>Please log in to view summary.</p>
   if (error) return <p>{error}</p>
@@ -76,7 +79,7 @@ export default function MonthlySummary({ setViewMode }) {
           </li>
 
           <li className="list-item sum-li-item">
-            <span>Disposable budget spending</span> 
+            <span>Disposable income spending</span> 
             <span className="expenditure-summary">
               -{monthlySummary.formatted_disposable_spending}
             </span>

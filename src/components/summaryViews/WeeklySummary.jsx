@@ -4,11 +4,13 @@ import api from '../../api/axiosDefaults'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import styles from '../../styles/WeeklySummary.module.css'
 import getMonthWeeklyRanges from '../../utils/getFixedWeeklyRanges'
+import { useCalendar } from '../../context/CalendarContext'
 
 
 export default function WeeklySummary({ setViewMode }) {
   const { user } = useAuth()
   const { dataVersion } = useFinancialData();
+  const { selectedDate, getSelectedMonthParam } = useCalendar()
   const [weeklySummary, setWeeklySummary] = useState({ weeks: [] })
   const [loading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -23,7 +25,7 @@ export default function WeeklySummary({ setViewMode }) {
     if (!user) return
     setError('')
     try {
-      const res = await api.get('/weekly-summary/')
+      const res = await api.get(`/weekly-summary/?month=${getSelectedMonthParam()}`)
       setWeeklySummary(res.data)
     } catch (err) {
       console.error('Failed to fetch incomes:', err)
@@ -35,7 +37,7 @@ export default function WeeklySummary({ setViewMode }) {
 
   useEffect(() => {
     fetchSummary()
-  }, [user, dataVersion])
+  }, [user, dataVersion, selectedDate])
 
   if (!user) return <p>Please log in to view summaries.</p>
   if (error) return <p>{error}</p>
