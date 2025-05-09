@@ -15,10 +15,9 @@ export default function WeeklySummary({ setViewMode }) {
   const [loading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-  const weeklyRanges = useMemo(() => getMonthWeeklyRanges(today), [today]);
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  const weeklyRanges = useMemo(() => getMonthWeeklyRanges(selectedDate), [selectedDate]);
 
   // Fetch incomes from the backend
   const fetchSummary = async () => {
@@ -63,14 +62,17 @@ export default function WeeklySummary({ setViewMode }) {
             </tr>
           </thead>
           <tbody>
-          {[0, 1, 2, 3, 4].map((i) => {
+          {[0, 1, 2, 3, 4,5 ].map((i) => {
+            // Only render if the data for that week exists
+            if (!weeklySummary.weeks[i] || !weeklyRanges[i]) return null;
+
             const week = weeklySummary.weeks[i];
             const range = weeklyRanges[i];
             return (
               <tr key={i}>
                 <td>
                 {range
-                  ? `${today.toLocaleString('en-GB', { month: 'short' })} ${range.start} - ${range.end}`
+                  ? `${selectedDate.toLocaleString('en-GB', { month: 'short' })} ${range.start} - ${range.end}`
                   : `Week ${i + 1}`}
                 </td>
                 <td className="income-summary">+{week?.income || 'N/A'}</td>
