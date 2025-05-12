@@ -88,46 +88,39 @@ export default function DisSpendList() {
         <ul>
           <div>
             <div className="list-titles-section">
-              <span className="list-item-section list-title">
+
+              <span className="list-item-section title list-title">
                 Title
               </span>
-              <span 
-                className="
-                  list-item-section 
-                  list-title
-                  list-item-section-2">
-                Amount
-              </span>
+
               <span 
                 className="
                   list-item-section
-                  list-title
-                  list-item-section-3">
+                  amount
+                  list-title">
+                Amount
               </span>
-              <span className="list-item-section list-title">
+
+              <span className="list-item-section date list-title">
                 Date
               </span>
+
+              <span className="btns-container"></span>
+              
             </div>
             {disSpend.map((item) => (
               <li key={item.id} className="list-item expenditure-item">
 
                 <span 
-                  className="list-item-section">
+                  className="list-item-section title">
                   {item.title}
                   </span>
 
-                <span className="list-item-section
-                  list-item-section-2">
+                <span className="list-item-section amount">
                   - {item.formatted_amount}
                   </span>
 
-                <span 
-                  className="list-item-section
-                  list-item-section">
-                  {item.type}
-                </span>
-
-                <span className="list-item-section list-item-section-4">
+                <span className="list-item-section date">
                 {new Date(item.date).toLocaleDateString('en-GB', {
                     weekday: 'short',
                     month: 'short',

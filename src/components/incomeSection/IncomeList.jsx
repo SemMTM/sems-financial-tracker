@@ -87,26 +87,27 @@ export default function IncomeList() {
         <ul>
           <div>
             <div className="list-titles-section">
-              <span className="list-item-section list-title">
+
+              <span className="list-item-section title list-title">
                 Title
               </span>
+
               <span 
                 className="
                   list-item-section 
+                  amount
                   list-title">
                 Amount
               </span>
-              <span 
-                className="
-                  list-item-section
-                  list-title">
-              </span>
-              <span className="
-                  list-item-section
-                  list-title"></span>
-              <span className="list-item-section list-title">
+
+              <span className="list-item-section
+                date
+                list-title">
                 Date
               </span>
+
+              <span className="btns-container"></span>
+              
             </div>
             {incomes.map((item) => (
               <li 
@@ -126,13 +127,6 @@ export default function IncomeList() {
                   amount">
                   {item.formatted_amount}
                   </span>
-
-                <span 
-                  className="list-item-section
-                  type">
-                  {item.type}
-                </span>
-
                 <span className="list-item-section date">
                 {new Date(item.date).toLocaleDateString('en-GB', {
                     weekday: 'short',

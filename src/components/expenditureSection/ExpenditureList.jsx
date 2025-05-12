@@ -88,19 +88,19 @@ export default function ExpenditureList() {
         <ul>
           <div>
             <div className="list-titles-section">
-              <span className="list-item-section list-title">
+              <span className="list-item-section title list-title">
                 Title
               </span>
               <span 
                 className="
-                  list-item-section list-title">
+                  list-item-section amount list-title">
                 Amount
               </span>
               <span 
-                className="list-item-section list-title">
+                className="list-item-section type list-title">
                 Type
               </span>
-              <span className="list-item-section list-title">
+              <span className="list-item-section date list-title">
                 Date
               </span>
               <span className="btns-container"></span>
