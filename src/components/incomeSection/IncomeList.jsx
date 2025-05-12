@@ -93,16 +93,17 @@ export default function IncomeList() {
               <span 
                 className="
                   list-item-section 
-                  list-title
-                  list-item-section-2">
+                  list-title">
                 Amount
               </span>
               <span 
                 className="
                   list-item-section
-                  list-title
-                  list-item-section-3">
+                  list-title">
               </span>
+              <span className="
+                  list-item-section
+                  list-title"></span>
               <span className="list-item-section list-title">
                 Date
               </span>
@@ -117,22 +118,22 @@ export default function IncomeList() {
                 }`}>
 
                 <span 
-                  className="list-item-section">
+                  className="list-item-section title">
                   {item.title}
                   </span>
 
                 <span className="list-item-section
-                  list-item-section-2">
+                  amount">
                   {item.formatted_amount}
                   </span>
 
                 <span 
                   className="list-item-section
-                  list-item-section">
+                  type">
                   {item.type}
                 </span>
 
-                <span className="list-item-section list-item-section-4">
+                <span className="list-item-section date">
                 {new Date(item.date).toLocaleDateString('en-GB', {
                     weekday: 'short',
                     month: 'short',

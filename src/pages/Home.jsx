@@ -16,35 +16,37 @@ const Home = () => {
 
   return (
     <div className="home-page"> 
-      <SettingsDropdown />
+      <div className="summary-sec-con">
+        <SettingsDropdown />
 
-      {/* Month Switcher Section */}
-      <div className="month-switcher">
-        <button onClick={goToPreviousMonth}>←</button>
+        {/* Month Switcher Section */}
+        <div className="month-switcher">
+          <button onClick={goToPreviousMonth}>←</button>
 
-        <span className="current-month">
-          {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
-          {/* Example: "April 2025" */}
-        </span>
+          <span className="current-month">
+            {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+            {/* Example: "April 2025" */}
+          </span>
 
-        <button onClick={goToNextMonth}>→</button>
-      </div>
-
-      {summaryMode === 'calendar' ? (
-        <div className="summary-section">
-        <CalendarView />
-          <button onClick={() => setSummaryMode('summary')}>Change to summary view</button>
+          <button onClick={goToNextMonth}>→</button>
         </div>
-      ) : (
-        <div className="summary-section">
-        {viewMode === 'monthly' ? (
-          <MonthlySummary setViewMode={setViewMode} />
+
+        {summaryMode === 'calendar' ? (
+          <div className="summary-section">
+          <CalendarView />
+            <button onClick={() => setSummaryMode('summary')}>Change to summary view</button>
+          </div>
         ) : (
-          <WeeklySummary setViewMode={setViewMode} />
+          <div className="summary-section">
+          {viewMode === 'monthly' ? (
+            <MonthlySummary setViewMode={setViewMode} />
+          ) : (
+            <WeeklySummary setViewMode={setViewMode} />
+          )}
+            <button onClick={() => setSummaryMode('calendar')}>Change to calendar view</button>
+          </div>
         )}
-          <button onClick={() => setSummaryMode('calendar')}>Change to calendar view</button>
-        </div>
-      )}
+      </div>
 
       <div className="finance-list-section">
         <ExpenditureList />

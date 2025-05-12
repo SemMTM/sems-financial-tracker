@@ -93,21 +93,17 @@ export default function ExpenditureList() {
               </span>
               <span 
                 className="
-                  list-item-section 
-                  list-title
-                  list-item-section-2">
+                  list-item-section list-title">
                 Amount
               </span>
               <span 
-                className="
-                  list-item-section
-                  list-title
-                  list-item-section-3">
+                className="list-item-section list-title">
                 Type
               </span>
               <span className="list-item-section list-title">
                 Date
               </span>
+              <span className="btns-container"></span>
             </div>
             {expenditures.map((item) => (
               <li 
@@ -119,22 +115,20 @@ export default function ExpenditureList() {
                 }`}>
 
                 <span 
-                  className="list-item-section">
+                  className="list-item-section title">
                   {item.title}
                   </span>
 
-                <span className="list-item-section
-                  list-item-section-2">
+                <span className="list-item-section amount">
                   -{item.formatted_amount}
                   </span>
 
                 <span 
-                  className="list-item-section
-                  list-item-section">
+                  className="list-item-section type">
                   {item.type}
                 </span>
 
-                <span className="list-item-section list-item-section-4">
+                <span className="list-item-section date">
                 {new Date(item.date).toLocaleDateString('en-GB', {
                     weekday: 'short',
                     month: 'short',
@@ -147,7 +141,6 @@ export default function ExpenditureList() {
                     onClick={() => handleEdit(item)}
                     >Edit</button>
                 </span>
-
               </li>
             ))}
           </div>
