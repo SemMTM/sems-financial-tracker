@@ -75,23 +75,23 @@ export default function DisIncomeBudget() {
         <ul>
           <div>
             {disBudget.map((item) => (
-              <li key={item.id} className="list-item">
+              <li key={item.id} className={styles['dis-budget-con']}>
+                <div>
+                  <span className="list-item-section"
+                    style={{ 
+                      fontSize: "18px",
+                      paddingRight: "10px"
+                    }}
+                  >
+                    {cleanFormattedAmount(item.formatted_amount)}
+                  </span>
 
-                <span className="list-item-section"
-                  style={{ 
-                    fontSize: "18px",
-                    paddingRight: "10px"
-                   }}
-                >
-                  {cleanFormattedAmount(item.formatted_amount)}
-                </span>
-
-                <span className="btns-container">
-                  <button className="edit-btn"
-                    onClick={() => handleEdit(item)}
-                    >Edit</button>
-                </span>
-
+                  <span className="btns-container">
+                    <button className="edit-btn"
+                      onClick={() => handleEdit(item)}
+                      >Edit</button>
+                  </span>
+                </div>
                 <span className={styles.remaining}
                 > Remaining: {cleanFormattedAmount(item.remaining_formatted)}
                 </span>

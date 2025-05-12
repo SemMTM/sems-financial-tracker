@@ -1,4 +1,9 @@
 .remaining {
   font-size: 18px;
-  padding-left: 30px;
+}
+
+.dis-budget-con {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
 }
