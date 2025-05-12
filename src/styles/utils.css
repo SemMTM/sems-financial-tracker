@@ -185,3 +185,26 @@ background-color: rgba(255, 0, 0, 0.5);
   font-size: 1.2rem;
   font-weight: bold;
 }
+
+@media screen and (min-width: 700px) {
+  .home-page {
+    width: 600px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .home-page {
+    width: 900px;
+    margin: 0 auto;
+  }
+
+  .finance-list-section {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .list-section {
+    flex: 0 0 50%;
+  }
+}
