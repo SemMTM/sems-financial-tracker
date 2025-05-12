@@ -6,6 +6,7 @@ import IncomeForm from './IncomeForm'
 import EditIncomeForm from './EditIncomeForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import { useCalendar } from '../../context/CalendarContext';
+import { cleanFormattedAmount } from '../../utils/cleanAmount'
 
 
 export default function IncomeList() {
@@ -107,7 +108,7 @@ export default function IncomeList() {
               </span>
 
               <span className="btns-container"></span>
-              
+
             </div>
             {incomes.map((item) => (
               <li 
@@ -125,7 +126,7 @@ export default function IncomeList() {
 
                 <span className="list-item-section
                   amount">
-                  {item.formatted_amount}
+                  {cleanFormattedAmount(item.formatted_amount)}
                   </span>
                 <span className="list-item-section date">
                 {new Date(item.date).toLocaleDateString('en-GB', {

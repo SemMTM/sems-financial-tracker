@@ -5,6 +5,7 @@ import { useFinancialData } from '../../context/FinancialDataContext'
 import styles from '../../styles/WeeklySummary.module.css'
 import getMonthWeeklyRanges from '../../utils/getFixedWeeklyRanges'
 import { useCalendar } from '../../context/CalendarContext'
+import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 
 export default function WeeklySummary({ setViewMode }) {
@@ -75,9 +76,9 @@ export default function WeeklySummary({ setViewMode }) {
                   ? `${selectedDate.toLocaleString('en-GB', { month: 'short' })} ${range.start} - ${range.end}`
                   : `Week ${i + 1}`}
                 </td>
-                <td className="income-summary">+{week?.income || 'N/A'}</td>
-                <td className="expenditure-summary">-{week?.cost || 'N/A'}</td>
-                <td className={week?.summary?.includes('-') ? 'expenditure-summary' : 'income-summary'
+                <td className="income-summary">+{cleanFormattedAmount(week?.income) || 'N/A'}</td>
+                <td className="expenditure-summary">-{cleanFormattedAmount(week?.cost) || 'N/A'}</td>
+                <td className={cleanFormattedAmount(week?.summary)?.includes('-') ? 'expenditure-summary' : 'income-summary'
                   } 
                 >
                   {week?.summary || 'N/A'}</td>

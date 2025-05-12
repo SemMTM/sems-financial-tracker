@@ -4,6 +4,7 @@ import api from '../../api/axiosDefaults'
 import styles from '../../styles/MonthlySummary.module.css'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import { useCalendar } from '../../context/CalendarContext'
+import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 
 export default function MonthlySummary({ setViewMode }) {
@@ -53,35 +54,35 @@ export default function MonthlySummary({ setViewMode }) {
           <li className="list-item">
             <span>Monthly Income</span>
             <span className="income-summary">
-              +{monthlySummary.formatted_income}
+              +{cleanFormattedAmount(monthlySummary.formatted_income)}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <span>Bills</span>
             <span className="expenditure-summary">
-              -{monthlySummary.formatted_bills}
+              -{cleanFormattedAmount(monthlySummary.formatted_bills)}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <span>Saving</span>
             <span className="expenditure-summary">
-              -{monthlySummary.formatted_saving}
+              -{cleanFormattedAmount(monthlySummary.formatted_saving)}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <span>Investment</span> 
             <span className="expenditure-summary">
-              -{monthlySummary.formatted_investment}
+              -{cleanFormattedAmount(monthlySummary.formatted_investment)}
             </span>
           </li>
 
           <li className="list-item sum-li-item">
             <span>Disposable income spending</span> 
             <span className="expenditure-summary">
-              -{monthlySummary.formatted_disposable_spending}
+              -{cleanFormattedAmount(monthlySummary.formatted_disposable_spending)}
             </span>
           </li>
 
@@ -98,7 +99,7 @@ export default function MonthlySummary({ setViewMode }) {
               >
                 {monthlySummary.formatted_total.includes('-')
                   ? monthlySummary.formatted_total
-                  : `+${monthlySummary.formatted_total}`}
+                  : `+${cleanFormattedAmount(monthlySummary.formatted_total)}`}
               </span>
             )}
 
@@ -109,7 +110,7 @@ export default function MonthlySummary({ setViewMode }) {
             <div>
               <div>Disposable Income Budget</div> 
               <div className="">
-                {monthlySummary.formatted_budget}
+                {cleanFormattedAmount(monthlySummary.formatted_budget)}
               </div>
             </div>
 
@@ -125,8 +126,8 @@ export default function MonthlySummary({ setViewMode }) {
                 }
               >
                 {monthlySummary.formatted_remaining_disposable.includes('-')
-                  ? monthlySummary.formatted_remaining_disposable
-                  : `${monthlySummary.formatted_remaining_disposable}`}
+                  ? cleanFormattedAmount(monthlySummary.formatted_remaining_disposable)
+                  : `${cleanFormattedAmount(monthlySummary.formatted_remaining_disposable)}`}
               </div>
               )}
             

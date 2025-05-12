@@ -4,6 +4,7 @@ import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
 import styles from "../styles/CalendarView.module.css";
 import { useFinancialData } from '../context/FinancialDataContext'
 import { useCalendar } from '../context/CalendarContext';
+import { cleanFormattedAmount } from '../utils/cleanAmount';
 
 export default function CalendarView() {
   const today = new Date();
@@ -91,18 +92,18 @@ export default function CalendarView() {
                 <div className={styles['cal-day-num']}>
                   {cell.date.getDate()}
                 </div>
-                {Number(cell.expenditure) > 0 ? (
+                {typeof cell.expenditure === 'string' && cell.expenditure !== '0.00' ? (
                   <div className={`${styles['cal-day-expen']} expenditure-summary`}>
-                    {cell.symbol}{cell.expenditure}
+                    {cell.symbol}{cleanFormattedAmount(cell.expenditure)}
                   </div>
                 ) : (
                   <div className={`${styles['cal-day-expen']} expenditure-summary`}>
                     
                   </div>
                 )}
-                {cell.income !== '0.00' ? (
+                {typeof cell.income === 'string' && cell.income !== '0.00' ? (
                   <div className={`${styles['cal-day-income']} income-summary`}>
-                    {cell.symbol}{cell.income}
+                    {cell.symbol}{cleanFormattedAmount(cell.income)}
                   </div>
                 ) : (
                   <div className={`${styles['cal-day-income']} income-summary`}>

@@ -6,6 +6,7 @@ import EditDisBudgetForm from './EditDisBudgetForm'
 import styles from '../../styles/DisIncomeBudget.module.css'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import { useCalendar } from '../../context/CalendarContext';
+import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 
 export default function DisIncomeBudget() {
@@ -82,7 +83,7 @@ export default function DisIncomeBudget() {
                     paddingRight: "10px"
                    }}
                 >
-                  {item.formatted_amount}
+                  {cleanFormattedAmount(item.formatted_amount)}
                 </span>
 
                 <span className="btns-container">
@@ -92,7 +93,7 @@ export default function DisIncomeBudget() {
                 </span>
 
                 <span className={styles.remaining}
-                > Remaining: {item.remaining_formatted}
+                > Remaining: {cleanFormattedAmount(item.remaining_formatted)}
                 </span>
               </li>
             ))}

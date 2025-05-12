@@ -6,6 +6,7 @@ import DisSpendForm from './DisSpendForm'
 import EditDisSpendForm from './EditDisSpendForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import { useCalendar } from '../../context/CalendarContext';
+import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 
 export default function DisSpendList() {
@@ -106,7 +107,7 @@ export default function DisSpendList() {
               </span>
 
               <span className="btns-container"></span>
-              
+
             </div>
             {disSpend.map((item) => (
               <li key={item.id} className="list-item expenditure-item">
@@ -117,7 +118,7 @@ export default function DisSpendList() {
                   </span>
 
                 <span className="list-item-section amount">
-                  - {item.formatted_amount}
+                  - {cleanFormattedAmount(item.formatted_amount)}
                   </span>
 
                 <span className="list-item-section date">

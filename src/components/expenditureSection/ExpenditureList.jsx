@@ -6,6 +6,7 @@ import Modal from '../Modal'
 import EditExpenditureForm from './EditExpenditureForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import { useCalendar } from '../../context/CalendarContext';
+import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 
 export default function ExpenditureList() {
@@ -120,7 +121,7 @@ export default function ExpenditureList() {
                   </span>
 
                 <span className="list-item-section amount">
-                  -{item.formatted_amount}
+                  -{cleanFormattedAmount(item.formatted_amount)}
                   </span>
 
                 <span 
