@@ -59,7 +59,7 @@ export default function WeeklySummary({ setViewMode }) {
               <th scope="col">Week</th>
               <th scope="col">Income</th>
               <th scope="col">Expenditure</th>
-              <th scope="col">Total</th>
+              <th scope="col">Summary</th>
             </tr>
           </thead>
           <tbody>

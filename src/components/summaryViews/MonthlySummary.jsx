@@ -51,7 +51,7 @@ export default function MonthlySummary({ setViewMode }) {
 
       <div className={styles['monthly-summary-sec-inner']}>
         <ul className={styles['month-sum-list']}>
-          <li className="list-item">
+          <li className="list-item sum-li-item">
             <span>Monthly Income</span>
             <span className="income-summary">
               +{cleanFormattedAmount(monthlySummary.formatted_income)}
@@ -87,7 +87,7 @@ export default function MonthlySummary({ setViewMode }) {
           </li>
 
           <li className="list-item sum-li-item">
-            <strong><span>Total</span></strong> 
+            <strong><span>Summary</span></strong> 
 
             {monthlySummary?.formatted_total && (
               <span
