@@ -82,7 +82,6 @@ export default function IncomeForm({ onAdd }) {
       <div className="form-input-con">
         <select value={repeated} onChange={(e) => setRepeated(e.target.value)}>
           <option value="NEVER">No Repeat</option>
-          <option value="DAILY">Daily</option>
           <option value="WEEKLY">Weekly</option>
           <option value="MONTHLY">Monthly</option>
         </select>
