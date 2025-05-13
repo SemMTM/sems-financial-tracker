@@ -61,7 +61,7 @@ export default function DisIncomeBudget() {
     return (
       <div className="list-section">
         <h3>Disposable Income Budget</h3>
-        <div className='spinner'></div>;
+        <div className='spinner'></div>
       </div>
     )
 

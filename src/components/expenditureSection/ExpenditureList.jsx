@@ -75,7 +75,7 @@ export default function ExpenditureList() {
     return (
       <div className="list-section">
         <h3>Monthly Expenditures</h3>
-        <div className='spinner'></div>;
+        <div className='spinner'></div>
       </div>
     )
 
