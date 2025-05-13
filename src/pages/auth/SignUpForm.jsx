@@ -82,7 +82,6 @@ export default function SignUpForm() {
             placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
 
           <input
