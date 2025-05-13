@@ -19,12 +19,17 @@ export default function CalendarView() {
   // Capture scroll position before data updates
   useLayoutEffect(() => {
     scrollYBeforeUpdate.current = window.scrollY;
+
+    // Freeze scroll during layout reflow
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollYBeforeUpdate.current}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
   }, [dataVersion]);
 
   // fetches calendar data from API
   useEffect(() => {
     const fetchSummary = async () => {
-      setLoading(true);
       try {
         const res = await api.get(`/calendar-summary/?month=${getSelectedMonthParam()}`);
         setSummary(res.data);
@@ -68,6 +73,11 @@ export default function CalendarView() {
 
   // Restore scroll position immediately after DOM update
   useLayoutEffect(() => {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+
     window.scrollTo(0, scrollYBeforeUpdate.current);
   }, [summary]);
 
