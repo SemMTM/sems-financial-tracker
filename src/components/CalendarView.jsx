@@ -27,6 +27,7 @@ export default function CalendarView() {
     document.body.style.right = '0';
   }, [dataVersion]);
 
+
   // fetches calendar data from API
   useEffect(() => {
     const fetchSummary = async () => {
@@ -71,6 +72,7 @@ export default function CalendarView() {
     setCalendarData(merged);
   }, [summary, selectedDate]);
 
+
   // Restore scroll position immediately after DOM update
   useLayoutEffect(() => {
     document.body.style.position = '';
@@ -80,6 +82,7 @@ export default function CalendarView() {
 
     window.scrollTo(0, scrollYBeforeUpdate.current);
   }, [summary]);
+
 
   // Loading spinner
   if (loading) {

@@ -118,7 +118,7 @@ export default function ExpenditureList() {
                 <span 
                   className="list-item-section title">
                   {item.title}
-                  </span>
+                </span>
 
                 <span className="list-item-section amount">
                   -{cleanFormattedAmount(item.formatted_amount)}
@@ -126,7 +126,7 @@ export default function ExpenditureList() {
 
                 <span 
                   className="list-item-section type">
-                  {item.type}
+                  {item.type.charAt(0).toUpperCase() + item.type.slice(1).toLowerCase()}
                 </span>
 
                 <span className="list-item-section date">
