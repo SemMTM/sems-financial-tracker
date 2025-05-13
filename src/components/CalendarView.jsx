@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import api from '../api/axiosDefaults'
 import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
 import styles from "../styles/CalendarView.module.css";
@@ -10,10 +10,16 @@ export default function CalendarView() {
   const today = new Date();
   const { getSelectedMonthParam, selectedDate } = useCalendar();
   const { dataVersion } = useFinancialData();
+  const scrollYBeforeUpdate = useRef(0);
 
   const [calendarData, setCalendarData] = useState([]);
   const [summary, setSummary] = useState([]);
   const [loading, setLoading] = useState(true)
+
+  // Capture scroll position before data updates
+  useLayoutEffect(() => {
+    scrollYBeforeUpdate.current = window.scrollY;
+  }, [dataVersion]);
 
   // fetches calendar data from API
   useEffect(() => {
@@ -59,6 +65,11 @@ export default function CalendarView() {
   
     setCalendarData(merged);
   }, [summary, selectedDate]);
+
+  // Restore scroll position immediately after DOM update
+  useLayoutEffect(() => {
+    window.scrollTo(0, scrollYBeforeUpdate.current);
+  }, [summary]);
 
   // Loading spinner
   if (loading) {
