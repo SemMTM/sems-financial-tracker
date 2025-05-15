@@ -10,22 +10,10 @@ export default function CalendarView() {
   const today = new Date();
   const { getSelectedMonthParam, selectedDate } = useCalendar();
   const { dataVersion } = useFinancialData();
-  const scrollYBeforeUpdate = useRef(0);
 
   const [calendarData, setCalendarData] = useState([]);
   const [summary, setSummary] = useState([]);
   const [loading, setLoading] = useState(true)
-
-  // Capture scroll position before data updates
-  useLayoutEffect(() => {
-    scrollYBeforeUpdate.current = window.scrollY;
-
-    // Freeze scroll during layout reflow
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollYBeforeUpdate.current}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-  }, [dataVersion]);
 
 
   // fetches calendar data from API
@@ -71,17 +59,6 @@ export default function CalendarView() {
   
     setCalendarData(merged);
   }, [summary, selectedDate]);
-
-
-  // Restore scroll position immediately after DOM update
-  useLayoutEffect(() => {
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-
-    window.scrollTo(0, scrollYBeforeUpdate.current);
-  }, [summary]);
 
 
   // Loading spinner
