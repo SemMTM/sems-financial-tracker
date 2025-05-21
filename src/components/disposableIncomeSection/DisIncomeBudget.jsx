@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults' 
 import Modal from '../Modal'
@@ -10,38 +10,38 @@ import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 
 export default function DisIncomeBudget() {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const { getSelectedMonthParam, selectedDate } = useCalendar();
   const { dataVersion, notifyChange } = useFinancialData();
 
-  const [disBudget, setDisBudget] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [showModal, setShowModal] = useState(false)
-  const [modalContent, setModalContent] = useState(null)
+  const [disBudget, setDisBudget] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
 
 
-  const fetchDisBudget = async () => {
+  const fetchDisBudget = useCallback(async () => {
     if (!user) return
-    setError('')
+    setError('');
     try {
       const res = await api.get(
-        `/disposable-budget/?month=${getSelectedMonthParam()}`)
-      setDisBudget(res.data)
+        `/disposable-budget/?month=${getSelectedMonthParam()}`);
+      setDisBudget(res.data || []);
     } catch (err) {
-      console.error('Failed to fetch budget:', err)
-      setError('Failed to load budget.')
+      console.error('Failed to fetch budget:', err);
+      setError('Failed to load budget.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  }, [user, getSelectedMonthParam]);
 
   useEffect(() => {
-    fetchDisBudget()
-  }, [user, dataVersion, selectedDate])
+    fetchDisBudget();
+  }, [fetchDisBudget, dataVersion, selectedDate]);
   
   // 4. Handle edit s
-  const handleEdit = (item) => {
+  const handleEdit = useCallback((item) => {
     setModalContent(
       <EditDisBudgetForm
         item={item}
@@ -52,8 +52,8 @@ export default function DisIncomeBudget() {
         }}
       />
     )
-    setShowModal(true)
-  }
+    setShowModal(true);
+  }, [fetchDisBudget, notifyChange]);
 
   if (!user) return <p>Please log in to view budget.</p>
   if (error) return <p>{error}</p>
@@ -73,31 +73,29 @@ export default function DisIncomeBudget() {
         <p>No disposable spending for this month.</p>
       ) : (
         <ul>
-          <div>
-            {disBudget.map((item) => (
-              <li key={item.id} className={styles['dis-budget-con']}>
-                <div>
-                  <span className="list-item-section"
-                    style={{ 
-                      fontSize: "18px",
-                      paddingRight: "10px"
-                    }}
-                  >
-                    {cleanFormattedAmount(item.formatted_amount)}
-                  </span>
-
-                  <span className="btns-container">
-                    <button className="edit-btn"
-                      onClick={() => handleEdit(item)}
-                      >Edit</button>
-                  </span>
-                </div>
-                <span className={styles.remaining}
-                > Remaining: {cleanFormattedAmount(item.remaining_formatted)}
+          {disBudget.map((item) => (
+            <li key={item.id} className={styles['dis-budget-con']}>
+              <div>
+                <span className="list-item-section"
+                  style={{ 
+                    fontSize: "18px",
+                    paddingRight: "10px"
+                  }}
+                >
+                  {cleanFormattedAmount(item.formatted_amount)}
                 </span>
-              </li>
-            ))}
-          </div>
+
+                <span className="btns-container">
+                  <button className="edit-btn"
+                    onClick={() => handleEdit(item)}
+                    >Edit</button>
+                </span>
+              </div>
+              <span className={styles.remaining}
+              > Remaining: {cleanFormattedAmount(item.remaining_formatted)}
+              </span>
+            </li>
+          ))}
         </ul>
       )}
       
@@ -108,5 +106,5 @@ export default function DisIncomeBudget() {
       )}
 
     </div>
-  )
+  );
 }
