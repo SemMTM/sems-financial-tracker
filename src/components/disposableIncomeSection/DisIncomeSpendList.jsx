@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import Modal from '../Modal'
@@ -20,27 +20,27 @@ export default function DisSpendList() {
   const [modalContent, setModalContent] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const fetchDisSpend = async () => {
+  const fetchDisSpend = useCallback(async () => {
     if (!user) return
     setError('')
     try {
       const res = await api.get(`/disposable-spending/?month=${getSelectedMonthParam()}`)
-      setDisSpend(res.data)
+      setDisSpend(res.data || [])
     } catch (err) {
       console.error('Failed to fetch spending:', err)
       setError('Failed to load spending.')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [user, getSelectedMonthParam]);
 
   useEffect(() => {
     fetchDisSpend()
-  }, [user, selectedDate])
+  }, [fetchDisSpend, selectedDate])
 
 
   // Handle add new expenditure
-    const handleAdd = () => {
+    const handleAdd = useCallback(() => {
       setModalContent(
         <DisSpendForm
           onAdd={() => {
@@ -51,10 +51,10 @@ export default function DisSpendList() {
         />
       )
       setShowModal(true)
-    }
+    }, [fetchDisSpend, notifyChange]);
   
     // 4. Handle edit s
-      const handleEdit = (item) => {
+      const handleEdit = useCallback((item) => {
         setModalContent(
           <EditDisSpendForm
             item={item}
@@ -66,7 +66,7 @@ export default function DisSpendList() {
           />
         )
         setShowModal(true)
-      }
+      }, [fetchDisSpend, notifyChange]);
 
   if (!user) return <p>Please log in to view incomes.</p>
   if (error) return <p>{error}</p>
@@ -87,57 +87,31 @@ export default function DisSpendList() {
         <p>No disposable spending for this month.</p>
       ) : (
         <ul>
-          <div>
-            <div className="list-titles-section">
+          <li className="list-titles-section">
+            <span className="list-item-section title list-title">Title</span>
+            <span className="list-item-section amount list-title">Amount</span>
+            <span className="list-item-section date list-title">Date</span>
+            <span className="btns-container" />
+          </li>
 
-              <span className="list-item-section title list-title">
-                Title
+          {disSpend.map((item) => (
+            <li key={item.id} className="list-item expenditure-item">
+              <span className="list-item-section title">{item.title}</span>
+              <span className="list-item-section amount">
+                - {cleanFormattedAmount(item.formatted_amount)}
               </span>
-
-              <span 
-                className="
-                  list-item-section
-                  amount
-                  list-title">
-                Amount
-              </span>
-
-              <span className="list-item-section date list-title">
-                Date
-              </span>
-
-              <span className="btns-container"></span>
-
-            </div>
-            {disSpend.map((item) => (
-              <li key={item.id} className="list-item expenditure-item">
-
-                <span 
-                  className="list-item-section title">
-                  {item.title}
-                  </span>
-
-                <span className="list-item-section amount">
-                  - {cleanFormattedAmount(item.formatted_amount)}
-                  </span>
-
-                <span className="list-item-section date">
+              <span className="list-item-section date">
                 {new Date(item.date).toLocaleDateString('en-GB', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                }
-                </span>
-                <span className="btns-container">
-                  <button className="edit-btn"
-                    onClick={() => handleEdit(item)}
-                    >Edit</button>
-                </span>
-
-              </li>
-            ))}
-          </div>
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+              <span className="btns-container">
+                <button className="edit-btn" onClick={() => handleEdit(item)}>Edit</button>
+              </span>
+            </li>
+          ))}
         </ul>
       )}
 

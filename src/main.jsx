@@ -42,17 +42,15 @@ persistQueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <FinancialDataProvider>
-            <ThemeProvider>
-              <App />
-            </ThemeProvider>  
-          </FinancialDataProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <AuthProvider>
+        <FinancialDataProvider>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>  
+        </FinancialDataProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </QueryClientProvider>
 )
