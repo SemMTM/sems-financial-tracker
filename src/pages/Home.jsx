@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { useState } from 'react'
 import ExpenditureList from '../components/expenditureSection/ExpenditureList'
 import SettingsDropdown from './SettingsDropdown'
 import IncomeList from '../components/incomeSection/IncomeList'
@@ -7,7 +7,7 @@ import DisIncomeSpendList from '../components/disposableIncomeSection/DisIncomeS
 import MonthlySummary from '../components/summaryViews/MonthlySummary'
 import WeeklySummary from '../components/summaryViews/WeeklySummary'
 import CalendarView from '../components/CalendarView'
-import { useCalendar } from '../context/CalendarContext';
+import { useCalendar } from '../context/CalendarContext'
 
 const Home = () => {
   const [viewMode, setViewMode] = useState('monthly');
@@ -27,20 +27,28 @@ const Home = () => {
 
         {/* Month Switcher Section */}
         <div className="month-switcher">
-          <button onClick={goToPreviousMonth} hidden={isAtStart}>←</button>
+          <button 
+            onClick={goToPreviousMonth}
+            hidden={isAtStart}
+            aria-label="Go to previous month"
+          >←</button>
 
           <span className="current-month">
             {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
             {/* Example: "April 2025" */}
           </span>
 
-          <button onClick={goToNextMonth} hidden={isAtEnd}>→</button>
+          <button 
+            onClick={goToNextMonth}
+            hidden={isAtEnd}
+            aria-label="Go to next month"
+          >→</button>
         </div>
 
         {summaryMode === 'calendar' ? (
           <div className="summary-section">
           <CalendarView />
-            <button onClick={() => setSummaryMode('summary')}>Change to summary view</button>
+            <button type="button" onClick={() => setSummaryMode('summary')}>Change to summary view</button>
           </div>
         ) : (
           <div className="summary-section">
@@ -49,7 +57,7 @@ const Home = () => {
           ) : (
             <WeeklySummary setViewMode={setViewMode} />
           )}
-            <button onClick={() => setSummaryMode('calendar')}>Change to calendar view</button>
+            <button type="button" onClick={() => setSummaryMode('calendar')}>Change to calendar view</button>
           </div>
         )}
       </div>
