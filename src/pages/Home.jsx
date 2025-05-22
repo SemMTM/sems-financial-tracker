@@ -12,7 +12,13 @@ import { useCalendar } from '../context/CalendarContext';
 const Home = () => {
   const [viewMode, setViewMode] = useState('monthly');
   const [summaryMode, setSummaryMode] = useState('calendar');
-  const { selectedDate, goToPreviousMonth, goToNextMonth } = useCalendar();
+  const {
+    selectedDate,
+    goToPreviousMonth,
+    goToNextMonth,
+    isAtStart,
+    isAtEnd
+  } = useCalendar();
 
   return (
     <div className="home-page"> 
@@ -21,14 +27,14 @@ const Home = () => {
 
         {/* Month Switcher Section */}
         <div className="month-switcher">
-          <button onClick={goToPreviousMonth}>←</button>
+          <button onClick={goToPreviousMonth} hidden={isAtStart}>←</button>
 
           <span className="current-month">
             {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
             {/* Example: "April 2025" */}
           </span>
 
-          <button onClick={goToNextMonth}>→</button>
+          <button onClick={goToNextMonth} hidden={isAtEnd}>→</button>
         </div>
 
         {summaryMode === 'calendar' ? (

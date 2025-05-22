@@ -98,22 +98,14 @@ export default function CalendarView() {
                 <div className={styles['cal-day-num']}>
                   {cell.date.getDate()}
                 </div>
-                {typeof cell.expenditure === 'string' && cell.expenditure !== '0.00' ? (
+                {typeof cell.expenditure === 'string' && cell.expenditure !== '0.00' && (
                   <div className={`${styles['cal-day-expen']} expenditure-summary`}>
                     {cell.symbol}{cleanFormattedAmount(cell.expenditure)}
                   </div>
-                ) : (
-                  <div className={`${styles['cal-day-expen']} expenditure-summary`}>
-                    
-                  </div>
                 )}
-                {typeof cell.income === 'string' && cell.income !== '0.00' ? (
+                {typeof cell.income === 'string' && cell.income !== '0.00' && (
                   <div className={`${styles['cal-day-income']} income-summary`}>
                     {cell.symbol}{cleanFormattedAmount(cell.income)}
-                  </div>
-                ) : (
-                  <div className={`${styles['cal-day-income']} income-summary`}>
-                    
                   </div>
                 )}
               </>

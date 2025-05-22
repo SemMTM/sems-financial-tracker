@@ -1,9 +1,10 @@
-import { createContext, useContext, useState } from 'react';
+import { useCallback, createContext, useContext, useState } from 'react';
 import { addMonths, subMonths, isAfter, isBefore } from 'date-fns';
 
 const CalendarContext = createContext();
 
 const today = new Date();
+today.setHours(0, 0, 0, 0);
 
 export const CalendarProvider = ({ children }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -25,9 +26,12 @@ export const CalendarProvider = ({ children }) => {
   };
 
   // Format as YYYY-MM for query strings
-  const getSelectedMonthParam = () => {
+  const getSelectedMonthParam = useCallback(() => {
     return selectedDate.toISOString().slice(0, 7); // e.g. '2025-04'
-  };
+  }, [selectedDate]);
+
+  const isAtStart = isBefore(subMonths(today, 5), selectedDate) === false;
+  const isAtEnd = isAfter(addMonths(today, 5), selectedDate) === false;
 
   return (
     <CalendarContext.Provider value={{
@@ -36,6 +40,8 @@ export const CalendarProvider = ({ children }) => {
       goToNextMonth,
       goToPreviousMonth,
       getSelectedMonthParam,
+      isAtStart,
+      isAtEnd,
     }}>
       {children}
     </CalendarContext.Provider>

@@ -1,15 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axiosDefaults'
-import { getCookie } from '../utils/csrf'
 
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  const navigate = useNavigate()
-  const csrfToken = getCookie('csrftoken');
+  const navigate = useNavigate();
 
 
   // Login using HttpOnly cookie session
@@ -18,15 +16,12 @@ export const AuthProvider = ({ children }) => {
       await api.post('/dj-rest-auth/login/', {
          username, 
          password, 
-        }, {
-         headers: {
-          'X-CSRFToken': csrfToken,
-         }
-        });
-      const res = await api.get('/dj-rest-auth/user/')
-      setUser(res.data)
+        }
+      );
+      const res = await api.get('/dj-rest-auth/user/');
+      setUser(res.data);
     } catch (err) {
-      console.error('Login failed:', err)
+      console.error('Login failed:', err);
       throw err
     }
   }
@@ -35,10 +30,10 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post('/dj-rest-auth/logout/')
     } catch (err) {
-      console.warn('Logout failed:', err)
+      console.warn('Logout failed:', err);
     } finally {
-      setUser(null)
-      navigate('/signin')
+      setUser(null);
+      navigate('/signin');
     }
   }
 
@@ -46,12 +41,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const res = await api.get('/dj-rest-auth/user/')
-        setUser(res.data)
+        const res = await api.get('/dj-rest-auth/user/');
+        setUser(res.data);
       } catch (err) {
-        setUser(null)
+        setUser(null);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
 
@@ -66,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{ user, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => useContext(AuthContext);
