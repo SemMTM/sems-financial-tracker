@@ -1,20 +1,19 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import api from '../../api/axiosDefaults'
 import { useCalendar } from '../../context/CalendarContext';
 
 export default function IncomeForm({ onAdd }) {
   const [title, setTitle] = useState('') 
   const [amount, setAmount] = useState('')
-
   const { selectedDate } = useCalendar();
   const [date, setDate] = useState(
-    selectedDate.toISOString().split('T')[0]
+    selectedDate.toLocaleDateString('en-CA')
   );
-  
+  const [error, setError] = useState('')
   const [repeated, setRepeated] = useState('NEVER')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     const formatAmount = parseFloat(amount).toFixed(2)
@@ -27,11 +26,11 @@ export default function IncomeForm({ onAdd }) {
       })
       onAdd()
     } catch (err) {
-      console.error('Failed to add income:', err)
+      setError('Failed to add income:', err)
     } finally {
       setIsSubmitting(false)
     }
-  }
+  }, [amount, title, date, repeated, onAdd]);
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
@@ -44,7 +43,7 @@ export default function IncomeForm({ onAdd }) {
           type="text"
           placeholder="Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value.trimStart())}
           required
         />
       </div>
@@ -89,7 +88,10 @@ export default function IncomeForm({ onAdd }) {
 
       <button className="add-button" 
         disabled={isSubmitting}
-        type="submit">Add Income</button>
+        type="submit">Add Income
+      </button>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   )
 }

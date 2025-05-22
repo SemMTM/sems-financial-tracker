@@ -7,6 +7,7 @@ export default function ExpenditureForm({ onAdd }) {
   
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
+  const [error, setError] = useState('')
   const [date, setDate] = useState(
     selectedDate.toLocaleDateString('en-CA')
   );
@@ -106,7 +107,10 @@ export default function ExpenditureForm({ onAdd }) {
 
       <button className="add-button" 
         disabled={isSubmitting}
-        type="submit">Add Expenditure</button>
+        type="submit">Add Expenditure
+      </button>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   )
 }

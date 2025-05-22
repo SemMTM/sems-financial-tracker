@@ -14,7 +14,6 @@ export default function EditIncomeForm(
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-
     try {
       await api.put(`/income/${item.id}/`, {
         title,
@@ -31,7 +30,6 @@ export default function EditIncomeForm(
   const handleDelete = useCallback(async () => {
     const confirmed = window.confirm('Are you sure you want to delete this income?');
     if (!confirmed) return
-  
     try {
       await api.delete(`/income/${item.id}/`);
       onUpdate();
