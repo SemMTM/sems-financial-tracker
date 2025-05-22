@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import api from '../../api/axiosDefaults'
 
 const CurrencyModal = ({ onClose, setSuccess }) => {
-  const [currency, setCurrency] = useState('')
-  const [currencyId, setCurrencyId] = useState(null)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
+  const [currency, setCurrency] = useState('');
+  const [currencyId, setCurrencyId] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const options = [
     ['USD', 'US Dollar $'],
@@ -24,34 +24,32 @@ const CurrencyModal = ({ onClose, setSuccess }) => {
   useEffect(() => {
     const fetchCurrency = async () => {
       try {
-        const res = await api.get('/currency/')
-        setCurrency(res.data.currency)
-        setCurrencyId(res.data.id)
+        const res = await api.get('/currency/');
+        setCurrency(res.data.currency);
+        setCurrencyId(res.data.id);
       } catch (err) {
-        console.error('Failed to load currency:', err)
-        setError('Could not load your currency setting.')
+        setError('Could not load your currency setting.');
       }
     }
 
-    fetchCurrency()
+    fetchCurrency();
   }, [])
 
   // 2. Handle saving new selection
-  const handleSave = async () => {
-    setSaving(true)
+  const handleSave = useCallback(async () => {
+    setSaving(true);
     try {
-      await api.put(`/currency/${currencyId}/`, { currency })
-      setSuccess('Currency updated successfully.')
-      setError('')
-      onClose()
+      await api.put(`/currency/${currencyId}/`, { currency });
+      setSuccess('Currency updated successfully.');
+      setError('');
+      onClose();
       window.location.reload();
     } catch (err) {
-      console.error('Currency update error:', err)
-      setError('Failed to update currency. Please try again.')
+      setError('Failed to update currency. Please try again.');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  }, [currency, currencyId, setSuccess, onClose]);
 
   return (
     <div className="popup">
@@ -81,7 +79,7 @@ const CurrencyModal = ({ onClose, setSuccess }) => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default CurrencyModal
