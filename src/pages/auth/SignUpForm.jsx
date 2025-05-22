@@ -6,26 +6,27 @@ import { useAuth } from '../../context/AuthContext'
 
 export default function SignUpForm() {
   // Store form inputs
-  const [username, setUsername] = useState('')
-  const [password1, setPassword1] = useState('')
-  const [password2, setPassword2] = useState('')
-  const [email, setEmail] = useState('')
-  const [backendErrors, setBackendErrors] = useState([])
-  const [success, setSuccess] = useState(false)
+  const [username, setUsername] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [email, setEmail] = useState('');
+  const [backendErrors, setBackendErrors] = useState([]);
+  const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const navigate = useNavigate()
-  const { login } = useAuth()
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    setBackendErrors([])
-    setSuccess(false)
+    e.preventDefault();
+    setIsSubmitting(true);
+    setBackendErrors([]);
+    setSuccess(false);
 
     // Basic client-side check
     if (password1 !== password2) {
-      setError('Passwords do not match')
+      setBackEndErrors('Passwords do not match');
       return
     }
 
@@ -36,27 +37,28 @@ export default function SignUpForm() {
         email,
         password1,
         password2,
-      })
+      });
 
-      setSuccess(true)
-      setBackendErrors([])
+      setSuccess(true);
+      setBackendErrors([]);
 
-      await login(username, password1)
-      navigate('/')
+      await login(username, password1);
+      navigate('/');
 
     } catch (err) {
       const data = err.response?.data || {}
       const collectedErrors = []
 
-      if (data.username) collectedErrors.push(...data.username)
-      if (data.email) collectedErrors.push(...data.email)
-      if (data.password1) collectedErrors.push(...data.password1)
-      if (data.password2) collectedErrors.push(...data.password2)
-      if (data.non_field_errors) collectedErrors.push(...data.non_field_errors)
+      if (data.username) collectedErrors.push(...data.username);
+      if (data.email) collectedErrors.push(...data.email);
+      if (data.password1) collectedErrors.push(...data.password1);
+      if (data.password2) collectedErrors.push(...data.password2);
+      if (data.non_field_errors) collectedErrors.push(...data.non_field_errors);
 
-      setBackendErrors(collectedErrors.length ? collectedErrors : ['Signup failed. Please check your input.'])
-      setSuccess(false)
+      setBackendErrors(collectedErrors.length ? collectedErrors : ['Signup failed. Please check your input.']);
+      setSuccess(false);
     }
+    setIsSubmitting(false);
   }
 
   return (
@@ -110,19 +112,23 @@ export default function SignUpForm() {
             </ul>
           </div>
 
-          <button type="submit">Register</button>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Registering...' : 'Register'}
+          </button>
 
           {/* Backend Validation Errors */}
-          {backendErrors.length > 0 && (
-            <div className="error">
-              <ul>
-                {backendErrors.map((msg, index) => (
-                  <li key={index}>{msg}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {success && <p className="success">Account created! You can now sign in.</p>}
+          <div aria-live="polite">
+            {backendErrors.length > 0 && (
+              <div className="error">
+                <ul>
+                  {backendErrors.map((msg, index) => (
+                    <li key={index}>{msg}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {success && <p className="success">Account created! You can now sign in.</p>}
+          </div>
           
           <p className={styles.altlink}>Already have an account?
             <Link to="/signin"> Sign-in</Link>
@@ -130,5 +136,5 @@ export default function SignUpForm() {
         </form>
       </div>
     </div>
-  )
+  );
 }
