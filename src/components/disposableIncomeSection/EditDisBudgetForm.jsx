@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import api from "../../api/axiosDefaults";
 
-export default function EditDisSpendForm(
+export default function EditDisBudgetForm(
   { item, onClose, onUpdate}) {
   const [amount, setAmount] = useState(
     item.formatted_amount.replace(/[^0-9.]/g, "")
@@ -9,7 +9,7 @@ export default function EditDisSpendForm(
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setIsSubmitting(true)
     try {
@@ -23,7 +23,7 @@ export default function EditDisSpendForm(
     } finally {
       setIsSubmitting(false)
     }
-  };
+  }, [amount, item.id, onUpdate, onClose]);
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">

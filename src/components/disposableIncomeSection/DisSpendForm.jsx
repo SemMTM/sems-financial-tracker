@@ -82,5 +82,5 @@ export default function DisSpendForm({ onAdd }) {
         disabled={isSubmitting}
         type="submit">Add Spending</button>
     </form>
-  )
+  );
 }

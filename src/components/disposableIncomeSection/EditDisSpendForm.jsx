@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import api from "../../api/axiosDefaults";
 
 export default function EditDisSpendForm(
@@ -7,11 +7,13 @@ export default function EditDisSpendForm(
   const [amount, setAmount] = useState(
     item.formatted_amount.replace(/[^0-9.]/g, "")
   );
-  const [date, setDate] = useState(item.date.slice(0, 10));
+  const [date, setDate] = useState(
+    new Date(item.date).toLocaleDateString('en-CA')
+  );
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setIsSubmitting(true)
     try {
@@ -27,9 +29,9 @@ export default function EditDisSpendForm(
     } finally {
       setIsSubmitting(false)
     }
-  };
+  }, [item.id, title, amount, date, onUpdate, onClose]);
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
     if (!confirmed) return
     setIsSubmitting(true)
@@ -42,7 +44,7 @@ export default function EditDisSpendForm(
     } finally {
       setIsSubmitting(false)
     }
-  }
+  }, [item.id, onUpdate, onClose]);
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
@@ -71,7 +73,7 @@ export default function EditDisSpendForm(
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           required
-          min="0"
+          min="0.01"
           step="0.01"
         />
       </div>
