@@ -1,36 +1,39 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import api from '../../api/axiosDefaults'
 import { useCalendar } from '../../context/CalendarContext';
 
 export default function DisSpendForm({ onAdd }) {
-  const [title, setTitle] = useState('')
-  const [amount, setAmount] = useState('')
   const { selectedDate } = useCalendar();
-  const [date, setDate] = useState(
-    selectedDate.toISOString().split('T')[0]
-  )
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    const formatAmount = parseFloat(amount).toFixed(2)
+  const [title, setTitle] = useState('');
+  const [amount, setAmount] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [date, setDate] = useState(
+    selectedDate.toLocaleDateString('en-CA')
+  );
+
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formatAmount = parseFloat(amount).toFixed(2);
+    
     try {
       await api.post('/disposable-spending/', {
         title,
         amount: formatAmount,
         date,
       })
-      onAdd()
-      setTitle('')
-      setAmount('')
-      setDate('')
+      onAdd();
+      setTitle('');
+      setAmount('');
+      setDate('');
     } catch (err) {
-      console.error('Failed to add spending:', err)
+      console.error('Failed to add spending:', err);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  }, [title, amount, date, onAdd]);
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
@@ -43,7 +46,7 @@ export default function DisSpendForm({ onAdd }) {
           type="text"
           placeholder="Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value.trimStart())}
           required
         />
       </div>
@@ -58,6 +61,7 @@ export default function DisSpendForm({ onAdd }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           step="0.01"
+          min="0.01"
           required
         />
       </div>
