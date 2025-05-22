@@ -6,14 +6,21 @@ import { Link } from 'react-router-dom'
 const ResetPasswordForm = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       await api.post('/dj-rest-auth/password/reset/', { email });
       setMessage('Check your email for the password reset link.');
+      setErrorMessage('');
     } catch (error) {
-      setMessage('Failed to send password reset email.');
+      setErrorMessage('Failed to send password reset email.');
+      setMessage('');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -29,8 +36,14 @@ const ResetPasswordForm = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button type="submit">Send Reset Link</button>
-          {message && <p>{message}</p>}
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Sending...' : 'Send Reset Link'}
+          </button>
+
+          <div aria-live="polite">
+            {message && <p style={{ color: 'green' }}>{message}</p>}
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          </div>
         </form>
 
         <p className={styles.altlink}>
