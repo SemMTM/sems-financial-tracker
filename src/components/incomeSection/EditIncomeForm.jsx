@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import api from "../../api/axiosDefaults";
 
 export default function EditIncomeForm(
@@ -7,10 +7,12 @@ export default function EditIncomeForm(
   const [amount, setAmount] = useState(
     item.formatted_amount.replace(/[^0-9.]/g, "")
   );
-  const [date, setDate] = useState(item.date.slice(0, 10));
+  const [date, setDate] = useState(
+    new Date(item.date).toLocaleDateString('en-CA')
+  );
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
 
     try {
@@ -24,20 +26,20 @@ export default function EditIncomeForm(
     } catch (err) {
       setError("Failed to update income.");
     }
-  };
+  }, [title, amount, date, item.id, onUpdate, onClose]);
 
-  const handleDelete = async () => {
-    const confirmed = window.confirm('Are you sure you want to delete this income?')
+  const handleDelete = useCallback(async () => {
+    const confirmed = window.confirm('Are you sure you want to delete this income?');
     if (!confirmed) return
   
     try {
-      await api.delete(`/income/${item.id}/`)
-      onUpdate()
-      onClose()
+      await api.delete(`/income/${item.id}/`);
+      onUpdate();
+      onClose();
     } catch (err) {
-      console.error('Failed to delete income:', err)
+      setError('Failed to delete income:', err);
     }
-  }
+  }, [item.id, onUpdate, onClose]);
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
@@ -51,7 +53,7 @@ export default function EditIncomeForm(
           type="text"
           placeholder="Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value.trimStart())}
           required
         />
       </div>
@@ -66,7 +68,7 @@ export default function EditIncomeForm(
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           required
-          min="0"
+          min="0.01"
           step="0.01"
         />
       </div>

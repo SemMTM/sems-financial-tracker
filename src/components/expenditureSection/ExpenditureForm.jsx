@@ -18,13 +18,6 @@ export default function ExpenditureForm({ onAdd }) {
     e.preventDefault();
     setIsSubmitting(true);
     const formatAmount = parseFloat(amount).toFixed(2);
-    console.log({
-        title,
-        amount,
-        date,
-        type,
-        repeated: repeated || null,
-      });
     try {
       await api.post('/expenditures/', {
         title,
@@ -40,7 +33,7 @@ export default function ExpenditureForm({ onAdd }) {
       setType('BILL');
       setRepeated('NEVER');
     } catch (err) {
-      console.error('Failed to add expenditure:', err);
+      setError('Failed to add expenditure:', err);
     } finally {
       setIsSubmitting(false);
     }

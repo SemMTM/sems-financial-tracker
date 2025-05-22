@@ -10,50 +10,49 @@ import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 
 export default function ExpenditureList() {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const { notifyChange } = useFinancialData();
   const { getSelectedMonthParam, selectedDate } = useCalendar();
 
-  const [expenditures, setExpenditures] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [showModal, setShowModal] = useState(false)
-  const [modalContent, setModalContent] = useState(null)
+  const [expenditures, setExpenditures] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   // Fetch expenditures from the backend
   const fetchExpenditures = useCallback(async () => {
     if (!user) return
-    setError('')
+    setError('');
     try {
-      const res = await api.get(`/expenditures/?month=${getSelectedMonthParam()}`)
-      setExpenditures(res.data || [])
+      const res = await api.get(`/expenditures/?month=${getSelectedMonthParam()}`);
+      setExpenditures(res.data || []);
     } catch (err) {
-      console.error('Failed to fetch expenditures:', err)
-      setError('Failed to load expenditures.')
+      setError('Failed to load expenditures.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }, [user, getSelectedMonthParam]);
 
   useEffect(() => {
-      fetchExpenditures()
-    }, [fetchExpenditures, selectedDate])
+      fetchExpenditures();
+    }, [fetchExpenditures, selectedDate]);
 
   // Handle add new expenditure
   const handleAdd = useCallback(() => {
     setModalContent(
       <ExpenditureForm
         onAdd={() => {
-          fetchExpenditures()
-          setShowModal(false)
-          notifyChange()
+          fetchExpenditures();
+          setShowModal(false);
+          notifyChange();
         }}
       />
-    )
-    setShowModal(true)
+    );
+    setShowModal(true);
   }, [fetchExpenditures, notifyChange]);
 
   // Handle edit s
@@ -63,28 +62,28 @@ export default function ExpenditureList() {
         item={item}
         onClose={() => setShowModal(false)}
         onUpdate={() => {
-          fetchExpenditures()
-          notifyChange()
+          fetchExpenditures();
+          notifyChange();
         }}
       />
-    )
-    setShowModal(true)
+    );
+    setShowModal(true);
   }, [fetchExpenditures, notifyChange]);
 
   function formatType(type) {
     if (typeof type !== 'string') return ''
-    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()
+    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
   }
 
   if (!user) return <p>Please log in to view expenditures.</p>
   if (error) return <p>{error}</p>
-  if (isLoading) 
+  if (isLoading)
     return (
       <div className="list-section">
         <h3>Monthly Expenditures</h3>
         <div className='spinner'></div>
       </div>
-    )
+    );
 
   return (
     <div className="list-section">
@@ -151,5 +150,5 @@ export default function ExpenditureList() {
       )}
 
     </div>
-  )
+  );
 }
