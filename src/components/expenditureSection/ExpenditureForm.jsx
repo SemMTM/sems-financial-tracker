@@ -3,9 +3,10 @@ import api from '../../api/axiosDefaults'
 import { useCalendar } from '../../context/CalendarContext';
 
 export default function ExpenditureForm({ onAdd }) {
+  const { selectedDate } = useCalendar();
+  
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
-  const { selectedDate } = useCalendar();
   const [date, setDate] = useState(
     selectedDate.toLocaleDateString('en-CA')
   );
@@ -14,16 +15,16 @@ export default function ExpenditureForm({ onAdd }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = useCallback(async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    const formatAmount = parseFloat(amount).toFixed(2)
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formatAmount = parseFloat(amount).toFixed(2);
     console.log({
         title,
         amount,
         date,
         type,
         repeated: repeated || null,
-      })
+      });
     try {
       await api.post('/expenditures/', {
         title,
@@ -31,17 +32,17 @@ export default function ExpenditureForm({ onAdd }) {
         date,
         type,
         repeated: repeated || 'NEVER',
-      })
-      onAdd()
-      setTitle('')
-      setAmount('')
-      setDate('')
-      setType('BILL')
-      setRepeated('NEVER')
+      });
+      onAdd();
+      setTitle('');
+      setAmount('');
+      setDate('');
+      setType('BILL');
+      setRepeated('NEVER');
     } catch (err) {
-      console.error('Failed to add expenditure:', err)
+      console.error('Failed to add expenditure:', err);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }, [title, amount, date, type, repeated, onAdd]);
 

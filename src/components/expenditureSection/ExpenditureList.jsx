@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import ExpenditureForm from './ExpenditureForm'
@@ -20,28 +20,30 @@ export default function ExpenditureList() {
   const [showModal, setShowModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
 
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
   // Fetch expenditures from the backend
-  const fetchExpenditures = async () => {
+  const fetchExpenditures = useCallback(async () => {
     if (!user) return
     setError('')
     try {
       const res = await api.get(`/expenditures/?month=${getSelectedMonthParam()}`)
-      setExpenditures(res.data)
+      setExpenditures(res.data || [])
     } catch (err) {
       console.error('Failed to fetch expenditures:', err)
       setError('Failed to load expenditures.')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [user, getSelectedMonthParam]);
 
   useEffect(() => {
       fetchExpenditures()
-    }, [user, selectedDate])
+    }, [fetchExpenditures, selectedDate])
 
   // Handle add new expenditure
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
     setModalContent(
       <ExpenditureForm
         onAdd={() => {
@@ -52,10 +54,10 @@ export default function ExpenditureList() {
       />
     )
     setShowModal(true)
-  }
+  }, [fetchExpenditures, notifyChange]);
 
   // Handle edit s
-  const handleEdit = (item) => {
+  const handleEdit = useCallback((item) => {
     setModalContent(
       <EditExpenditureForm
         item={item}
@@ -67,6 +69,11 @@ export default function ExpenditureList() {
       />
     )
     setShowModal(true)
+  }, [fetchExpenditures, notifyChange]);
+
+  function formatType(type) {
+    if (typeof type !== 'string') return ''
+    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()
   }
 
   if (!user) return <p>Please log in to view expenditures.</p>
@@ -87,64 +94,49 @@ export default function ExpenditureList() {
         <p>No expenditures for this month.</p>
       ) : (
         <ul>
-          <div>
-            <div className="list-titles-section">
-              <span className="list-item-section title list-title">
-                Title
-              </span>
+          <li className="list-titles-section">
+            <span className="list-item-section title list-title">Title</span>
+            <span className="list-item-section amount list-title">Amount</span>
+            <span className="list-item-section type list-title">Type</span>
+            <span className="list-item-section date list-title">Date</span>
+            <span className="btns-container"></span>
+          </li>
+          {expenditures.map((item) => (
+            <li 
+              key={item.id} 
+              className={`list-item expenditure-item ${
+                new Date(item.date).setHours(0, 0, 0, 0) < today ? 'greyed-out' : ''
+              }`}>
+
               <span 
-                className="
-                  list-item-section amount list-title">
-                Amount
+                className="list-item-section title">
+                {item.title}
               </span>
+
+              <span className="list-item-section amount">
+                -{cleanFormattedAmount(item.formatted_amount)}
+                </span>
+
               <span 
-                className="list-item-section type list-title">
-                Type
+                className="list-item-section type">
+                {formatType(item.type)}
               </span>
-              <span className="list-item-section date list-title">
-                Date
+
+              <span className="list-item-section date">
+              {new Date(item.date).toLocaleDateString('en-GB', {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                })
+              }
               </span>
-              <span className="btns-container"></span>
-            </div>
-            {expenditures.map((item) => (
-              <li 
-                key={item.id} 
-                className={`list-item expenditure-item ${
-                  new Date(item.date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0) 
-                      ? 'greyed-out' 
-                      : ''
-                }`}>
-
-                <span 
-                  className="list-item-section title">
-                  {item.title}
-                </span>
-
-                <span className="list-item-section amount">
-                  -{cleanFormattedAmount(item.formatted_amount)}
-                  </span>
-
-                <span 
-                  className="list-item-section type">
-                  {item.type.charAt(0).toUpperCase() + item.type.slice(1).toLowerCase()}
-                </span>
-
-                <span className="list-item-section date">
-                {new Date(item.date).toLocaleDateString('en-GB', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                }
-                </span>
-                <span className="btns-container">
-                  <button className="edit-btn" 
-                    onClick={() => handleEdit(item)}
-                    >Edit</button>
-                </span>
-              </li>
-            ))}
-          </div>
+              <span className="btns-container">
+                <button className="edit-btn" 
+                  onClick={() => handleEdit(item)}
+                  >Edit</button>
+              </span>
+            </li>
+          ))}
         </ul>
       )}
 
