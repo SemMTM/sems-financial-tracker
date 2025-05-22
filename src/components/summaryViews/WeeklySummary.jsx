@@ -8,15 +8,15 @@ import { useCalendar } from '../../context/CalendarContext'
 import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
 const isNegative = (val) =>
-  typeof val === 'string' && val.includes('-')
+  typeof val === 'string' && val.includes('-');
 
 export default function WeeklySummary({ setViewMode }) {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const { dataVersion } = useFinancialData();
-  const { selectedDate, getSelectedMonthParam } = useCalendar()
-  const [weeklySummary, setWeeklySummary] = useState({ weeks: [] })
-  const [loading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
+  const { selectedDate, getSelectedMonthParam } = useCalendar();
+  const [weeklySummary, setWeeklySummary] = useState({ weeks: [] });
+  const [loading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const year = selectedDate.getFullYear();
   const month = selectedDate.getMonth();
@@ -25,20 +25,20 @@ export default function WeeklySummary({ setViewMode }) {
   // Fetch incomes from the backend
   const fetchSummary = useCallback(async () => {
     if (!user) return
-    setError('')
+    setError('');
     try {
-      const res = await api.get(`/weekly-summary/?month=${getSelectedMonthParam()}`)
-      setWeeklySummary(res.data || { weeks: []})
+      const res = await api.get(`/weekly-summary/?month=${getSelectedMonthParam()}`);
+      setWeeklySummary(res.data || { weeks: []});
     } catch (err) {
-      setError('Failed to load incomes.')
+      setError('Failed to load incomes.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }, [user, getSelectedMonthParam]);
 
   useEffect(() => {
-    fetchSummary()
-  }, [fetchSummary, dataVersion, selectedDate])
+    fetchSummary();
+  }, [fetchSummary, dataVersion, selectedDate]);
 
   if (!user) return <p>Please log in to view summaries.</p>
   if (error) return <p>{error}</p>
@@ -95,5 +95,5 @@ export default function WeeklySummary({ setViewMode }) {
       </div>
       
     </div>
-  )
+  );
 }

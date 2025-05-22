@@ -1,36 +1,42 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import api from '../api/axiosDefaults'
 import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
-import styles from "../styles/CalendarView.module.css";
+import styles from "../styles/CalendarView.module.css"
 import { useFinancialData } from '../context/FinancialDataContext'
-import { useCalendar } from '../context/CalendarContext';
-import { cleanFormattedAmount } from '../utils/cleanAmount';
+import { useCalendar } from '../context/CalendarContext'
+import { cleanFormattedAmount } from '../utils/cleanAmount'
 
 export default function CalendarView() {
-  const today = new Date();
+
+  const fixedToday = useMemo(() => {
+    const t = new Date()
+    t.setHours(0, 0, 0, 0)
+    return t
+  }, []);
+
   const { getSelectedMonthParam, selectedDate } = useCalendar();
   const { dataVersion } = useFinancialData();
 
   const [calendarData, setCalendarData] = useState([]);
   const [summary, setSummary] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
 
   // fetches calendar data from API
-  useEffect(() => {
-    const fetchSummary = async () => {
+  const fetchSummary = useCallback(async () => {
       try {
         const res = await api.get(`/calendar-summary/?month=${getSelectedMonthParam()}`);
         setSummary(res.data);
       } catch (err) {
         console.error('Failed to load calendar summary', err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    };
+    },[getSelectedMonthParam]);
   
+  useEffect(() => {
     fetchSummary();
-  }, [dataVersion, getSelectedMonthParam]);
+  }, [dataVersion, fetchSummary]);
 
   // Merges data into generated calendar grid
   useEffect(() => {;
@@ -39,20 +45,19 @@ export default function CalendarView() {
     const merged = grid.map(cell => {
       if (cell.type !== 'day') return cell;
 
-      const localDate = cell.date;
+      const localDate = new Date(cell.date);
       localDate.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
 
-      const isPast = localDate < today;
+      const isPast = localDate < fixedToday;
   
       const iso = cell.date.toLocaleDateString('en-CA');
       const match = summary.find(item => item.date === iso);
   
       return {
         ...cell,
-        income: match?.income,
-        expenditure: match?.expenditure,
-        symbol: match?.currency_symbol,
+        income: match?.income || "0.00",
+        expenditure: match?.expenditure || "0.00",
+        symbol: match?.currency_symbol || "£",
         isPast,
       };
     });
