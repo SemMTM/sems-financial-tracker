@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import { useFinancialData } from '../../context/FinancialDataContext'
@@ -7,6 +7,8 @@ import getMonthWeeklyRanges from '../../utils/getFixedWeeklyRanges'
 import { useCalendar } from '../../context/CalendarContext'
 import { cleanFormattedAmount } from '../../utils/cleanAmount';
 
+const isNegative = (val) =>
+  typeof val === 'string' && val.includes('-')
 
 export default function WeeklySummary({ setViewMode }) {
   const { user } = useAuth()
@@ -21,23 +23,22 @@ export default function WeeklySummary({ setViewMode }) {
   const weeklyRanges = useMemo(() => getMonthWeeklyRanges(selectedDate), [selectedDate]);
 
   // Fetch incomes from the backend
-  const fetchSummary = async () => {
+  const fetchSummary = useCallback(async () => {
     if (!user) return
     setError('')
     try {
       const res = await api.get(`/weekly-summary/?month=${getSelectedMonthParam()}`)
-      setWeeklySummary(res.data)
+      setWeeklySummary(res.data || { weeks: []})
     } catch (err) {
-      console.error('Failed to fetch incomes:', err)
       setError('Failed to load incomes.')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [user, getSelectedMonthParam]);
 
   useEffect(() => {
     fetchSummary()
-  }, [user, dataVersion, selectedDate])
+  }, [fetchSummary, dataVersion, selectedDate])
 
   if (!user) return <p>Please log in to view summaries.</p>
   if (error) return <p>{error}</p>
@@ -69,6 +70,11 @@ export default function WeeklySummary({ setViewMode }) {
 
             const week = weeklySummary.weeks[i];
             const range = weeklyRanges[i];
+
+            const formattedIncome = cleanFormattedAmount(week.income || '0')
+            const formattedExpenditure = cleanFormattedAmount(week.cost || '0')
+            const formattedSummary = week.summary || 'N/A'
+
             return (
               <tr key={i}>
                 <td>
@@ -76,12 +82,11 @@ export default function WeeklySummary({ setViewMode }) {
                   ? `${selectedDate.toLocaleString('en-GB', { month: 'short' })} ${range.start} - ${range.end}`
                   : `Week ${i + 1}`}
                 </td>
-                <td className="income-summary">+{cleanFormattedAmount(week?.income) || 'N/A'}</td>
-                <td className="expenditure-summary">-{cleanFormattedAmount(week?.cost) || 'N/A'}</td>
-                <td className={cleanFormattedAmount(week?.summary)?.includes('-') ? 'expenditure-summary' : 'income-summary'
-                  } 
-                >
-                  {week?.summary || 'N/A'}</td>
+                <td className="income-summary">+{formattedIncome}</td>
+                <td className="expenditure-summary">-{formattedExpenditure}</td>
+                <td className={isNegative(formattedSummary) ? 'expenditure-summary' : 'income-summary'}>
+                    {formattedSummary}
+                  </td>
               </tr>
             );
           })}

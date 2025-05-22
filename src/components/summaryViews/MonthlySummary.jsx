@@ -8,41 +8,41 @@ import { cleanFormattedAmount } from '../../utils/cleanAmount'
 
 
 export default function MonthlySummary({ setViewMode }) {
-  const { user } = useAuth()
-  const [monthlySummary, setMonthlySummary] = useState([])
-  const [loading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
+  const { user } = useAuth();
+  const [monthlySummary, setMonthlySummary] = useState([]);
+  const [loading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const { dataVersion } = useFinancialData();
-  const { selectedDate, getSelectedMonthParam } = useCalendar()
+  const { selectedDate, getSelectedMonthParam } = useCalendar();
 
-  const isNegative = (str) => typeof str === 'string' && str.includes('-')
+  const isNegative = (str) => typeof str === 'string' && str.includes('-');
 
   const fetchSummary = useCallback(async () => {
     if (!user) return
-    setError('')
+    setError('');
     try {
       const res = await api.get(
-        `/monthly-summary/?month=${getSelectedMonthParam()}`)
-      setMonthlySummary(res.data  || {})
+        `/monthly-summary/?month=${getSelectedMonthParam()}`);
+      setMonthlySummary(res.data  || {});
     } catch (err) {
-      setError('Failed to load monthly summary.')
+      setError('Failed to load monthly summary.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }, [user, getSelectedMonthParam]);
 
   // Load summary on mount or when user is set
   useEffect(() => {
      fetchSummary()
-  }, [fetchSummary, dataVersion, selectedDate])
+  }, [fetchSummary, dataVersion, selectedDate]);
 
   const SummaryRow = ({ label, value, className, sign }) => (
     <li className="list-item sum-li-item">
       <span>{label}</span>
       <span className={className}>{sign}{value}</span>
     </li>
-  )
+  );
 
   if (!user) return <p>Please log in to view summary.</p>
   if (error) return <p>{error}</p>
@@ -133,10 +133,9 @@ export default function MonthlySummary({ setViewMode }) {
                   : `${cleanFormattedAmount(monthlySummary.formatted_remaining_disposable || '0.00')}`}
               </div>
               )}
-            
             </div>
           </div>
       </div>
     </div>
-  )
+  );
 }
