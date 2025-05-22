@@ -3,9 +3,9 @@ import api from '../../api/axiosDefaults'
 import { useAuth } from '../../context/AuthContext'
 
 const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
-    const { user, setUser } = useAuth()
-    const [newUsername, setNewUsername] = useState('')
-    const [validationError, setValidationError] = useState('')
+    const { user, setUser } = useAuth();
+    const [newUsername, setNewUsername] = useState('');
+    const [validationError, setValidationError] = useState('');
   
     // Validation rules
     const isValidUsername = (username) => {
@@ -14,42 +14,42 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
         username &&
         username.length <= 40 &&
         pattern.test(username)
-        )
+        );
     }
 
-    const handleChange = async () => {
+    const handleChange = useCallback(async () => {
         // 1. Validate before sending request
         if (!newUsername.trim()) {
-            setValidationError('Username cannot be blank.')
+            setValidationError('Username cannot be blank.');
             return
         }
         if (!isValidUsername(newUsername)) {
             setValidationError(
             'Username must only contain letters, numbers, dashes (-), or underscores (_) and be at most 40 characters.'
-            )
+            );
             return
         }
 
         try {
             // 1. Send PATCH request to update username
-            await api.patch('/dj-rest-auth/user/', { username: newUsername })
+            await api.patch('/dj-rest-auth/user/', { username: newUsername });
     
             // 2. Refetch updated user data
-            const res = await api.get('/dj-rest-auth/user/')
-            setUser(res.data)
+            const res = await api.get('/dj-rest-auth/user/');
+            setUser(res.data);
     
             // 3. Close modal and show success message
-            setSuccess('Username updated successfully.')
-            setError('')
-            setValidationError('')
-            onClose()
+            setSuccess('Username updated successfully.');
+            setError('');
+            setValidationError('');
+            onClose();
         } catch (err) {
             const msg = err.response?.data?.username?.[0] ||
             'Failed to update username.'
-            setError(msg)
-            setValidationError('')
+            setError(msg);
+            setValidationError('');
         }
-        }
+      }, [newUsername, isValidUsername, setUser, setSuccess, setError, onClose]);
     
         return (
         <div className="popup">
@@ -67,7 +67,8 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
                   id="new-username"
                   placeholder="New username"
                   value={newUsername}
-                  onChange={(e) => setNewUsername(e.target.value)}
+                  onChange={(e) => setNewUsername(e.target.value.trimStart())}
+                  required
                 />
               </div>
 
@@ -83,7 +84,7 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
               </div>
             </div>
         </div>
-        )
+        );
     }
   
   export default ChangeUsernameModal
