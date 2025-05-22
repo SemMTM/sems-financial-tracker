@@ -11,11 +11,11 @@ export default function EditDisSpendForm(
     new Date(item.date).toLocaleDateString('en-CA')
   );
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
       await api.put(`/disposable-spending/${item.id}/`, {
         title,
@@ -27,22 +27,22 @@ export default function EditDisSpendForm(
     } catch (err) {
       setError("Failed to update disposable spending.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }, [item.id, title, amount, date, onUpdate, onClose]);
 
   const handleDelete = useCallback(async () => {
-    const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
+    const confirmed = window.confirm('Are you sure you want to delete this expenditure?');
     if (!confirmed) return
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      await api.delete(`/disposable-spending/${item.id}/`)
-      onUpdate()
-      onClose()
+      await api.delete(`/disposable-spending/${item.id}/`);
+      onUpdate();
+      onClose();
     } catch (err) {
-      setError('Failed to delete expenditure.')
+      setError('Failed to delete expenditure.');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }, [item.id, onUpdate, onClose]);
 

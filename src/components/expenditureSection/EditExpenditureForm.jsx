@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import api from "../../api/axiosDefaults";
 import { useFinancialData } from '../../context/FinancialDataContext'
 
@@ -9,12 +9,15 @@ export default function EditExpenditureForm(
     item.formatted_amount.replace(/[^0-9.]/g, "")
   );
   const [type, setType] = useState(item.type);
-  const [date, setDate] = useState(item.date.slice(0, 10));
+  const [date, setDate] = useState(
+    new Date(item.date).toLocaleDateString('en-CA')
+  );
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { notifyChange } = useFinancialData();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setIsSubmitting(true)
     try {
@@ -24,31 +27,31 @@ export default function EditExpenditureForm(
         type,
         date,
       });
-      onUpdate(); // Refresh list
-      notifyChange()
-      onClose(); // Close modal
+      onUpdate();
+      notifyChange();
+      onClose();
     } catch (err) {
       setError("Failed to update expenditure.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  };
+  }, [title, amount, type, date, item.id, onUpdate, onClose, notifyChange]);
 
-  const handleDelete = async () => {
-    const confirmed = window.confirm('Are you sure you want to delete this expenditure?')
+  const handleDelete = useCallback(async () => {
+    const confirmed = window.confirm('Are you sure you want to delete this expenditure?');
     if (!confirmed) return
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      await api.delete(`/expenditures/${item.id}/`)
-      onUpdate()
-      notifyChange()
-      onClose()
+      await api.delete(`/expenditures/${item.id}/`);
+      onUpdate();
+      notifyChange();
+      onClose();
     } catch (err) {
-      setError('Failed to delete expenditure.')
+      setError('Failed to delete expenditure.');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  }, [item.id, onUpdate, onClose, notifyChange]);
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
@@ -77,7 +80,7 @@ export default function EditExpenditureForm(
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           required
-          min="0"
+          min="0.01"
           step="0.01"
         />
       </div>

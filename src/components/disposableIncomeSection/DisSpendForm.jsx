@@ -7,6 +7,7 @@ export default function DisSpendForm({ onAdd }) {
 
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
+  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = useState(
     selectedDate.toLocaleDateString('en-CA')
@@ -29,7 +30,7 @@ export default function DisSpendForm({ onAdd }) {
       setAmount('');
       setDate('');
     } catch (err) {
-      console.error('Failed to add spending:', err);
+      setError('Failed to add spending:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -80,7 +81,10 @@ export default function DisSpendForm({ onAdd }) {
 
       <button className="add-button" 
         disabled={isSubmitting}
-        type="submit">Add Spending</button>
+        type="submit">Add Spending
+      </button>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
 }
