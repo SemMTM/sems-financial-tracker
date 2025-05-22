@@ -59,37 +59,50 @@ export default function SettingsDropdown() {
 
   return (
     <div className={styles['settings-wrapper']} ref={dropdownRef}>
-      <button onClick={() => setShowDropdown((prev) => !prev)}>
+      <button
+        onClick={() => setShowDropdown((prev) => !prev)}
+        aria-expanded={showDropdown}
+        aria-controls="settings-dropdown-panel"
+        type="button"
+      >
         Settings
       </button>
   
       {/* 6. Dropdown Panel */}
       {showDropdown && (
-        <div className={styles['settings-dropdown']}>
+        <div 
+          className={styles['settings-dropdown']}
+          id="settings-dropdown-panel"
+        >
           <h2>Settings</h2>
   
-          {success && <p className={styles['success-msg']}>{success}</p>}
-          {error && <p className={styles['error-msg']}>{error}</p>}
+          <div aria-live="polite">
+            {success && <p className={styles['success-msg']}>{success}</p>}
+            {error && <p className={styles['error-msg']}>{error}</p>}
+          </div>
 
           <div>
-            <label htmlFor="theme-toggle">Dark Mode</label>
-            <input
-              type="checkbox"
-              id="theme-toggle"
-              checked={theme === 'dark'}
-              onChange={toggleTheme}
-            />
+            <button
+              onClick={toggleTheme}
+              type="button"
+              className={styles['settings-btn']}
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+            </button>
           </div>
   
           <div>
             <button className={styles['settings-btn']}
-              onClick={() => openModal(ChangeUsernameModal)}>
+              onClick={() => openModal(ChangeUsernameModal)}
+              type="button">
               Change Username
             </button>
           </div>
 
           <div>
-          <button className={styles['settings-btn']}
+            <button className={styles['settings-btn']}
+              type="button"
               onClick={() => openModal(ChangeEmailModal)}>
               Change Email Address
             </button>
@@ -97,6 +110,7 @@ export default function SettingsDropdown() {
   
           <div>
             <button className={styles['settings-btn']}
+              type="button"
               onClick={() => openModal(ChangePasswordModal)}>
               Change Password
             </button>
@@ -104,6 +118,7 @@ export default function SettingsDropdown() {
   
           <div>
             <button className={styles['settings-btn']}
+              type="button"
               onClick={() => openModal(CurrencySelector)}>
               Change Currency
             </button>
@@ -111,6 +126,7 @@ export default function SettingsDropdown() {
   
           <div>
             <button
+              type="button"
               onClick={handleLogout}
               className={`${styles['logout-btn']} ${styles['settings-btn']}`}
             >
