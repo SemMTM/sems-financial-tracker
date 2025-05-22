@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axiosDefaults'
 import styles from '../../styles/MonthlySummary.module.css'
 import { useFinancialData } from '../../context/FinancialDataContext'
 import { useCalendar } from '../../context/CalendarContext'
-import { cleanFormattedAmount } from '../../utils/cleanAmount';
+import { cleanFormattedAmount } from '../../utils/cleanAmount'
 
 
 export default function MonthlySummary({ setViewMode }) {
@@ -16,25 +16,33 @@ export default function MonthlySummary({ setViewMode }) {
   const { dataVersion } = useFinancialData();
   const { selectedDate, getSelectedMonthParam } = useCalendar()
 
-  const fetchSummary = async () => {
+  const isNegative = (str) => typeof str === 'string' && str.includes('-')
+
+  const fetchSummary = useCallback(async () => {
     if (!user) return
     setError('')
     try {
       const res = await api.get(
         `/monthly-summary/?month=${getSelectedMonthParam()}`)
-      setMonthlySummary(res.data)
+      setMonthlySummary(res.data  || {})
     } catch (err) {
-      console.error('Failed to fetch monthly summary:', err)
       setError('Failed to load monthly summary.')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [user, getSelectedMonthParam]);
 
   // Load summary on mount or when user is set
   useEffect(() => {
      fetchSummary()
-  }, [user, dataVersion, selectedDate])
+  }, [fetchSummary, dataVersion, selectedDate])
+
+  const SummaryRow = ({ label, value, className, sign }) => (
+    <li className="list-item sum-li-item">
+      <span>{label}</span>
+      <span className={className}>{sign}{value}</span>
+    </li>
+  )
 
   if (!user) return <p>Please log in to view summary.</p>
   if (error) return <p>{error}</p>
@@ -51,58 +59,53 @@ export default function MonthlySummary({ setViewMode }) {
 
       <div className={styles['monthly-summary-sec-inner']}>
         <ul className={styles['month-sum-list']}>
-          <li className="list-item sum-li-item">
-            <span>Monthly Income</span>
-            <span className="income-summary">
-              +{cleanFormattedAmount(monthlySummary.formatted_income)}
-            </span>
-          </li>
+          <SummaryRow
+            label="Monthly Income"
+            value={cleanFormattedAmount(monthlySummary.formatted_income) || '0.00'}
+            className="income-summary"
+            sign={"+"}
+          />
 
-          <li className="list-item sum-li-item">
-            <span>Bills</span>
-            <span className="expenditure-summary">
-              -{cleanFormattedAmount(monthlySummary.formatted_bills)}
-            </span>
-          </li>
+          <SummaryRow
+            label="Bills"
+            value={cleanFormattedAmount(monthlySummary.formatted_bills) || '0.00'}
+            className="expenditure-summary"
+            sign={"-"}
+          />
 
-          <li className="list-item sum-li-item">
-            <span>Saving</span>
-            <span className="expenditure-summary">
-              -{cleanFormattedAmount(monthlySummary.formatted_saving)}
-            </span>
-          </li>
+          <SummaryRow
+            label="Savings"
+            value={cleanFormattedAmount(monthlySummary.formatted_saving) || '0.00'}
+            className="expenditure-summary"
+            sign={"-"}
+          />
 
-          <li className="list-item sum-li-item">
-            <span>Investment</span> 
-            <span className="expenditure-summary">
-              -{cleanFormattedAmount(monthlySummary.formatted_investment)}
-            </span>
-          </li>
+          <SummaryRow
+            label="Investment"
+            value={cleanFormattedAmount(monthlySummary.formatted_investment) || '0.00'}
+            className="expenditure-summary"
+            sign={"-"}
+          />
 
-          <li className="list-item sum-li-item">
-            <span>Disposable income spending</span> 
-            <span className="expenditure-summary">
-              -{cleanFormattedAmount(monthlySummary.formatted_disposable_spending)}
-            </span>
-          </li>
+          <SummaryRow
+            label="Disposable Income Spending"
+            value={cleanFormattedAmount(monthlySummary.formatted_disposable_spending) || '0.00'}
+            className="expenditure-summary"
+            sign={"-"}
+          />
 
           <li className="list-item sum-li-item">
             <strong><span>Summary</span></strong> 
-
             {monthlySummary?.formatted_total && (
-              <span
-                className={
-                  monthlySummary.formatted_total.includes('-')
-                    ? 'expenditure-summary'
-                    : 'income-summary'
-                }
-              >
-                {monthlySummary.formatted_total.includes('-')
-                  ? monthlySummary.formatted_total
-                  : `+${cleanFormattedAmount(monthlySummary.formatted_total)}`}
+              <span className={
+                  isNegative(monthlySummary.formatted_total)
+                  ? 'expenditure-summary' :
+                  'income-summary'
+                  }
+                >
+                {monthlySummary.formatted_total}
               </span>
             )}
-
           </li>
         </ul>
 
@@ -110,7 +113,7 @@ export default function MonthlySummary({ setViewMode }) {
             <div>
               <div>Disposable Income Budget</div> 
               <div className="">
-                {cleanFormattedAmount(monthlySummary.formatted_budget)}
+                {cleanFormattedAmount(monthlySummary.formatted_budget || '0.00')}
               </div>
             </div>
 
@@ -126,8 +129,8 @@ export default function MonthlySummary({ setViewMode }) {
                 }
               >
                 {monthlySummary.formatted_remaining_disposable.includes('-')
-                  ? cleanFormattedAmount(monthlySummary.formatted_remaining_disposable)
-                  : `${cleanFormattedAmount(monthlySummary.formatted_remaining_disposable)}`}
+                  ? cleanFormattedAmount(monthlySummary.formatted_remaining_disposable || '0.00')
+                  : `${cleanFormattedAmount(monthlySummary.formatted_remaining_disposable || '0.00')}`}
               </div>
               )}
             
