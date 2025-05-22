@@ -1,25 +1,27 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import api from '../../api/axiosDefaults'
 
 export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
-  const [newPassword1, setNewPassword1] = useState('')
-  const [newPassword2, setNewPassword2] = useState('')
+  const [newPassword1, setNewPassword1] = useState('');
+  const [newPassword2, setNewPassword2] = useState('');
   const [backendErrors, setBackendErrors] = useState([]);
 
-  const handlePasswordChange = async () => {
+  const handlePasswordChange = useCallback(async () => {
+    if (!newPassword1 || !newPassword2) return
+
     try {
       await api.post('/dj-rest-auth/password/change/', {
         new_password1: newPassword1,
         new_password2: newPassword2,
       })
 
-      setSuccess('Password changed successfully.')
-      setError('')
+      setSuccess('Password changed successfully.');
+      setError('');
       setBackendErrors([]);
-      onClose()
+      onClose();
     } catch (err) {
-      const data = err.response?.data || {};
-      const combinedErrors = [];
+      const data = err.response?.data || {}
+      const combinedErrors = []
 
       if (data.new_password1) combinedErrors.push(...data.new_password1);
       if (data.new_password2) combinedErrors.push(...data.new_password2);
@@ -29,7 +31,7 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
       setError('Failed to change password.');
       setSuccess('');
     }
-  }
+  }, [newPassword1, newPassword2, setSuccess, setError, onClose]);
 
   return (
     <div className="popup">
@@ -42,6 +44,7 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
             placeholder="New password"
             value={newPassword1}
             onChange={(e) => setNewPassword1(e.target.value)}
+            required
           />
         </div>
 
@@ -51,6 +54,7 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
             placeholder="Confirm new password"
             value={newPassword2}
             onChange={(e) => setNewPassword2(e.target.value)}
+            required
           />
         </div>
 
@@ -86,5 +90,5 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
