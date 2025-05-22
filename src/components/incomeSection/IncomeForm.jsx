@@ -3,20 +3,20 @@ import api from '../../api/axiosDefaults'
 import { useCalendar } from '../../context/CalendarContext';
 
 export default function IncomeForm({ onAdd }) {
-  const [title, setTitle] = useState('') 
-  const [amount, setAmount] = useState('')
+  const [title, setTitle] = useState('');
+  const [amount, setAmount] = useState('');
   const { selectedDate } = useCalendar();
   const [date, setDate] = useState(
     selectedDate.toLocaleDateString('en-CA')
   );
-  const [error, setError] = useState('')
-  const [repeated, setRepeated] = useState('NEVER')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('');
+  const [repeated, setRepeated] = useState('NEVER');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = useCallback(async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    const formatAmount = parseFloat(amount).toFixed(2)
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formatAmount = parseFloat(amount).toFixed(2);
     try {
       await api.post('/income/', {
         title,
@@ -24,11 +24,11 @@ export default function IncomeForm({ onAdd }) {
         date,
         repeated: repeated || 'NEVER',
       })
-      onAdd()
+      onAdd();
     } catch (err) {
-      setError('Failed to add income:', err)
+      setError('Failed to add income:', err);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }, [amount, title, date, repeated, onAdd]);
 
@@ -93,5 +93,5 @@ export default function IncomeForm({ onAdd }) {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
-  )
+  );
 }
