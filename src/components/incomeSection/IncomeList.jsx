@@ -5,53 +5,53 @@ import Modal from '../Modal'
 import IncomeForm from './IncomeForm'
 import EditIncomeForm from './EditIncomeForm'
 import { useFinancialData } from '../../context/FinancialDataContext'
-import { useCalendar } from '../../context/CalendarContext';
+import { useCalendar } from '../../context/CalendarContext'
 import { cleanFormattedAmount } from '../../utils/cleanAmount'
 
 
 export default function IncomeList() {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const { notifyChange } = useFinancialData();
   const { getSelectedMonthParam, selectedDate } = useCalendar();
 
-  const [incomes, setIncomes] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [showModal, setShowModal] = useState(false)
-  const [modalContent, setModalContent] = useState(null)
+  const [incomes, setIncomes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const fetchIncomes = useCallback(async () => {
     if (!user) return
-    setError('')
+    setError('');
     try {
-      const res = await api.get(`/income/?month=${getSelectedMonthParam()}`)
-      setIncomes(res.data || [])
+      const res = await api.get(`/income/?month=${getSelectedMonthParam()}`);
+      setIncomes(res.data || []);
     } catch (err) {
-      setError('Failed to load incomes.')
+      setError('Failed to load incomes.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }, [user, getSelectedMonthParam]);
 
   useEffect(() => {
-    fetchIncomes()
-  }, [fetchIncomes, selectedDate])
+    fetchIncomes();
+  }, [fetchIncomes, selectedDate]);
 
   // Handle add new income
     const handleAdd = useCallback(() => {
       setModalContent(
         <IncomeForm
           onAdd={() => {
-            fetchIncomes()
-            notifyChange()
-            setShowModal(false)
+            fetchIncomes();
+            notifyChange();
+            setShowModal(false);
           }}
         />
       )
-      setShowModal(true)
+      setShowModal(true);
     }, [fetchIncomes, notifyChange]);
   
     // 4. Handle edit s
@@ -61,16 +61,16 @@ export default function IncomeList() {
             item={item}
             onClose={() => setShowModal(false)}
             onUpdate={() => {
-              fetchIncomes()
-              notifyChange()
+              fetchIncomes();
+              notifyChange();
             }}
           />
         )
-        setShowModal(true)
+        setShowModal(true);
       }, [fetchIncomes, notifyChange]);
 
   if (!user) return <p>Please log in to view incomes.</p>
-  if (error) return <p>Failed to load incomes.</p>;
+  if (error) return <p>Failed to load incomes.</p>
   if (isLoading)
     return (
       <div className="list-section">
@@ -139,5 +139,5 @@ export default function IncomeList() {
       )}
 
     </div>
-  )
+  );
 }

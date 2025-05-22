@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import api from '../../api/axiosDefaults';
 import { useAuth } from '../../context/AuthContext'
 
@@ -8,11 +8,16 @@ const ChangeEmailModal = ({ onClose, setSuccess }) => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
 
     if (email === user.email) {
-      setError('New email is the same as the current email.')
+      setError('New email is the same as the current email.');
+      return
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError('Please enter a valid email address.');
       return
     }
 
@@ -27,11 +32,11 @@ const ChangeEmailModal = ({ onClose, setSuccess }) => {
       setError('Failed to change email. Please try again.');
       console.error(err)
     } finally {
-      const res = await api.get('/dj-rest-auth/user/')
-      setUser(res.data)
+      const res = await api.get('/dj-rest-auth/user/');
+      setUser(res.data);
       setIsSubmitting(false);
     }
-  };
+  }, [email, user.email, setUser, setSuccess, onClose]);
 
   return (
     <div className="popup">
@@ -55,7 +60,7 @@ const ChangeEmailModal = ({ onClose, setSuccess }) => {
               placeholder="New email address"
               id="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.trim())}
               required
             />
           </div>
@@ -69,6 +74,6 @@ const ChangeEmailModal = ({ onClose, setSuccess }) => {
       </div>
     </div>
   );
-};
+}
 
-export default ChangeEmailModal;
+export default ChangeEmailModal
