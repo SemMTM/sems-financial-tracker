@@ -38,6 +38,7 @@ export default function SignInForm() {
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
             required
           />
 
@@ -46,14 +47,13 @@ export default function SignInForm() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
 
           <button type="submit" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
-
-          {error && <p className="error">{error}</p>}
         </form>
 
         <Link to="/passwordreset">
@@ -61,6 +61,11 @@ export default function SignInForm() {
               Forgot password?
           </button>
         </Link>
+
+        {error && 
+          <p className="error" aria-live="polite" style={{ color: 'red', marginTop: '0.5rem' }}>
+            {error}
+          </p>}
 
         <p className={styles.altlink}>Don't have an account? 
           <Link to="/signup"> Sign-up</Link>
