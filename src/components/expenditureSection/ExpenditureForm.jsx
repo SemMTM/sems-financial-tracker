@@ -1,19 +1,19 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import api from '../../api/axiosDefaults'
 import { useCalendar } from '../../context/CalendarContext';
 
 export default function ExpenditureForm({ onAdd }) {
-  const [title, setTitle] = useState('')
-  const [amount, setAmount] = useState('')
+  const [title, setTitle] = useState('');
+  const [amount, setAmount] = useState('');
   const { selectedDate } = useCalendar();
   const [date, setDate] = useState(
-    selectedDate.toISOString().split('T')[0]
-  )
-  const [type, setType] = useState('BILL')
-  const [repeated, setRepeated] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+    selectedDate.toLocaleDateString('en-CA')
+  );
+  const [type, setType] = useState('BILL');
+  const [repeated, setRepeated] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     const formatAmount = parseFloat(amount).toFixed(2)
@@ -43,7 +43,7 @@ export default function ExpenditureForm({ onAdd }) {
     } finally {
       setIsSubmitting(false)
     }
-  }
+  }, [title, amount, date, type, repeated, onAdd]);
 
   return (
     <form onSubmit={handleSubmit} className="expenditure-form">
@@ -56,7 +56,7 @@ export default function ExpenditureForm({ onAdd }) {
           type="text"
           placeholder="Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value.trimStart())}
           required
         />
       </div>
@@ -71,6 +71,7 @@ export default function ExpenditureForm({ onAdd }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           step="0.01"
+          min="0.01"
           required
         />
       </div>

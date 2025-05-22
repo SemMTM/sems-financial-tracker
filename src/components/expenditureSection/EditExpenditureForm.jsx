@@ -65,7 +65,7 @@ export default function EditExpenditureForm(
           type="text"
           placeholder="Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value.trimStart())}
           required
         />
       </div>
