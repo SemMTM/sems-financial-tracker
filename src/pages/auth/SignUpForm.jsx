@@ -32,7 +32,7 @@ export default function SignUpForm() {
 
     try {
       // Send signup request to backend
-      const response = await api.post('/dj-rest-auth/registration/', {
+      await api.post('/dj-rest-auth/registration/', {
         username,
         email,
         password1,
