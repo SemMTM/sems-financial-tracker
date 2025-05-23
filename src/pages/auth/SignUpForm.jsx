@@ -42,8 +42,6 @@ export default function SignUpForm() {
         payload.email = email.trim();
       }
 
-      console.log('Final payload:', payload);
-
       await api.post('/dj-rest-auth/registration/', payload);
 
       setSuccess(true);
@@ -55,8 +53,6 @@ export default function SignUpForm() {
     } catch (err) {
       const data = err.response?.data || {}
       const collectedErrors = []
-      console.log('Signup error:', err.response?.data || err.message);
-      console.log('Payload:', { username, password1, password2 });
 
       if (data.username) collectedErrors.push(...data.username);
       if (data.email) collectedErrors.push(...data.email);
