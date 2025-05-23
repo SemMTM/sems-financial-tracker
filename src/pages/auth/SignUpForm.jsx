@@ -26,18 +26,25 @@ export default function SignUpForm() {
 
     // Basic client-side check
     if (password1 !== password2) {
-      setBackEndErrors('Passwords do not match');
+      setBackEndErrors(['Passwords do not match']);
       return
     }
 
     try {
       // Send signup request to backend
-      await api.post('/dj-rest-auth/registration/', {
+      const payload = {
         username,
-        email,
         password1,
         password2,
-      });
+      };
+
+      if (email && email.trim() !== '') {
+        payload.email = email.trim();
+      }
+
+      console.log('Final payload:', payload);
+
+      await api.post('/dj-rest-auth/registration/', payload);
 
       setSuccess(true);
       setBackendErrors([]);
@@ -48,6 +55,8 @@ export default function SignUpForm() {
     } catch (err) {
       const data = err.response?.data || {}
       const collectedErrors = []
+      console.log('Signup error:', err.response?.data || err.message);
+      console.log('Payload:', { username, password1, password2 });
 
       if (data.username) collectedErrors.push(...data.username);
       if (data.email) collectedErrors.push(...data.email);
