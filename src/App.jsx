@@ -5,7 +5,8 @@ import SignUpForm from './pages/auth/SignUpForm'
 import PasswordResetForm from './pages/auth/PasswordResetFrom'
 import ProtectedRoute from './components/ProtectedRoute'
 import SettingsDropdown from '../src/pages/SettingsDropdown'
-import { CalendarProvider } from '../src/context/CalendarContext';
+import { CalendarProvider } from '../src/context/CalendarContext'
+import NotFound from './pages/NotFound'
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
