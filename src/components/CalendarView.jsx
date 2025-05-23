@@ -24,6 +24,7 @@ export default function CalendarView() {
 
   // fetches calendar data from API
   const fetchSummary = useCallback(async () => {
+    setLoading(true);
       try {
         const res = await api.get(`/calendar-summary/?month=${getSelectedMonthParam()}`);
         setSummary(res.data);
@@ -65,12 +66,6 @@ export default function CalendarView() {
     setCalendarData(merged);
   }, [summary, selectedDate]);
 
-
-  // Loading spinner
-  if (loading) {
-    return <div className='spinner'></div>
-  }
-
   return (
     <div>
       {/* Weekday Header */}
@@ -83,37 +78,44 @@ export default function CalendarView() {
       </div>
 
       {/* Calendar Body */}
-      <div className={`${styles['calendar-grid']}`}>
-        {calendarData.map((cell, index) => (
-          <div
-            key={index}
-            className={`
-              ${styles['cal-day']}
-              ${cell.isToday ? styles['today'] : ''}
-              ${cell.isPast ? styles['past-day'] : ''}
-            `}
-            >
-            {cell.type === 'day' ? (
-              <>
-                <div className={styles['cal-day-num']}>
-                  {cell.date.getDate()}
-                </div>
-                {typeof cell.expenditure === 'string' && cell.expenditure !== '0.00' && (
-                  <div className={`${styles['cal-day-expen']} expenditure-summary`}>
-                    {cell.symbol}{cleanFormattedAmount(cell.expenditure)}
-                  </div>
-                )}
-                {typeof cell.income === 'string' && cell.income !== '0.00' && (
-                  <div className={`${styles['cal-day-income']} income-summary`}>
-                    {cell.symbol}{cleanFormattedAmount(cell.income)}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className={styles['placeholder']}></div>
-            )}
+      <div className={styles['calendar-wrapper']}>
+        {loading && (
+          <div className={styles['calendar-overlay']}>
+            <div className="spinner" />
           </div>
-        ))}
+        )}
+        <div className={`${styles['calendar-grid']}`}>
+          {calendarData.map((cell, index) => (
+            <div
+              key={index}
+              className={`
+                ${styles['cal-day']}
+                ${cell.isToday ? styles['today'] : ''}
+                ${cell.isPast ? styles['past-day'] : ''}
+              `}
+              >
+              {cell.type === 'day' ? (
+                <>
+                  <div className={styles['cal-day-num']}>
+                    {cell.date.getDate()}
+                  </div>
+                  {typeof cell.expenditure === 'string' && cell.expenditure !== '0.00' && (
+                    <div className={`${styles['cal-day-expen']} expenditure-summary`}>
+                      {cell.symbol}{cleanFormattedAmount(cell.expenditure)}
+                    </div>
+                  )}
+                  {typeof cell.income === 'string' && cell.income !== '0.00' && (
+                    <div className={`${styles['cal-day-income']} income-summary`}>
+                      {cell.symbol}{cleanFormattedAmount(cell.income)}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className={styles['placeholder']}></div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

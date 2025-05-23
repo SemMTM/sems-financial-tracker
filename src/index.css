@@ -28,6 +28,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   --modal-bg-color: #252525;
   --input-color: black;
   --calendar-icon-filter: invert(0);
+  --loading-overlay: rgba(0,0,0,0.3);
 }
 
 /* Light mode colors */
@@ -41,6 +42,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   --modal-bg-color: #e2e2e2;
   --input-color: white;
   --calendar-icon-filter: invert(1);
+  --loading-overlay: rgba(255, 255, 255, 0.6);
 }
 
 a {
