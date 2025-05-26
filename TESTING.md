@@ -195,3 +195,27 @@ Extensive unit tests were created for all serializers, views and util files in t
 | User 4 | I really like the calendar feature, its very simple to use |
 
 ## PageSpeed Insight Testing
+
+## Responsiveness
+All pages were tested to ensure responsiveness on screensizes from 320px and upwards.
+
+**Steps to test:**
+
+- Open browser and navigate to Monthlyfinancetracker.xyz
+- Open the developer tools (right click and inspect)
+- Set to responsive and decrease width to 320px
+- Set the zoom to 50%
+- Click and drag the responsive window to maximum width
+
+**Expected:**
+
+- Website is responsive on all screens
+- No images are distorted
+- No horizontal scroll is present
+- There are no issues with modals
+- No elements overlap
+- Elements are spaced appropriately
+
+**Actual:**
+
+Website behaved as expected. Website was also tested on a number of mobile devices with no issues.
