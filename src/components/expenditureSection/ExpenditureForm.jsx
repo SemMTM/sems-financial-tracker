@@ -53,6 +53,7 @@ export default function ExpenditureForm({ onAdd }) {
           value={title}
           onChange={(e) => setTitle(e.target.value.trimStart())}
           required
+          maxLength={50}
         />
       </div>
       

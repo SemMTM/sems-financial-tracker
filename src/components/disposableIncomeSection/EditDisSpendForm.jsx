@@ -60,6 +60,7 @@ export default function EditDisSpendForm(
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
+          maxLength={50}
         />
       </div>
 
