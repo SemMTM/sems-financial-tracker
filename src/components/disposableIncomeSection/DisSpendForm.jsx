@@ -65,6 +65,7 @@ export default function DisSpendForm({ onAdd }) {
           step="0.01"
           min="0.01"
           required
+          max="1000000"
         />
       </div>
 

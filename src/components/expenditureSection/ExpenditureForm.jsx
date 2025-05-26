@@ -69,6 +69,7 @@ export default function ExpenditureForm({ onAdd }) {
           step="0.01"
           min="0.01"
           required
+          max="1000000"
         />
       </div>
 
