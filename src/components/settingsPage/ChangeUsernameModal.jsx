@@ -44,10 +44,13 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
             setValidationError('');
             onClose();
         } catch (err) {
-            const msg = err.response?.data?.username?.[0] ||
-            'Failed to update username.'
-            setError(msg);
-            setValidationError('');
+            const msg =
+              err.response?.data?.username?.[0] ||
+              err.response?.data?.non_field_errors?.[0] ||
+              'Failed to update username.';
+
+            setValidationError(msg);
+            setError('');
         }
       }, [newUsername, isValidUsername, setUser, setSuccess, setError, onClose]);
     

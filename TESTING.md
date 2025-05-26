@@ -121,19 +121,19 @@
 | TC119 | []() | When the edit button is pressed, a modal is displayed | Press the edit button next to an entry | The edit modal is shown | As expected
 | TC120 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | After an entry is added, the remaining amount is correctly updated | Add a budget, then add a few disposable spending entries, then check the remaining | The remaining number adjusts correctly after the entries are added | As expected
 | **Month Selector** |  |  |  |  |  |  |
-| TC121 | []() | The currently selected month is displayed in the centre |  |  |  |  |
-| TC122 | []() | The month move forward or backwards when the user presses the arrows |  |  |  |  |
-| TC123 | []() | All lists and views change to the selected month when the month is changed |  |  |  |  |
-| TC124 | []() | When at the end of the visible month window (-5 or +5 months from the current), the arrow disappears |  |  |  |  |
-| TC125 | []() | When the month is changed, the data for the selected month is correctly shown |  |  |  |  |
+| TC121 | []() | The currently selected month is displayed in the centre | go to the homepage and check the date selector | The current selected month and year are displayed | As expected
+| TC122 | []() | The month moves forwards or backwards when the user presses the arrows | go to the homepage and click the forward and backwards arrows | The month changes in the direction of which arrow was pressed | As expected
+| TC123 | []() | All lists and views change to the selected month when the month is changed | Add entires in multiple lists to 3 different months, then check each month and the dates on the entires | The lists load and displays the correct calendar grid and entires | As expected
+| TC124 | []() | When at the end of the visible month window (-5 or +5 months from the current), the arrow disappears | Click to the end months going forwards and backwards | At each last available month, the arrow disappears | As expected
 | **Settings Dropdown** |  |  |  |  |  |  |
-| TC126 | [USER STORY: Access a setting page](https://github.com/SemMTM/sems-financial-tracker/issues/19) | When the settings button is pressed, a drop down is shown |  |  |  |  |
-| TC127 | [USER STORY: Access a setting page](https://github.com/SemMTM/sems-financial-tracker/issues/19) | All menu opens open their relevant modal |  |  |  |  |
-| TC128 | [USER STORY: Dark/Light mode](https://github.com/SemMTM/sems-financial-tracker/issues/49) | When pressing dark mode/light mode, the app changes its display mode and colors |  |  |  |  |
-| TC129 | []() | The users selected mode is present after log out or page refresh |  |  |  |  |
-| TC130 | [USER STORY: Change username](https://github.com/SemMTM/sems-financial-tracker/issues/21) | A users username is displayed in the change username modal |  |  |  |  |
-| TC131 | [USER STORY: Change username](https://github.com/SemMTM/sems-financial-tracker/issues/21) | A user can successfully change their username |  |  |  |  |
-| TC132 | [https://github.com/SemMTM/sems-financial-tracker/issues/46](https://github.com/SemMTM/sems-financial-tracker/issues/46) | The new username must be unique |  |  |  |  |
+| TC126 | [USER STORY: Access a setting page](https://github.com/SemMTM/sems-financial-tracker/issues/19) | When the settings button is pressed, a drop down is shown | Click the settings dropdown | The settings dropdown is shown | As expected
+| TC127 | [USER STORY: Access a setting page](https://github.com/SemMTM/sems-financial-tracker/issues/19) | All menu opens open their relevant modal | Open the setting dropdown and click each menu item | Each menus modal is displayed or its action is performed | As expected
+| TC128 | [USER STORY: Dark/Light mode](https://github.com/SemMTM/sems-financial-tracker/issues/49) | When pressing dark mode/light mode, the app changes its display mode and colors | Open the settings dropdown and press the "light mode" button | The colour mode of the app changes | As expected
+| TC129 | []() | The users selected mode is present after log out or page refresh | Change the colour mode, refresh the page, log out, log back in | The previously set color mode is present | As expected
+| TC130 | [USER STORY: Change username](https://github.com/SemMTM/sems-financial-tracker/issues/21) | A users username is displayed in the change username modal | Go to the change username modal and check the current username | Users current username is displayed | As expected
+| TC131 | [USER STORY: Change username](https://github.com/SemMTM/sems-financial-tracker/issues/21) | A user can successfully change their username | Go to the "change username" modal and change the username, then reopen the settings modal, and check the username | A success message is shown in the settings modal and the current username shows the new username | As expected
+| TC132 | [https://github.com/SemMTM/sems-financial-tracker/issues/46](https://github.com/SemMTM/sems-financial-tracker/issues/46) | The new username must be unique | Go to the change username modal and try to change the username to "testuser" (already existing) | An error should be displayed and the username is not changed | FAILED - Form did not submit and returned 400 but no error was displayed
+| TC132 #2 | [https://github.com/SemMTM/sems-financial-tracker/issues/46](https://github.com/SemMTM/sems-financial-tracker/issues/46) | The new username must be unique | Go to the change username modal and try to change the username to "testuser" (already existing) | An error should be displayed and the username is not changed | PASSED - Updated from to show backend errors
 | TC133 | [https://github.com/SemMTM/sems-financial-tracker/issues/46](https://github.com/SemMTM/sems-financial-tracker/issues/46) | The new username can not have forbidden characters |  |  |  |  |
 | TC134 | [https://github.com/SemMTM/sems-financial-tracker/issues/46](https://github.com/SemMTM/sems-financial-tracker/issues/46) | The new username has a length limit |  |  |  |  |
 | TC135 | [https://github.com/SemMTM/sems-financial-tracker/issues/46](https://github.com/SemMTM/sems-financial-tracker/issues/46) | The new username cannot be blank |  |  |  |  |
