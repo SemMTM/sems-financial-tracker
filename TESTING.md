@@ -57,10 +57,10 @@
 | TC053 | [USER STORY: Weekly financial breakdown](https://github.com/SemMTM/sems-financial-tracker/issues/17) | When selected month is changed, Weekly summary view updates to show the correct months summaries | In separate interactions, add income and expenditure entires in different weeks and months. Check each month and its data are correct | Each month shows the correct data | As expected
 | **Expenditure/Income List** | All tests should be done for both income and expenditure entries |  |  |  |  |  |
 | TC054 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | An entry can be added to the list and is displayed | Add multiple expenditure entires | They have been appended to the list | As expected
-| TC055 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | The recently added entry is on the list after page refresh | Add multiple expenditure entires to the list then refresh the page | The previously added entry is visible on the list | As expected
-| TC056 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | All details added about the entry are displayed on the list | Add an expenditure entry and check the list | All details and the entry can be seen on the list | As expected
+| TC055 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | The recently added entry is on the list after page refresh | Add multiple entires to the list then refresh the page | The previously added entry is visible on the list | As expected
+| TC056 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | All details added about the entry are displayed on the list | Add an entry and check the list | All details and the entry can be seen on the list | As expected
 | TC057 | []() | Entrys are organised in date order | Add multiple entrys with different dates | The entrys have been organised in date order | As expected
-| TC058 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | The list is updated dynamically when an entry is added | Add an expenditure entry | After the entry is added it is appended the list with no page refresh | As expected
+| TC058 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | The list is updated dynamically when an entry is added | Add an entry | After the entry is added it is appended the list with no page refresh | As expected
 | TC059 | []() | Entry's older than todays date are greyed out | Add multiple entrys for this month, ones before todays date and ones after | Entires with dates before todays date are greyed out | As expected
 | TC060 | [USER STORY: List of all expenditure entries](https://github.com/SemMTM/sems-financial-tracker/issues/9) - [USER STORY: List of that months income](https://github.com/SemMTM/sems-financial-tracker/issues/10) | The entry's date is displayed correctly formatted | Add multiple entries and check the entires dates on the list | The dates have been correctly formatted as Day, 7 Mon | As expected
 | TC061 | [USER STORY: Delete expenditure entry](https://github.com/SemMTM/sems-financial-tracker/issues/7) | An entry can be deleted | Delete an entry | The entry is deleted | As expected
@@ -89,40 +89,37 @@
 | TC086 | []() | Budget can not be a negative value | Edit the budget and set it to a negative value | Warning is thrown and for not submitted | As expected |
 | TC087 | []() | Budget can only be a number | Edit budget and try to add letters, special characters or leave it blank | Characters other than letters cannot be added, warning is thrown when leaving field empty and form is not submitted | As expected
 | TC088 | []() | Budget has an upper limit | Edit the budget and add a value of 10000000 | A warning is thrown and the form is not submitted | As expected
-| TC089 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining budget is displayed |  |  |  |  |
-| TC090 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining budget is calculated correctly after disposable spending is added |  |  |  |  |
-| TC091 | [USER STORY: Edit disposable income budget](https://github.com/SemMTM/sems-financial-tracker/issues/33) | Budget and remaining update dynamically when budget is edited |  |  |  |  |
-| TC092 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining updates dynamically when a disposable spending entry is changed/added/deleted |  |  |  |  |
-| TC093 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | When users currency is changed, this is reflected in the budget and remaining |  |  |  |  |
-| TC094 | []() | When the edit button is pressed, a modal is displayed |  |  |  |  |
-| TC094 | [USER STORY: Edit disposable income budget](https://github.com/SemMTM/sems-financial-tracker/issues/33) | User can edit and set the disposable budget |  |  |  |  |
+| TC089 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining budget is displayed | Scroll to the budget section | Remaining can be seen | As expected
+| TC090 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining budget is calculated correctly after disposable spending is added | Add an amount to disposable budget, then add Disposable spending entries. Take the total value of the entries away from the set budget | The remaining calculation matches your calculation | As expected
+| TC091 | [USER STORY: Edit disposable income budget](https://github.com/SemMTM/sems-financial-tracker/issues/33) | Budget and remaining update dynamically when budget is edited | Update the disposable budget | Remaining and budget update without page refresh | As expected
+| TC092 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining updates dynamically when a disposable spending entry is changed/added/deleted | Set a budget amount and add disposable spending items. Edit some and check, delete some and check | Remaining updates dynamically | As expected
+| TC093 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | When users currency is changed, this is reflected in the budget and remaining | Change global currency setting in settings drop down and check disposable section | Currency change can be seen in the disposable section | As expected
+| TC094 | []() | When the Disposable budget edit button is pressed, a modal is displayed | Press the edit button next to disposable budget | The edit modal is displayed | As expected
+| TC094 | [USER STORY: Edit disposable income budget](https://github.com/SemMTM/sems-financial-tracker/issues/33) | User can edit and set the disposable budget | Click the edit button next to the budget and change its value | User can update the value | As expected
 | **Disposable Income Spending Section** |  |  |  |  |  |  |
-| TC095 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | An entry can be added to the list and is displayed |  |  |  |  |
-| TC096 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | The recently added entry is on the list after page refresh |  |  |  |  |
-| TC097 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | All detail added about the entry are displayed on the list |  |  |  |  |
-| TC098 | []() | Entrys are organised in date order |  |  |  |  |
-| TC099 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | The list is updated dynamically when an entry is added |  |  |  |  |
-| TC100 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | The entry's date is displayed correctly formatted |  |  |  |  |
-| TC101 | [USER STORY: Delete disposable income spending entry](https://github.com/SemMTM/sems-financial-tracker/issues/8) | An entry can be deleted |  |  |  |  |
-| TC102 | [USER STORY: Delete disposable income spending entry](https://github.com/SemMTM/sems-financial-tracker/issues/8) | The list updates dynamically after any changes to an entry |  |  |  |  |
-| TC103 | [USER STORY: Delete disposable income spending entry](https://github.com/SemMTM/sems-financial-tracker/issues/8) | Entry's are dynamically removed from the list upon deletion |  |  |  |  |
-| TC104 | [USER STORY: Edit disposable income spending entries](https://github.com/SemMTM/sems-financial-tracker/issues/6) | Entrys can be edited |  |  |  |  |
-| TC105 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | When an entry is added it is dynamically appended to the list in the correct position |  |  |  |  |
-| TC106 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | When the users global current is updated, all entrys are updated to show this |  |  |  |  |
-| TC107 | []() | An entry must have a title |  |  |  |  |
-| TC108 | []() | An entry must have an amount |  |  |  |  |
-| TC109 | []() | An entry must have a date |  |  |  |  |
-| TC110 | []() | The date is auto selected to today |  |  |  |  |
-| TC111 | []() | An entrys title has a character limit |  |  |  |  |
-| TC112 | []() | An entrys amount must be greater than 0 |  |  |  |  |
-| TC113 | []() | An entry amount can only be a number |  |  |  |  |
-| TC114 | []() | An entrys titles must only be letters |  |  |  |  |
-| TC115 | []() | Entrys older than 6 months are deleted |  |  |  |  |
-| TC116 | []() | The submit button is disabled until the form has finished its post request |  |  |  |  |
-| TC117 | []() | When deleting an entry, a confirmation is first shown |  |  |  |  |
-| TC118 | []() | An entrys amount has an upper limit |  |  |  |  |
-| TC119 | []() | When the edit button is pressed, a modal is displayed |  |  |  |  |
-| TC120 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | After an entry is added, the remaining amount is correctly updated |  |  |  |  |
+| TC095 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | An entry can be added to the list and is displayed | Add multiple entires | They have been appended to the list | As expected
+| TC096 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | The recently added entry is on the list after page refresh | Add multiple entires to the list then refresh the page | The previously added entry is visible on the list | As expected
+| TC097 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | All detail added about the entry are displayed on the list | Add ane entry and check the list | All details and the entry can be seen on the list | As expected
+| TC098 | []() | Entrys are organised in date order | Add multiple entrys with different dates | The entrys have been organised in date order | As expected
+| TC099 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | The list is updated dynamically when an entry is added | Add an entry | After the entry is added it is appended the list with no page refresh | As expected
+| TC100 | [USER STORY: Add disposable income to database](https://github.com/SemMTM/sems-financial-tracker/issues/3) | The entry's date is displayed correctly formatted | Add multiple entries and check the entires dates on the list | The dates have been correctly formatted as Day, 7 Mon | As expected|
+| TC101 | [USER STORY: Delete disposable income spending entry](https://github.com/SemMTM/sems-financial-tracker/issues/8) | An entry can be deleted | Delete an entry | The entry is deleted | As expected
+| TC102 | [USER STORY: Delete disposable income spending entry](https://github.com/SemMTM/sems-financial-tracker/issues/8) | The list updates dynamically after any changes to an entry | Edit multiple entries | The lists are updated dynamically after each edit | As expected
+| TC103 | [USER STORY: Delete disposable income spending entry](https://github.com/SemMTM/sems-financial-tracker/issues/8) | Entry's are dynamically removed from the list upon deletion | Delete a previously added entry | The entry is removed from the list without page refresh | As expected
+| TC104 | [USER STORY: Edit disposable income spending entries](https://github.com/SemMTM/sems-financial-tracker/issues/6) | Entrys can be edited | Click edit on a previously added entry and change its details | The details of the entry are changed aft6er form submission | As expected
+| TC106 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | When the users global currency is updated, all entrys are updated to show this | In the settings drop down, change the currency setting and check the list | Selected currency is displayed on the list | As expected
+| TC107 | []() | An entry must have a title | Try and add an entry with no title | Warning is shown and form can not be submitted | As expected
+| TC108 | []() | An entry must have an amount | Try and add an entry with no amount | Warning is shown and form can not be submitted | As expected
+| TC109 | []() | An entry must have a date | Add an entry and press clear on the date picker | A warning is thrown and the form is not submitted | As expected
+| TC110 | []() | The date is auto selected to today | Add an entry and check the date picker is todays date | The date picker is todays date | As expected
+| TC111 | []() | An entrys title has a character limit | Add an entry and hold a | User cannot type for than 50 characters | PASS - Added Char limit on all titles
+| TC112 | []() | An entrys amount must be greater than 0 | Add and entry with a negative value | Warning will be shown and form will not be submitted | As expected
+| TC113 | []() | An entry amount can only be a number | As separate interactions add an entry with letters, special characters and nothing | Warning is thrown and form is not submitted or only numbers can be typed | As expected
+| TC116 | []() | The submit button is disabled until the form has finished its post request | Add an entry and try to press the submit button multiple times on for submission | Button can only be pressed once and only 1 entry is created | As expected
+| TC117 | []() | When deleting an entry, a confirmation is first shown | A confirmation alert is displayed, after clicking yes the entry is deleted | As expected
+| TC118 | []() | An entrys amount cannot be more than 1,000,000 | Add an entry with an amount of 100000000000 | A warning is thrown and the form is not submitted | As expected
+| TC119 | []() | When the edit button is pressed, a modal is displayed | Press the edit button next to an entry | The edit modal is shown | As expected
+| TC120 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | After an entry is added, the remaining amount is correctly updated | Add a budget, then add a few disposable spending entries, then check the remaining | The remaining number adjusts correctly after the entries are added | As expected
 | **Month Selector** |  |  |  |  |  |  |
 | TC121 | []() | The currently selected month is displayed in the centre |  |  |  |  |
 | TC122 | []() | The month move forward or backwards when the user presses the arrows |  |  |  |  |
