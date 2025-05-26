@@ -81,14 +81,14 @@
 | TC077 | []() | An entrys amount must be greater than 0 | Add and entry with a negative value | Warning will be shown and form will not be submitted | As expected
 | TC078 | []() | An entry amount can only be a number | As separate interactions add an entry with letters, special characters and nothing | Warning is thrown and form is not submitted or only numbers can be typed | As expected
 | TC081 | []() | The submit button is disabled until the form has finished its post request | Add an entry and try to press the submit button multiple times on for submission | Button can only be pressed once and only 1 entry is created | As expected
-| TC082 | []() | When deleting an entry, a confirmation is first shown | Add an entry then delete it | A confirmation alert is displayed, after clicking yesm the entry is deleted | As expected
+| TC082 | []() | When deleting an entry, a confirmation is first shown | Add an entry then delete it | A confirmation alert is displayed, after clicking yes the entry is deleted | As expected
 | TC083 | []() | An entrys amount cannot be more than 1,000,000 | Add an entry with an amount of 100000000000 | A warning is thrown and the form is not submitted | As expected
 | TC084 | []() | When the edit button is pressed, a modal is displayed | Press the edit button next to an entry | The edit modal is shown | As expected
 | **Disposable Income Budget Section** |  |  |  |  |  |  |
-| TC085 | [USER STORY: Remaining disposable income reset each month](https://github.com/SemMTM/sems-financial-tracker/issues/32) | Budget is automatically created at 0 for each month |  |  |  |  |
-| TC086 | []() | Budget can not be a negative value |  |  |  |  |
-| TC087 | []() | Budget can only be a number |  |  |  |  |
-| TC088 | []() | Budget has an upper limit |  |  |  |  |
+| TC085 | [USER STORY: Remaining disposable income reset each month](https://github.com/SemMTM/sems-financial-tracker/issues/32) | Budget is automatically created at 0 for each month | Create a new user, then check all the available forward months budgets | All budgets are at 0 | As expected
+| TC086 | []() | Budget can not be a negative value | Edit the budget and set it to a negative value | Warning is thrown and for not submitted | As expected |
+| TC087 | []() | Budget can only be a number | Edit budget and try to add letters, special characters or leave it blank | Characters other than letters cannot be added, warning is thrown when leaving field empty and form is not submitted | As expected
+| TC088 | []() | Budget has an upper limit | Edit the budget and add a value of 10000000 | A warning is thrown and the form is not submitted | As expected
 | TC089 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining budget is displayed |  |  |  |  |
 | TC090 | [USER STORY: Remaining disposable income](https://github.com/SemMTM/sems-financial-tracker/issues/13) | Remaining budget is calculated correctly after disposable spending is added |  |  |  |  |
 | TC091 | [USER STORY: Edit disposable income budget](https://github.com/SemMTM/sems-financial-tracker/issues/33) | Budget and remaining update dynamically when budget is edited |  |  |  |  |
