@@ -29,8 +29,11 @@ const ChangeEmailModal = ({ onClose, setSuccess }) => {
       setSuccess('Email successfully changed!');
       onClose();
     } catch (err) {
-      setError('Failed to change email. Please try again.');
-      console.error(err)
+      const resError = err.response?.data?.email?.[0] ||
+                      err.response?.data?.detail ||
+                      'Failed to change email. Please try again.';
+      setError(resError);
+
     } finally {
       const res = await api.get('/dj-rest-auth/user/');
       setUser(res.data);

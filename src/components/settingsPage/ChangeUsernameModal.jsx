@@ -72,6 +72,7 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
                   value={newUsername}
                   onChange={(e) => setNewUsername(e.target.value.trimStart())}
                   required
+                  maxLength={40}
                 />
               </div>
 
