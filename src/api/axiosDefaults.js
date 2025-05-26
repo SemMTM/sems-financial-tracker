@@ -26,7 +26,6 @@ api.interceptors.response.use( // Registers a response interceptor.
         // Retry original request
         return api(originalRequest)
       } catch (refreshError) {
-        console.warn('Refresh token failed:', refreshError)
         return Promise.reject(refreshError)
       }
     }

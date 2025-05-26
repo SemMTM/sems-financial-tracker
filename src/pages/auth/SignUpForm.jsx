@@ -26,7 +26,7 @@ export default function SignUpForm() {
 
     // Basic client-side check
     if (password1 !== password2) {
-      setBackEndErrors(['Passwords do not match']);
+      setBackendErrors(['Passwords do not match']);
       return
     }
 

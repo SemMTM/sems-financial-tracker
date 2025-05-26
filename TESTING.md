@@ -112,7 +112,7 @@
 | TC108 | []() | An entry must have an amount | Try and add an entry with no amount | Warning is shown and form can not be submitted | As expected
 | TC109 | []() | An entry must have a date | Add an entry and press clear on the date picker | A warning is thrown and the form is not submitted | As expected
 | TC110 | []() | The date is auto selected to today | Add an entry and check the date picker is todays date | The date picker is todays date | As expected
-| TC111 | []() | An entrys title has a character limit | Add an entry and hold a | User cannot type for than 50 characters | PASS - Added Char limit on all titles
+| TC111 | []() | An entrys title has a character limit | Add an entry and hold a | User cannot type for than 50 characters | As expected
 | TC112 | []() | An entrys amount must be greater than 0 | Add and entry with a negative value | Warning will be shown and form will not be submitted | As expected
 | TC113 | []() | An entry amount can only be a number | As separate interactions add an entry with letters, special characters and nothing | Warning is thrown and form is not submitted or only numbers can be typed | As expected
 | TC116 | []() | The submit button is disabled until the form has finished its post request | Add an entry and try to press the submit button multiple times on for submission | Button can only be pressed once and only 1 entry is created | As expected
@@ -141,40 +141,57 @@
 | TC137 | [USER STORY: Change/add email address](https://github.com/SemMTM/sems-financial-tracker/issues/22) | A user can change their email address | Go to the change email section and enter a new email address. Once the form has been submitted go back to the email modal and check the current email | SUccess message shown and email address has been changed | As expected
 | TC138 | []() | The new email address cannot be one that another user is using | Go to email change modal and try to change email to "test@email.com" | Specific error is thrown and email is not changed | FAILED - The email is not accepted but a generic failure error is thrown, not a specific one
 | TC138 #2 | []() | The new email address cannot be one that another user is using | Go to email change modal and try to change email to "test@email.com" | Specific error is thrown and email is not changed | PASSED - Changed ChangeEmailModal to show specific backend errors
-| TC139 | []() | The new email address must be in the correct format |  |  |  |  |
-| TC140 | [USER STORY: Change/add email address](https://github.com/SemMTM/sems-financial-tracker/issues/22) | The users current email address is displayed in the modal |  |  |  |  |
-| TC141 | []() | The user receives a success message after successfully changing their username |  |  |  |  |
-| TC142 | []() | The user receives a success message after successfully changing their email address |  |  |  |  |
-| TC143 | []() | A user can close any modal by pressing the x |  |  |  |  |
-| TC144 | []() | A user can close any modal by pressing esc |  |  |  |  |
-| TC145 | [https://github.com/SemMTM/sems-financial-tracker/issues/20](https://github.com/SemMTM/sems-financial-tracker/issues/20) | A user can successfully change their password |  |  |  |  |
-| TC145 | [Add validation to username and password change forms](https://github.com/SemMTM/sems-financial-tracker/issues/46) | An error is thrown if the new password fails validation |  |  |  |  |
+| TC139 | []() | The new email address must be in the correct format | In separate interactions try to: add an empty email, add text with no @, add an email with no . | Error is thrown/warning is shown and form is not submitted | As expected
+| TC140 | [USER STORY: Change/add email address](https://github.com/SemMTM/sems-financial-tracker/issues/22) | The users current email address is displayed in the modal | Go to the change email modal and check current email | The users current email is displayed | As expected
+| TC141 | []() | The user receives a success message after successfully changing their username | go to the change username modal and change the username, then go back to the settings modal | Success message can be seen | As expected
+| TC142 | []() | The user receives a success message after successfully changing their email address | go to the change email modal and change the email, then go back to the settings modal | Success message can be seen | As expected
+| TC144 | []() | A user can close any modal by pressing esc | Open each modal individually, once open press ESC to close the modal | Modal closes on ESC | As expected
+| TC145 | [https://github.com/SemMTM/sems-financial-tracker/issues/20](https://github.com/SemMTM/sems-financial-tracker/issues/20) | A user can successfully change their password | go to the change password modal and change the password. Log out then log back in using the new pass | User can change and log in with their new password | As expected
+| TC145 | [Add validation to username and password change forms](https://github.com/SemMTM/sems-financial-tracker/issues/46) | An error is thrown if the new password fails validation | In the pass change modal, try to change the pass without following the validation rules | Error is thrown and pass is not set | As expected
 | TC146 | [https://github.com/SemMTM/sems-financial-tracker/issues/20](https://github.com/SemMTM/sems-financial-tracker/issues/20) | A user can log in with their new password after a successful change |  |  |  |  |
-| TC147 | [Add validation to username and password change forms](https://github.com/SemMTM/sems-financial-tracker/issues/46) | The new password must match to be changed |  |  |  |  |
-| TC148 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | A user can change their currency |  |  |  |  |
-| TC149 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | The users chosen currency is displayed in the selector |  |  |  |  |
-| TC150 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | Currency changes propagate across the entire app |  |  |  |  |
-| TC151 | []() | A user can log out by pressing the log out button |  |  |  |  |
+| TC148 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | A user can change their currency | Go to the change currency modal and change the currency | Page refreshes and currency change is propagated across the app | As expected
+| TC149 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | The users chosen currency is displayed in the selector | After changing the currency, go back to the currency change modal and look at the option displayed | Users previously set currency is displayed | As expected
+| TC150 | [USER STORY: Set currency](https://github.com/SemMTM/sems-financial-tracker/issues/23) | Currency changes propagate across the entire app | Go to the currency change modal and change the currency, after refresh check the homepage | All currency symbols have been changed to the newly set one | As expected
+| TC151 | []() | A user can log out by pressing the log out button | Open the settings drop down and log out | user is logged out | As expected
 | **Sign In Modal** |  |  |  |  |  |  |
-| TC152 | [USER STORY: Sign In](https://github.com/SemMTM/sems-financial-tracker/issues/15) | A user can successfully sign in with their username and password |  |  |  |  |
-| TC153 | []() | After signing in a user is automatically redirected to the home page |  |  |  |  |
-| TC154 | []() | Errors are displayed if a users sign in fails validation |  |  |  |  |
-| TC155 | []() | After the access token expires, a new token is automatically refreshed using the refresh token |  |  |  |  |
-| TC156 | []() | A user is automatically redirected to the log in modal(if not logged in)/homepage(if logged in) if they try to access a non existent  |  |  |  |  |
-| TC157 | []() | The Sign-up link takes the user to the sign up modal |  |  |  |  |
-| TC158 | []() | The Forgot Password button takes the user to the pass reset modal |  |  |  |  |
+| TC152 | [USER STORY: Sign In](https://github.com/SemMTM/sems-financial-tracker/issues/15) | A user can successfully sign in with their username and password | Create a new user, then sign in with the new credentials | User can sign in | As expected
+| TC153 | []() | After signing in a user is automatically redirected to the home page | Log in with existing credentials | User is redirected to homepage after signin | As expected
+| TC154 | []() | Errors are displayed if a users sign in fails validation | try to log in with non-existent credentials | Errors displayed and user not logged in | As expected
+| TC155 | []() | After the access token expires, a new token is automatically refreshed using the refresh token | In the backend, set access token to expire after 5 mins. In front end add a refreshing console log before it tries to refresh access token. Log in wait 6 mins and check console | Console log is shown, user is still logged in | As expected
+| TC156 | []() | A user is automatically redirected to the log in modal(if not logged in)/homepage(if logged in) if they try to access a non existent | In the url after the domain name add /1 | The user is shown an error page and auto redirected to the login or homepage | As expected
+| TC157 | []() | The Sign-up link takes the user to the sign up modal | Go to the log in modal and press the "Sign-up" link | User is taken to the sign up modal | As expected
+| TC158 | []() | The Forgot Password button takes the user to the pass reset modal | Go to the sign in modal and press the forgot password button | User is taken to pass reset modal | As expected
 | **Sign Up Modal** |  |  |  |  |  |  |
-| TC159 | [USER STORY: Account creation](https://github.com/SemMTM/sems-financial-tracker/issues/14) | A user can create an account |  |  |  |  |
-| TC160 | [USER STORY: Account creation](https://github.com/SemMTM/sems-financial-tracker/issues/14) | A user can log in with their new credentials after account creation |  |  |  |  |
-| TC161 | []() | Usernames must be unique |  |  |  |  |
-| TC162 | []() | Usernames cannot be blank |  |  |  |  |
-| TC163 | []() | Usernames cannot have forbidden characters |  |  |  |  |
-| TC164 | []() | A user does not need to add an email address to sign up |  |  |  |  |
-| TC165 | []() | A users password must pass the validation rules to be used |  |  |  |  |
-| TC166 | []() | The passwords must match for the account to be created |  |  |  |  |
-| TC167 | []() | After signing up the user is automatically signed in and redirected to the homepage |  |  |  |  |
-| TC168 | []() | The sign in link redirects the user to the sign in modal |  |  |  |  |
-
+| TC159 | [USER STORY: Account creation](https://github.com/SemMTM/sems-financial-tracker/issues/14) | A user can create an account | Go to the sign up modal and create an account | The user is able to create an account and they are auto logged in and redirected to the homepage | As expected
+| TC160 | [USER STORY: Account creation](https://github.com/SemMTM/sems-financial-tracker/issues/14) | A user can log in with their new credentials after account creation | After account creation, log out then log in with the new details | User can successfully log in | As expected
+| TC161 | []() | Usernames must be unique | Go to sign up modal and try to create an account with username "testuser" | Specific error is thrown and sign up fails | FAILED - Sign up fails but no specific error is thrown
+| TC161 #2 | []() | Usernames must be unique | Go to sign up modal and try to create an account with username "testuser" | Specific error is thrown and sign up fails | PASSED - Fix error with simple typo in function name
+| TC162 | []() | Usernames cannot be blank | Go to sign up modal and create an account with a space for a username | Specific error is thrown and sign up fails | As expected
+| TC163 | []() | Usernames cannot have forbidden characters | In sign up modal try to create an account with the character %$^£ | Specific error is thrown and sign up fails | As expected
+| TC164 | []() | A user does not need to add an email address to sign up | Go to sign up modal and create an account with no email address | User can create an account | As expected
+| TC165 | []() | A users password must pass the validation rules to be used | Go to sign up modal and try to use a password that doesnt follow validation rules | Specific error is thrown and account is not created | As expected 
+| TC166 |  | After sign up user is auto logged in a redirected to home page | Go to the sign up modal and create an account | The user is able to create an account and they are auto logged in and redirected to the homepage | As expected
+| TC168 | []() | The sign in link redirects the user to the sign in modal | Go to the sign up modal and press the sign in link | User is redirected to the sign in modal | As expected
 
 ## Unit Tests
-Extensive unit tests were created for all serializers, views and util file in the backend. 
+Extensive unit tests were created for all serializers, views and util files in the API. 
+
+### Transactions app:
+  - [Serializer unit tests](https://github.com/SemMTM/sems-finance-tracker-api/blob/main/transactions/tests/test_serializers.py) 
+  - [Utils unit tests](https://github.com/SemMTM/sems-finance-tracker-api/blob/main/transactions/tests/test_utils.py)
+  - [Views unit tests](https://github.com/SemMTM/sems-finance-tracker-api/blob/main/transactions/tests/test_views.py)
+### Core app:
+  - [Serializer unit tests](https://github.com/SemMTM/sems-finance-tracker-api/blob/main/core/tests/test_serializers.py)
+  - [Utils unit tests](https://github.com/SemMTM/sems-finance-tracker-api/blob/main/core/tests/test_utils.py)
+  - [Views unit tests](https://github.com/SemMTM/sems-finance-tracker-api/blob/main/core/tests/test_views.py)
+
+## User Tests
+5 users were given no instruction on how to use the app and were asked to create an account and use all features.
+| User | Result |
+|--|--|
+| User 1 | I couldn't find any bugs, everything was easy to use. |
+| User 3 | I really like the UI. Its really simple and easy to use straight away which is important. |
+| User 3 | After creating an account, it said signing in and nothing happened. After refreshing and logging in, everything worked fine and I had to other issues. |
+| User 4 | I really like the calendar feature, its very simple to use |
+
+## PageSpeed Insight Testing
