@@ -659,6 +659,35 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
     - Modal closes and success message appears
     - Email in user context is updated
 
+**Change Password Modal**
+- Form includes:
+    - Current password
+    - New password
+    - Confirm new password
+- Frontend checks for matching new/confirm fields
+- Backend checks:
+    - Password strength
+    - Correct current password
+- On success:
+    - Modal closes and success message appears
+- On failure:
+    - Field-level errors displayed (e.g., incorrect password, too short)
+
+**Currency Selection Modal**
+- User can select from a list of supported currencies (e.g., GBP, USD, EUR)
+- Selection updates:
+    - Backend: stores user's choice
+    - Frontend: user context updates after auto refresh
+    - Currency symbol used across summaries, calendar tiles, and entries updates after auto refresh
+- Modal uses a simple dropdown and confirmation button
+
+## UX & Performance Benefits
+- Keeps account settings readily accessible from any screen
+- Avoids disrupting user flow — all changes happen in context via modals
+- Clear visual hierarchy and feedback promote user confidence
+- Minimizes page reloads and improves perceived performance
+- Modular implementation allows new settings to be added easily
+
 
 [Back to Table of Contents](#table-of-contents)
 
