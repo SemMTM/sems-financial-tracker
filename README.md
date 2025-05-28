@@ -45,9 +45,8 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
     - [Site Goals](#site-goals)
 - [Project Scope & User Stories](#project-scope--user-stories)
     - [Agile Planning](#agile-planning)
-    - [Epics](#epics)
-    - [User Stories](#user-stories)
-- [The Structure Plane](#the-structure-plane)
+    - [Epics](#epics--user-stories)
+- [Application Features & Functionality](#application-features--functionality)
     - [Features](#features)
     - [Unimplemented Features](#unimplemented-features)
     - [Future Features](#future-features)
@@ -133,67 +132,189 @@ This approach allowed me to remain flexible throughout development, prioritize b
 
 [View the GitHub Kanban Board](https://github.com/users/SemMTM/projects/3/views/1)
 
-## Epics
+## Epics & User Stories
 This project had 8 epics that user stories were categorised into:
 
 ### Authentication
 Enable secure user login and logout using session-based cookie authentication. Required for accessing any user-specific financial data.
 
+<details>
+<summary>Click to view user stories</summary>
+
+- As a developer, I can implement JWT Auth, so that my users are more secure and don't have to log in every time to use the app.
+- As a user, I can create an account using social logins, so that creating an account is faster
+- As a developer, I can verify users emails with email verification so users can secure their accounts better
+- As a user, I can sign in to my account, so that I can access my finance tracker
+- As a user, I can create an account, so that I can use the app and all of its features
+
+</details>
+
 ### Budgeting
 Ability to set and track monthly disposable income budgets and disposable spending. 
+
+<details>
+<summary>Click to view user stories</summary>
+
+- As a user, I can edit my disposable income budget, so I can make changes when needed
+- As a dev, the disposable income remaining resets each month
+- As a user, I can see my remaining disposable income for the month, so I can easily manage my spending
+- As a user, I can set a monthly disposable income budget, so that I can manage my spending
+- As a user, I can see a list of all of my disposable income spending entries with details, so that I can see my spending
+- As a user, I can delete a disposable income spending entry, so that I can keep my financial tracking accurate
+- As a user, I can edit my disposable income spending entries, so that I can make changes if needed
+- As a user, I can add my disposable income spending to the list, so that I can manage my finances.
+
+</details>
+
 
 ### Documentation & Testing
 Create clear README documentation, manually test all frontend and backend features, write extensive backend unit tests.
 
+<details>
+<summary>Click to view user stories</summary>
+
+- As a developer, I will manually test all frontend and backend features, to ensure no bugs are present in the app
+- As a developer, I will write a full suite of unit tests for all backend views, serializers and utility file, so that I can ensure everything functions as intended.
+- As a developer, I will create the README documentation structure, I that I can ensure the app is well documented
+- As a developer, I will add all content to the README, so the app is properly documented.
+
+</details>
+
 ### Income & Expenditure Management
 Allow users to add, edit, delete, and repeat income and expenditure records. Ensure permissions and repeat logic work as expected.
+
+<details>
+<summary>Click to view user stories</summary>
+
+- As a user, I can set a category on an expenditure, so that I can categorise my spending
+- As a user, I can repeat an expenditure payment, so I don't have to enter it again every month
+- As a user, I can repeat an income payment, so I don't have to enter it again every month
+- As a user, I can see a list of this months incomes with details, so that I can manage my income
+- As a user, I can see a list of all of my expenditure entries with details, so that I can see my spending easier
+- As a user, I can delete an expenditure entry, so that I can keep my financial tracking accurate
+- As a user, I can edit my expenditure entries, so that I can make changes if needed
+- As a user, I can edit my incomes, so that I can make changes if needed
+- As a user, I can add my income to the list, so that I can manage my finances
+- As a user, I can add my expenditure, so that I can manage my finances
+
+</details>
 
 ### Setup
 Initial setup of the project structure, authentication configuration, CORS, environment variables, and deployment settings.
 
+<details>
+<summary>Click to view user stories</summary>
+
+- Purchase a domain and set up the API and Front end on the same top level domain so cookies work on mobile
+- Create views to return data from API
+- Create serializers for all models
+- Connect the frontend to the API
+- Set up database and relationships
+- Set up API and connect it to the database so receive new entries
+
+</details>
+
 ### Summary Views
 Calendar, weekly, and monthly summaries showing financial activity at a glance.
+
+<details>
+<summary>Click to view user stories</summary>
+
+- As a user, the month on the calendar view changes automatically, so that I don't have to manually change it each month
+- As a user, I can easily see which day we are on as it is highlighted
+- As a user, I can see a calendar view with all of my monthly finances plotted on it by day, so that I can visually see my finances
+- As a user, I can switch between weekly and monthly summaries, so that I can see more detailed breakdowns of my finances
+- As a user, I can see a weekly breakdown of all finances for the month, so that I can manage my weekly spending
+- As a user, I can see a monthly financial summary view of that months finances, so that I can easily manage my finances
+
+</details>
 
 ### User Settings
 Enable users to update their username, email, password, and preferred currency, with all changes reflected throughout the app.
 
-## User Stories
+<details>
+<summary>Click to view user stories</summary>
+
+- As a user, I can reset my password via email if i forget it, so I do not lose access to my account
+- As a user I can toggle dark or light mode so that I can customise the appearance of my financial tracker
+- As a user I can set/change the currency on my tracker
+- As a user, I can change/add an email on my account, so that I can secure my account
+- As a user, I can change my username, so I can edit my account log in info
+- As a user, I can change my account password
+- As a user, I can access a settings page, so I can change details about my account
+
+</details>
+
 
 [Back to Table of Contents](#table-of-contents)
 
-# The Structure Plane
+# Application Features & Functionality
+> The Structure Plane
 
 ## Features
+### Feature: Calendar Grid View
+### Overview
+The Calendar Grid View provides users with a clear, visual layout of their financial activity across the selected month. It aligns each day to its correct weekday and displays total income and expenditure per day, helping users spot trends, plan ahead, and track spending at a glance.
 
-## Homepage
+![Calendar Grid](src/readme_images/Screenshot_2.png)
 
-### Masonry Grid
+### Technical Breakdown
+**Frontend Implementation**
+- The `CalendarView` component generates a 5 or 6-row calendar layout using the `generateCalendarGrid()` utility. The utility calculates the correct start day of the month and fills in the grid to ensure five full rows are always rendered (35 cells).
+- This function accounts for:
+    - The weekday index of the first day of the selected month
+    - The number of days in the month
+    - Leading and trailing blank cells to ensure proper weekday alignment
+- The `CalendarView` component maps over this grid to render each day in the correct position using a responsive CSS Grid layout.
+- Each day is represented as a tile with date, income, and expenditure displayed using colored badges.
+- Data is fetched from the `/calendar-summary/` API via Axios and rendered dynamically when the user navigates between months using prev/next controls.
+- `useCalendar()` context manages the selected date and navigation logic (previous/next month), ensuring global state sync.
 
-#### What The Feature Does
-The Masonry Grid on the dynamically arranges images in a visually appealing, staggered layout. This feature ensures that images of varying heights fit together neatly while maximizing screen space and providing a visually appealing browsing experience. The masonry grid is used in multiple areas within the project: the board detail page, home page and created pins section.
+**Backend Implementation**
+- `CalendarSummaryView` receives year and month as query parameters and returns a dictionary of day-by-day totals for the authenticated user.
+- Values are raw integers in pence, with currency symbols handled client-side for consistency and formatting flexibility.
+- Permissions restrict access to the user’s own income and expenditure records.
 
-![Homepage masonry grid](static/readme_images/Screenshot_17.png)
+**Data Flow & Interactivity**
+- On mount or month change, the frontend sends a GET request with the selected year and month.
+- The backend aggregates financial data per day and returns it to the client.
+- The calendar updates reactively, and the grid always renders 5 rows regardless of month length or start weekday, preserving layout stability.
 
-#### Implementation
+### UX & Performance Benefits
+- Maintains a consistent 5-row layout regardless of month length or starting weekday, preventing layout shifts and improving predictability
+- Helps users build month-to-month memory of their financial rhythm by keeping tiles aligned
+- Allows users to see daily financial activity at a glance with minimal scrolling
+- Responsive across devices via CSS Grid
+- Optimized rendering ensures only necessary re-renders and minimal DOM updates on month change
 
-1. Backend (Django View)
-    - The `PostList` class-based view fetches posts ordered by creation date (in future releases image would be shown based on a users previous post interactions to show them the most relevant images)
-    - Implements pagination to retrieve 10 posts per request
-    - Supports HTMX-based dynamic loading, ensuring that new posts are loaded efficiently
-2. Frontend (HTML & CSS)
-    - The homepage contains a .image-grid container that holds post items
-    - `image_list.html` renders posts inside `.grid-item` elements, ensuring a consistent grid structure
-    - CSS Grid & Flexbox are used to define a responsive column layout
-3. JavaScript for Masonry Effect
-    - `masonry.js` ensures that each image is correctly positioned within the grid
-    - Uses `resizeGridWithImages()` to calculate row spans dynamically based on image heights
-    - Listens for HTMX events (htmx:afterSwap) to adjust the layout when new posts are loaded
+### Feature: Month Navigation & Change Handling
+### Overview
+The month navigation system allows users to move backward or forward in time to view their financial data for -5 or +5 months from the current month. 
 
-#### Why This Implementation Works Well:
-- Automatically adjusts image positions based on height
-- Ensures a responsive layout across different screen sizes
-- Efficient grid updates when new posts are loaded
-- Smooth user experience without layout shifts or gaps
+This interaction updates not only the calendar grid, but also synchronizes all financial components — including expenditure lists, income, budget, and summaries — to reflect the selected period. It acts as the global time controller for the entire application.
+
+![Month Changer](src/readme_images/Screenshot_4.png)
+
+### Technical Breakdown
+**Frontend Implementation**
+- Centralized in the custom `useCalendar()` context, which exposes:
+    - selectedDate — the currently viewed month/year
+    - `goToPreviousMonth()` and `goToNextMonth()` — handlers to shift month state
+    - `isAtStart` and `isAtEnd` — booleans to limit navigation bounds
+- When navigation is triggered:
+    1. The `selectedDate` is updated across the app
+    2. All components that consume selectedDate (via `useCalendar()`) re-fetch data for the new month
+ 3. These components include:
+    - `CalendarView`
+    - `ExpenditureList`
+    - `IncomeList`
+    - `DisIncomeBudget`
+    - `DisIncomeSpendList`
+    - `MonthlySummary` and `WeeklySummary`
+- This keeps the entire UI in sync with the selected month with minimal duplication of logic or state.
+
+**Backend Implementation**
+
 
 [Back to Table of Contents](#table-of-contents)
 
