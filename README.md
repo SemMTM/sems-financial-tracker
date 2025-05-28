@@ -1,5 +1,8 @@
 # Finance Tracker - Personal Finance Dashboard
-Monthly Finance Tracker is a secure, real-time web application that empowers users to take full control of their personal finances. Designed with a strong focus on usability, performance, and data privacy, the app provides a streamlined one-page dashboard for tracking income, expenditures, and disposable income in a clear, calendar-driven format.
+## Project Overview
+Monthly Finance Tracker is a secure, real-time, full-stack web application that empowers users to take full control of their personal finances. Designed with a strong focus on usability, performance, and data privacy, the app provides a streamlined one-page dashboard for tracking income, expenditures, and disposable income in a clear, calendar-driven format.
+
+This project was built as both a portfolio piece and a production-grade system, emphasizing strong frontend architecture, secure backend API design, and real-world performance considerations.
 
 Built using React (frontend), Django REST Framework (backend) and PostgreSQL, the system supports full CRUD operations on all financial entries and intelligently handles recurring transactions. It also includes features like monthly budgeting, weekly and monthly financial summaries, and dynamic currency symbol formatting — all personalized per user.
 
@@ -37,21 +40,15 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
 
 
 # Table of Contents
-- [The Strategy Plane](#the-strategy-plane)
+- [Project Overview](#project-overview)
+- [UX Strategy & Goals](#the-strategy-plane)
     - [Site Goals](#site-goals)
+- [Project Scope & User Stories](#project-scope--user-stories)
     - [Agile Planning](#agile-planning)
-- [The Scope Plane](#the-scope-plane)
     - [Epics](#epics)
     - [User Stories](#user-stories)
 - [The Structure Plane](#the-structure-plane)
     - [Features](#features)
-        - [Homepage](#home-page)
-        - [Post Detail Page](#post-detail-page)
-        - [Profile Page](#profile-page)
-        - [Board Detail Page](#board-detail-page)
-        - [Create Post Page](#create-post-page)
-        - [Dynamic Pop-up](#dynamic-pop-up)
-        - [Error Pages](#error-pages)
     - [Unimplemented Features](#unimplemented-features)
     - [Future Features](#future-features)
 - [The Skeleton Frame](#the-skeleton-plane)
@@ -77,20 +74,88 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
     - [Fork Project](#fork-project)
 - [Credits](#credits)
 
-# The Strategy Plane
+# UX Strategy & Goals
+> The Strategy Plane
 
 ## Site Goals
+The primary site goal is to provide users with a clear, responsive, and efficient dashboard for managing their personal finances — including income, expenses, and disposable income — through an interactive, data-driven interface that simplifies financial awareness and planning.
 
-### Functional Goals 
+### Functional Goals
+- Allow users to securely register, log in, and log out
+- Enable users to add, edit, and delete income and expenditure records
+- Support repeatable transactions (weekly and monthly) that automatically generate future entries
+- Provide a monthly and weekly summary view with aggregated totals
+- Present a dynamic calendar view that reflects financial activity per day
+- Allow users to set and track a monthly disposable income budget
+- Let users track discretionary spending against their budget
+- Enable users to set and store their preferred currency symbol
+- Display financial data consistently and responsively across devices
+- Deliver user feedback on actions (form validation, success messages, error handling)
 
 ### User-Centric Goals
+- Understand where their money is going at a glance
+- Track how much they’ve spent or saved in a specific time period
+- Identify spending habits or recurring costs over time
+- Set and stay within a self-defined spending limit (budgeting)
+- Access their financial data securely from any device
+- Experience a fast, mobile-friendly, intuitive interface
+- Avoid repetitive data entry through smart automation (repeat logic)
+- Trust that their data is private, accurate, and never shared
+- Have a clear and visual representation of their finances
 
 ### Business & Technical Goals
+- Build a modular, maintainable codebase following component-based design
+- Ensure full CRUD functionality and secure user authentication
+- Adhere to accessibility best practices and responsive design  principles
+- Follow DRY, KISS, and separation-of-concerns coding practices
+- Use Django REST Framework to expose a secure, structured API
+- Enforce strict data permissions so users can only access their own records
+- Implement environment variable-based secret handling for deployment security
+- Deploy both frontend and backend to cloud platforms
+- Protect all user-specific data using secure cookie-based authentication and CSRF safeguards
 
-# The Scope Plane
+# Project Scope & User Stories
+> The Scope Plane
+
 ## Agile Planning
+This project was managed using an Agile approach with GitHub Projects to break the work into prioritized user stories and organize them into epics. 
+
+The total time for all features to be implemented was 7 weeks, with an additional 2 weeks for refactoring, testing and documentation.
+This project was split up into 4 sprints, each being just over 2 weeks.
+
+Each card represents a feature or task, and progress was tracked using a Kanban board with the following columns:
+- Backlog – New user stories and ideas
+- To Do – Selected for development in the next sprint
+- In Progress – Features actively being built
+- Done – Completed and tested tasks
+
+This approach allowed me to remain flexible throughout development, prioritize based on core user needs, and continuously deliver working features. All user stories were tagged with their relevant epic and updated throughout the build.
+
+[View the GitHub Kanban Board](https://github.com/users/SemMTM/projects/3/views/1)
 
 ## Epics
+This project had 8 epics that user stories were categorised into:
+
+### Authentication
+Enable secure user login and logout using session-based cookie authentication. Required for accessing any user-specific financial data.
+
+### Budgeting
+Ability to set and track monthly disposable income budgets and disposable spending. 
+
+### Documentation & Testing
+Create clear README documentation, manually test all frontend and backend features, write extensive backend unit tests.
+
+### Income & Expenditure Management
+Allow users to add, edit, delete, and repeat income and expenditure records. Ensure permissions and repeat logic work as expected.
+
+### Setup
+Initial setup of the project structure, authentication configuration, CORS, environment variables, and deployment settings.
+
+### Summary Views
+Calendar, weekly, and monthly summaries showing financial activity at a glance.
+
+### User Settings
+Enable users to update their username, email, password, and preferred currency, with all changes reflected throughout the app.
 
 ## User Stories
 
