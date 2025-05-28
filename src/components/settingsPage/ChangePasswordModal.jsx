@@ -2,15 +2,17 @@ import { useCallback, useState } from 'react'
 import api from '../../api/axiosDefaults'
 
 export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword1, setNewPassword1] = useState('');
   const [newPassword2, setNewPassword2] = useState('');
   const [backendErrors, setBackendErrors] = useState([]);
 
   const handlePasswordChange = useCallback(async () => {
-    if (!newPassword1 || !newPassword2) return
+    if (!currentPassword || !newPassword1 || !newPassword2) return
 
     try {
       await api.post('/dj-rest-auth/password/change/', {
+        old_password: currentPassword,
         new_password1: newPassword1,
         new_password2: newPassword2,
       })
@@ -23,6 +25,7 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
       const data = err.response?.data || {}
       const combinedErrors = []
 
+      if (data.old_password) combinedErrors.push(...data.old_password);
       if (data.new_password1) combinedErrors.push(...data.new_password1);
       if (data.new_password2) combinedErrors.push(...data.new_password2);
       if (data.non_field_errors) combinedErrors.push(...data.non_field_errors);
@@ -31,12 +34,22 @@ export default function ChangePasswordModal({ onClose, setSuccess, setError }) {
       setError('Failed to change password.');
       setSuccess('');
     }
-  }, [newPassword1, newPassword2, setSuccess, setError, onClose]);
+  }, [currentPassword, newPassword1, newPassword2, setSuccess, setError, onClose]);
 
   return (
     <div className="popup">
       <div className="popup-content">
         <h3>Change Password</h3>
+
+        <div className="form-input-con">
+          <input
+            type="password"
+            placeholder="Current password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            required
+          />
+        </div>
 
         <div className="form-input-con">
           <input
