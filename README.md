@@ -136,7 +136,7 @@ This approach allowed me to remain flexible throughout development, prioritize b
 This project had 8 epics that user stories were categorised into:
 
 ### Authentication
-Enable secure user login and logout using session-based cookie authentication. Required for accessing any user-specific financial data.
+Enable secure user login and logout using JWT HttpOnly cookie authentication. Required for accessing any user-specific financial data.
 
 <details>
 <summary>Click to view user stories</summary>
@@ -501,10 +501,11 @@ The Monthly Income List displays all income entries for the selected month in a 
 
 ![Monthly income list](src/readme_images/Screenshot_8.png)
 
+### Technical Breakdown
+
 <details>
 <summary><strong>View Technical Breakdown</strong></summary>
 
-### Technical Breakdown
 **Frontend Implementation**
 - Implemented in the `IncomeList` component, this section fetches income data using the current month from the global `CalendarContext`.
 - Each income entry is rendered as a list item showing:
@@ -550,12 +551,14 @@ The Monthly Income List displays all income entries for the selected month in a 
 ### Overview
 When a user creates a new entry with a repeat interval (weekly or monthly), the system immediately generates repeated instances for the next 6 months, starting from the entry's date. This ensures the calendar and summaries are pre-filled with all upcoming occurrences.
 
+![Repeat modal](src/readme_images/Screenshot_17.png)
+
 ### Technical Breakdown
 
 <details>
 <summary><strong>View Technical Breakdown</strong></summary>
 
-#### generate_monthly_repeats_for_6_months
+### generate_monthly_repeats_for_6_months
 **What It Does:**
 - Creates monthly duplicates of a given entry (e.g. income, expenditure) for the next 5 months after the original.
 - Each new entry:
@@ -569,7 +572,7 @@ When a user creates a new entry with a repeat interval (weekly or monthly), the 
 **Used When:**
 - A user submits a new entry with repeated='MONTHLY'.
 
-#### generate_weekly_repeats_for_6_months
+### generate_weekly_repeats_for_6_months
 **What It Does:**
 - Creates weekly duplicates of the original entry by stepping forward 7 days at a time from the entry's date.
 - Continues generating until the end of the 6th visible month.
@@ -582,6 +585,17 @@ When a user creates a new entry with a repeat interval (weekly or monthly), the 
 
 </details>
 
+### UX & Performance Benefits
+- Set Once, Repeat Automatically
+    - Users only need to configure a repeat interval once — future entries are instantly generated.
+- Consistency Across Views
+    - Repeated entries appear seamlessly across the calendar, summaries, and list views, ensuring a unified experience.
+- Minimizes Manual Input
+    - Reduces user workload by eliminating the need to manually create identical future entries.
+- Handles Edge Cases Smoothly
+    - Automatically adjusts for month-length variations (e.g. Feb 30 → Feb 28) and prevents invalid repeats.
+- Bulk Creation = Fast Performance
+    - Uses batch operations to insert future entries efficiently with minimal strain on the database.
 
 
 ## Feature: Disposable Income Budget
@@ -591,6 +605,10 @@ The Disposable Income Budget section allows users to define how much flexible sp
 ![Disposable income budget](src/readme_images/Screenshot_9.png)
 
 ### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 - Handled in the `DisIncomeBudget` component, which:
 - Fetches the budget for the currently selected month on mount (via `?month=YYYY-MM`)
@@ -623,6 +641,8 @@ The Disposable Income Budget section allows users to define how much flexible sp
     - Disposable income spending comparisons remain accurate
     - Budget editing always targets the correct month entry
 
+</details>
+
 ### UX & Performance Benefits
 - Gives users a clear self-defined spending cap each month
 - Editable via intuitive modal with pre-filled values
@@ -640,6 +660,10 @@ Displayed in a list below the budget section, it enables fast add/edit/delete ac
 ![Disposable income spending](src/readme_images/Screenshot_16.png)
 
 ### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 - The `DisIncomeSpendList` component:
     - Fetches all spending entries for the currently selected month on mount or when the calendar date changes
@@ -676,6 +700,8 @@ Displayed in a list below the budget section, it enables fast add/edit/delete ac
         - Disposable Income Budget summary
         - Calendar tile amounts
         - Weekly and Monthly summary totals
+        
+</details>
 
 ### UX & Performance Benefits
 - Allows users to track personal, lifestyle-oriented spending distinct from fixed expenses
@@ -692,6 +718,10 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
 ![Settings Dropdown](src/readme_images/Screenshot_11.png)
 
 ### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 - The `SettingsDropdown` component:
     - Renders a settings button that toggles a dropdown menu on click
@@ -712,6 +742,8 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
 - Updates reflect in `/dj-rest-auth/user/` immediately after a successful change
 - Currency changes update financial formatting across the app
 - All endpoints return clear error messages which are parsed and displayed in the frontend
+</details>
+
 
 **Change Username Modal**
 
@@ -784,6 +816,11 @@ The Edit Modal allows users to update individual income, expenditure, disposable
 
 ![Edit modal](src/readme_images/Screenshot_10.png)
 
+### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 - All edit buttons open a shared `Modal` pre-populated with existing values via React state.
 - Each list (income, expenditure, spending) passes down the correct entry data and triggers the modal when the edit icon is clicked.
@@ -811,6 +848,8 @@ The Edit Modal allows users to update individual income, expenditure, disposable
     - If only other fields changed, future entries are updated in place and assigned a new group ID to track the change.
 - All updates are scoped to the authenticated user and protected by permission classes
 
+</details>
+
 ### UX & Performance Benefits
 - Keeps modal behavior fast and lightweight with no page transitions.
 - Prevents unexpected group-wide changes by isolating past and future repeats.
@@ -819,6 +858,11 @@ The Edit Modal allows users to update individual income, expenditure, disposable
 ## Feature: Month Auto-Detection & Rollover Logic for Repeating Entries
 ### Overview
 The financial tracker automatically manages recurring financial entries by detecting when a new month begins and ensuring all applicable weekly and monthly repeating entries are created on the newly available 6th month without manual user intervention. This allows users to set a repeat interval once and rely on the system to maintain future records automatically.
+
+### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
 
 **How Month Auto-Detection Works**
 - When the app initializes or restores a session, it makes a GET request to the `/dj-rest-auth/user/ endpoint`.
@@ -835,6 +879,89 @@ The financial tracker automatically manages recurring financial entries by detec
     - Clones the entry to the new date only if it doesn’t already exist.
     - Uses `bulk_create()` to insert all new entries efficiently.
 - This ensures calendar views, summaries, and budget data are always populated in advance, maintaining app consistency without bloating the database
+
+</details>
+
+### UX & Performance Benefits
+- Effortless Automation
+    - Users only need to set a repeat once — future entries are handled automatically every month.
+- Improved Financial Planning
+    - Seeing up to 6 months of future data helps users plan spending and budgeting with clarity.
+- No Duplicate Entries
+    - Built-in checks prevent repeated entries from being duplicated during monthly rollovers.
+- Efficient Backend Logic
+    - Uses `bulk_create()` and scoped time windows to keep performance high and database writes minimal.
+- Reliable Grouping
+    - Each set of repeated entries shares a unique group ID, allowing for clean updates or deletions.
+
+## Feature: Data Cleanup Logic
+### Overview
+To keep the database performant and relevant, the app includes automatic cleanup logic that removes outdated financial data (Entries outside of the 6-month viewing window). This ensures that the system remains fast and lightweight.
+
+### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary
+
+**Backend Implementation**
+- The cleanup logic is handled by the clean_old_transactions(user) utility function.
+- Its is triggered when the `the check_and_run_monthly_repeat()` is triggered on month rollover.
+- When triggered, it:
+    - Calculates the start of the current month.
+    - Subtracts 6 months to determine the cutoff date.
+    - Deletes all financial entries (Income, Expenditure, DisposableIncomeSpending, DisposableIncomeBudget) for that user that are older than the cutoff.
+
+</details>
+
+### UX & Performance Benefits
+- Faster Querying
+    - Reduces the volume of old data scanned during API queries, improving response times.
+- Maintains Storage Efficiency
+    - Prevents unnecessary buildup of legacy data over time, keeping the database lean.
+
+## Feature: Sign In Modal
+### Overview
+The Sign In Modal provides a secure and user-friendly interface for logging into the financial tracker. It triggers a login request to the backend and, upon successful authentication, initializes the app by fetching the authenticated user's financial data for the selected month.
+
+![Sign in modal](src/readme_images/Screenshot_18.png)
+
+### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary
+
+**Frontend Implementation**
+- The modal is rendered conditionally via React state when no user session is detected at app initialization.
+- The modal includes:
+    - Email and password input fields
+    - Client-side validation to prevent empty submissions
+    - Display of backend error messages (e.g. invalid credentials)
+- On submission, it calls the login endpoint (/dj-rest-auth/login/) via Axios.
+- On success:
+    - User credentials are stored in React context
+    - Financial data is fetched
+    - User is automatically logged in and taken to the dashboard
+
+**Backend Implementation**
+- The modal captures the user’s username and password via controlled form inputs.
+- On form submission:
+    - It sends a `POST` request to `/dj-rest-auth/login/` with the credentials.
+    - The backend responds by setting JWT tokens in secure, `HttpOnly` cookies — these are automatically sent by the browser on subsequent requests.
+- After login:
+    - The frontend immediately calls `/dj-rest-auth/user/` to verify login and retrieve the authenticated user.
+    - This also triggers the month auto-detection logic, ensuring recurring entries are generated if a new month has begun.
+- Error messages from the backend (e.g. invalid credentials) are displayed directly in the modal.
+
+**Authentication Security**
+- Tokens are stored in HttpOnly cookies and never exposed to JavaScript.
+- This eliminates the risk of token theft via XSS and provides the convenience of automatic cookie-based authentication for all subsequent API requests.
+
+</details>
+
+### UX & Performance Benefits
+- Login is persistent across reloads unless manually logged out.
+- The modal ensures clear feedback on errors and provides a fast entry point into the app.
+- Authentication is seamless and secure, with automatic token refresh handled by the backend.
 
 
 [Back to Table of Contents](#table-of-contents)
