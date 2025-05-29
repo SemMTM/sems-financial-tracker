@@ -1144,6 +1144,16 @@ The Financial Tracker app uses a relational PostgreSQL database to manage user-s
     - Supports internationalization and user preference.
     - Keeps currency logic isolated from transactional data.
 
+### Differences Between Live Database & ERD
+There were some changes made to the database throughout the project after the Entity Relationship Diagram was created:
+
+| Aspect | ERD | Live Database |
+|--|--|--|
+| UserProfile Model | Not present | Added as a standalone model linked via a `OneToOneField` for controlling monthly repeat logic (`last_repeat_check`). |
+| Repeated Field Handling | Described loosely as “multi choice” | Implemented as `CharField` with choices for both `repeated` and `type`, improving validation and maintainability. |
+| Repeat Group Tracking | Not present | Implemented using `repeat_group_id` (UUID) for grouping repeated entries across time, enabling batch updates/deletes. |
+| Amount Fields | Shown as `int` | Implemented as `PositiveIntegerField` representing pence (1/100th of a pound). Ensures no negative values are stored and avoids floating-point errors. Formatting into pounds and appending currency symbols is handled in the serializer layer. |
+| Currency Storage | Present but type unspecified | Uses a standard CharField and integrates with a custom currency utility that provides formatting and symbols. |
 
 ### Key Models & Their Purpose
 
