@@ -25,7 +25,9 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
 - Currency Personalization
   - Users can choose their preferred currency, which is reflected across all financial data outputs and summaries.
 - JWT Authentication
-  - Auth flow is powered by dj-rest-auth and SimpleJWT, ensuring secure access to all financial data. Auth state is managed in React context and persists across page reloads.
+  - Auth flow is powered by `dj-rest-auth` and `SimpleJWT`, ensuring secure access to all financial data. 
+  - Upon login, tokens are stored in secure, `HttpOnly` cookies, protecting them from XSS attacks. Auth state is managed in React context and persists across page reloads by verifying the authenticated user via `/dj-rest-auth/user/`. 
+  - This approach offers the security of cookies with the convenience of automatic session restoration, while fully avoiding token exposure to client-side JavaScript.
 - Performance Optimized UI
   - Built with reusable React components and minimal re-renders to ensure snappy performance across devices.
 
@@ -919,7 +921,7 @@ To keep the database performant and relevant, the app includes automatic cleanup
 - Maintains Storage Efficiency
     - Prevents unnecessary buildup of legacy data over time, keeping the database lean.
 
-## Feature: Sign In Modal
+## Feature: Sign In Page
 ### Overview
 The Sign In Modal provides a secure and user-friendly interface for logging into the financial tracker. It triggers a login request to the backend and, upon successful authentication, initializes the app by fetching the authenticated user's financial data for the selected month.
 
@@ -931,8 +933,9 @@ The Sign In Modal provides a secure and user-friendly interface for logging into
 <summary><strong>View Technical Breakdown</strong></summary
 
 **Frontend Implementation**
-- The modal is rendered conditionally via React state when no user session is detected at app initialization.
-- The modal includes:
+- An unauthenticated user trying to access any page, will be automatically redirected to the sign-in page.
+- All routes are protected and only authenticated users are allowed to access the app.
+- The page includes:
     - Email and password input fields
     - Client-side validation to prevent empty submissions
     - Display of backend error messages (e.g. invalid credentials)
@@ -940,7 +943,6 @@ The Sign In Modal provides a secure and user-friendly interface for logging into
 - On success:
     - User credentials are stored in React context
     - Financial data is fetched
-    - User is automatically logged in and taken to the dashboard
 
 **Backend Implementation**
 - The modal captures the user’s username and password via controlled form inputs.
@@ -960,21 +962,113 @@ The Sign In Modal provides a secure and user-friendly interface for logging into
 
 ### UX & Performance Benefits
 - Login is persistent across reloads unless manually logged out.
-- The modal ensures clear feedback on errors and provides a fast entry point into the app.
+- The page ensures clear feedback on errors and provides a fast entry point into the app.
 - Authentication is seamless and secure, with automatic token refresh handled by the backend.
 
+## Feature: Sign Up Page
+### Overview
+The Sign Up Page allows new users to create an account with minimal friction. It’s designed with validation, user feedback, and security in mind, ensuring a smooth onboarding experience.
+
+![Sign up page](src/readme_images/Screenshot_19.png)
+
+### Technical Breakdown
+
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary
+
+**Frontend Implementation**
+- The form collects:
+    - Username
+    - Email address
+    - Password and Password confirmation
+- On submission:
+    - A POST request is sent to `/dj-rest-auth/registration/`.
+    - If successful, the backend automatically logs the user in and sets JWT tokens in `HttpOnly` cookies.
+    - The frontend then fetches `/dj-rest-auth/user/` to verify the session and initialize financial data.
+- Validation:
+    - Client-side: Basic required field checks and password confirmation.
+    - Server-side: Built-in validation from dj-rest-auth, with error messages (e.g. weak password, username taken) displayed inline.
+
+**Security Considerations**
+- JWT tokens are never exposed to JavaScript.
+- Authenticated sessions are automatically secured via `HttpOnly` cookies, and reused on each page load without exposing credentials or requiring localStorage.
+- Password validation rules follow Django’s built-in password validators for strength and predictability.
+
+</details>
+
+### UX & Performance Benefits
+- Immediate access after sign-up — no separate login step required.
+- Realtime feedback on validation errors helps reduce frustration.
+- Secure session is automatically established.
+- Supports fast onboarding and full feature access from the first login.
+
+## Unimplemented Features
+Several features were not implemented due to time constraints and can be seen in the [backlog](https://github.com/users/SemMTM/projects/3).
+
+The unimplemented features include:
+- Social login 
+- Email verification
+
+## Future Features
+Features that could be implemented in a future iteration are:
+- Option to edit/delete just the current entry instead of all repeated version of the entry
+- Clickable calendar tiles to show a detailed view of each days finances
 
 [Back to Table of Contents](#table-of-contents)
 
 # The Skeleton Plane
 
 ## Wireframes
+### Add Entry Modal
+<details>
+<summary><strong>Click To View Wireframe</strong></summary>
 
-#### Desktop
+![Add entry wireframe](src/readme_images/add_expenditure_wireframe.png)
 
+</details>
 
-#### Mobile
+### Calendar View
+<details>
+<summary><strong>Click To View Wireframe</strong></summary>
 
+![Calendar View wireframe](src/readme_images/calendar_view_wireframe.png)
+
+</details>
+
+### Finance Lists
+<details>
+<summary><strong>Click To View Wireframe</strong></summary>
+
+![Finance list wireframe](src/readme_images/finance_list_wireframes.png)
+
+</details>
+
+### Monthly Summary View
+<details>
+<summary><strong>Click To View Wireframe</strong></summary>
+
+![monthly summary wireframe](src/readme_images/monthly_summary_view.png)
+
+</details>
+
+### Settings Modal
+<details>
+<summary><strong>Click To View Wireframe</strong></summary>
+
+![settings modal wireframe](src/readme_images/settings_page_wireframe.png)
+
+</details>
+
+### Weekly Summary View
+<details>
+<summary><strong>Click To View Wireframe</strong></summary>
+
+![settings modal wireframe](src/readme_images/weekly_summary_view.png)
+
+</details>
+
+[Back to Table of Contents](#table-of-contents)
 
 ## Database Design
 
