@@ -1071,6 +1071,78 @@ Features that could be implemented in a future iteration are:
 [Back to Table of Contents](#table-of-contents)
 
 ## Database Design
+The Financial Tracker app uses a relational PostgreSQL database to manage user-specific financial data with strict data ownership and repeat automation logic. Django’s ORM handles data integrity, model relationships, and query abstraction. All financial models are linked to the authenticated user, ensuring complete data privacy.
+
+![ERD](src/readme_images/Screenshot_20.png)
+
+### Key Models & Their Purpose
+**User Model (Django’s built-in User)**
+- Fields: `username`, `email`, `password`, etc.
+- Purpose:
+    - Manages authentication and user ownership of all financial data.
+    - Linked to every core financial model (income, expenditure, budget, etc.) via a ForeignKey.
+    - Used in combination with JWT authentication stored in secure HttpOnly cookies.
+
+**UserProfile Model**
+- Fields: user (`OneToOneField`), `last_repeat_check`
+- Purpose:
+    - Tracks when the repeat generation logic was last triggered for a user.
+    - Ensures monthly repeat entries are only generated once per month.
+    - Works with `/dj-rest-auth/user/` to trigger repeat generation automatically on login or session restore.
+- Why It’s Needed:
+    - Separates auxiliary user-specific data from the core User model.
+    - Controls the repeat system in a scalable and isolated way.
+
+**Income Model**
+- Fields: `title`, `amount` (int, pence), `date`, `repeated`, `repeat_group_id`, `owner` (FK)
+- Purpose:
+    - Stores income entries for each user.
+    - Supports optional weekly or monthly repeat logic.
+    - Automatically generates repeated instances using utility functions.
+    - Linked by repeat_group_id for group updates or deletions.
+- Why It’s Needed:
+    - Provides structured tracking of income with repeat support.
+    - Integrates into calendar, summary, and budget systems.
+
+**Expenditure Model**
+- Fields: `title`, `amount` (int, pence), `type`, `date`, `repeated`, `repeat_group_id`, `owner` (FK)
+- Purpose:
+    - Stores expense entries with optional repeat behavior.
+    - Includes a type field to distinguish between different spending categories.
+    - Uses repeat_group_id to manage updates/deletions for recurring expenses.
+- Why It’s Needed:
+    - Tracks structured spending data.
+    - Enables monthly and weekly summary breakdowns.
+    - Supports long-term budget visibility through repeat automation.
+
+**DisposableIncomeBudget Model**
+- Fields: `owner` (FK), `amount` (int, pence)
+- Purpose:
+    - Allows users to define a monthly budget for flexible spending.
+    - Only one entry is allowed per user per month.
+    - Automatically resets each month with a default value of 0.
+- Why It’s Needed:
+    - Helps users set limits for their monthly discretionary spending.
+    - Integrated into summaries for calculating remaining budget.
+
+**DisposableIncomeSpending Model**
+- Fields: `title`, `amount` (int, pence), `date`, `owner` (FK)
+- Purpose:
+    - Tracks ad-hoc discretionary purchases.
+    - Each entry is tied to a date and shown against the user’s monthly budget.
+    - Used to calculate remaining disposable income for each period.
+- Why It’s Needed:
+    - Enables users to log smaller, lifestyle-based purchases without cluttering main expenditure data.
+
+**Currency Model**
+- Fields: `currency`, `owner` (`OneToOneField`)
+- Purpose:
+    - Stores the user’s preferred currency code (e.g., GBP, USD).
+    - Used across all views to format financial amounts.
+    - Returns currency symbol through a backend utility function.
+- Why It’s Needed:
+    - Supports internationalization and user preference.
+    - Keeps currency logic isolated from transactional data.
 
 
 ### Key Models & Their Purpose
