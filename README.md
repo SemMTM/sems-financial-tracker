@@ -258,6 +258,10 @@ The Calendar Grid View provides users with a clear, visual layout of their finan
 ![Calendar Grid](src/readme_images/Screenshot_2.png)
 
 ### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 - The `CalendarView` component generates a 5 or 6-row calendar layout using the `generateCalendarGrid()` utility. The utility calculates the correct start day of the month and fills in the grid to ensure five full rows are always rendered (35 cells).
 - This function accounts for:
@@ -281,6 +285,8 @@ The Calendar Grid View provides users with a clear, visual layout of their finan
 - The backend aggregates financial data per day and returns it to the client.
 - The calendar updates reactively, and the grid always renders 5 rows regardless of month length or start weekday, preserving layout stability.
 
+</details>
+
 ### UX & Performance Benefits
 - Maintains a consistent 5-row layout regardless of month length or starting weekday, preventing layout shifts and improving predictability
 - Helps users build month-to-month memory of their financial rhythm by keeping tiles aligned
@@ -298,6 +304,10 @@ This interaction updates not only the calendar grid, but also synchronizes all f
 ![Month Changer](src/readme_images/Screenshot_4.png)
 
 ### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 - Centralized in the custom `useCalendar()` context, which exposes:
     - selectedDate — the currently viewed month/year
@@ -328,6 +338,8 @@ This interaction updates not only the calendar grid, but also synchronizes all f
     - All consuming components re-fetch their data based on the new date
     - The entire dashboard then reflects one unified time window
 
+</details>
+
 ### UX & Performance Benefits
 - Creates a seamless, intuitive way to explore historical financial data without navigating away from the dashboard
 - Reduces user error and confusion by ensuring all components reflect the same time period
@@ -342,6 +354,10 @@ The Monthly Summary View gives users a high-level overview of their income, expe
 ![Monthly summary view](src/readme_images/Screenshot_5.png)
 
 ### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 - The `MonthlySummary` component consumes the globally shared `selectedDate` from `useCalendar()`.
 - On mount or when the month changes, the component triggers a request to the `/calendar-summary/` API with the current month formatted as `YYYY-MM` (e.g., "2025-04").
@@ -365,6 +381,8 @@ The Monthly Summary View gives users a high-level overview of their income, expe
 - The values are displayed using local component state and are re-rendered automatically via `useEffect()` when the data is fetched.
 - The `MonthlySummary` view passes control to the `WeeklySummary` component when toggled, using a shared `viewMode` state in the parent component (`Home`).
 
+</details>
+
 ### UX & Performance Benefits
 - Offers users an immediate understanding of their financial balance for the selected month
 - Encourages budgeting discipline by surfacing disposable income as a single, focused value
@@ -376,6 +394,11 @@ The Monthly Summary View gives users a high-level overview of their income, expe
 The Weekly Summary View allows users to view a breakdown of their income and expenditure on a week-by-week basis within the selected month. It intelligently includes partial weeks as long as they fall within the selected month’s boundaries — ensuring no financial data is missed due to alignment quirks in the calendar. This enables more granular tracking of spending patterns, especially useful for users paid weekly or budgeting with short-term goals.
 
 ![Weekly summary view](src/readme_images/Screenshot_6.png)
+
+### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
 
 **Partial Week Logic**
 - Weeks in the calendar don’t always align perfectly with the start or end of a month. For example:
@@ -412,6 +435,8 @@ The Weekly Summary View allows users to view a breakdown of their income and exp
 - The values are displayed using local component state and are re-rendered automatically via `useEffect()` when the data is fetched.
 - The `MonthlySummary` view passes control to the `WeeklySummary` component when toggled, using a shared viewMode state in the parent component (`Home`).
 
+</details>
+
 ### UX & Performance Benefits
 - Gives users a more granular view of their financial activity, perfect for tracking short-term trends or weekly goals
 - Complements the Monthly Summary by providing more focused insight without requiring manual filtering
@@ -426,6 +451,10 @@ The Monthly Expenditures List displays a scrollable, filterable view of all user
 ![Monthly expenditures list](src/readme_images/Screenshot_7.png)
 
 ### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
 **Frontend Implementation**
 -  Component: `ExpenditureList`
 - Fetches and renders all user expenditures for the currently selected month, using context from `useCalendar()` to construct the query.
@@ -457,6 +486,8 @@ The Monthly Expenditures List displays a scrollable, filterable view of all user
     - The `/calendar-summary/` endpoint receives the same month string (`?month=2025-05`) and calculates daily totals for display.
     - This data directly powers the plotting logic on the calendar view using income/expenditure aggregation.
 
+</details>
+
 ### UX & Functional Benefits
 - Intuitive and Immediate: Changes to expenditure entries reflect across all areas of the app.
 - Smart Repeat Management: Users have full control over recurring expenses, reducing data entry while maintaining accuracy.
@@ -469,6 +500,9 @@ The Monthly Expenditures List displays a scrollable, filterable view of all user
 The Monthly Income List displays all income entries for the selected month in a clean, scrollable format. It allows users to view, add, edit, and delete recurring or one-time income items while reflecting changes instantly in both the summary and calendar views.
 
 ![Monthly income list](src/readme_images/Screenshot_8.png)
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
 
 ### Technical Breakdown
 **Frontend Implementation**
@@ -502,6 +536,8 @@ The Monthly Income List displays all income entries for the selected month in a 
     - Calendar view updates daily income tiles
     - The income list reflects current data without page reloads
 
+</details>
+
 ### UX & Performance Benefits
 - Enables granular control over income records with editable repeat schedules
 - Visualizes recurring income patterns month-to-month
@@ -510,9 +546,47 @@ The Monthly Income List displays all income entries for the selected month in a 
 - Currency formatting improves clarity, with data stored in pence for precision
 - Centralized data context keeps the UI reactive and avoids redundant fetches
 
+## Feature: Repeat Entry Logic
+### Overview
+When a user creates a new entry with a repeat interval (weekly or monthly), the system immediately generates repeated instances for the next 6 months, starting from the entry's date. This ensures the calendar and summaries are pre-filled with all upcoming occurrences.
+
+### Technical Breakdown
+
+<details>
+<summary><strong>View Technical Breakdown</strong></summary>
+
+#### generate_monthly_repeats_for_6_months
+**What It Does:**
+- Creates monthly duplicates of a given entry (e.g. income, expenditure) for the next 5 months after the original.
+- Each new entry:
+    - Copies the same amount, title, type (if applicable), and repeat group ID.
+    - Adjusts the date to the same day in the next month using `relativedelta(months=1)`.
+
+**Edge Case Handling:**
+- Automatically adjusts day values if a month doesn't have the same number of days.
+(Example: January 31st → February 28th or 29th)
+
+**Used When:**
+- A user submits a new entry with repeated='MONTHLY'.
+
+#### generate_weekly_repeats_for_6_months
+**What It Does:**
+- Creates weekly duplicates of the original entry by stepping forward 7 days at a time from the entry's date.
+- Continues generating until the end of the 6th visible month.
+
+**Repeat Grouping:**
+- All generated entries share the same `repeat_group_id` (UUID), making it possible to identify and update/delete future entries as a group later.
+
+**Used When:**
+- A user submits a new entry with `repeated='WEEKLY'`.
+
+</details>
+
+
+
 ## Feature: Disposable Income Budget
 ### Overview
-The Disposable Income Budget section allows users to define how much flexible spending money they want to allocate for the selected month. It acts as a planning and constraint mechanism, helping users measure their actual spending against a self-imposed limit. This budget then integrates into the monthly and weekly summaries for clear comparisons.
+The Disposable Income Budget section allows users to define how much flexible spending money they want to allocate for the selected month. It acts as a planning and constraint mechanism, helping users measure their actual spending against a self-imposed limit. This budget then integrates into the monthly and weekly summaries for clear comparisons. A "Remaining" amount can be seen next to the budget.
 
 ![Disposable income budget](src/readme_images/Screenshot_9.png)
 
@@ -530,6 +604,7 @@ The Disposable Income Budget section allows users to define how much flexible sp
     - Weekly summary
     - Any disposable income spending displays
 - User input is stored in pounds but auto-converted to pence before being sent to the API
+- Displays the "Remaining" disposable budget after disposable spending has been subtracted from the users assigned budget
 
 **Backend Implementation**
 - Managed via the `DisposableIncomeBudgetViewSet`, which:
@@ -539,6 +614,7 @@ The Disposable Income Budget section allows users to define how much flexible sp
 - Validates that only the owner can view or edit their own budget
 - `PUT` requests allow updating the current month’s value
 - Resetting is handled by submitting 0 as the new value
+- Calculates remaining disposable budget 
 
 **Data Flow & Integration**
 - The component listens to month changes from the global `CalendarContext` and re-fetches budget data on each change
@@ -546,7 +622,6 @@ The Disposable Income Budget section allows users to define how much flexible sp
     - Summary components reflect updated available budget
     - Disposable income spending comparisons remain accurate
     - Budget editing always targets the correct month entry
-- API endpoint: `/disposable-income-budget/?month=YYYY-MM`
 
 ### UX & Performance Benefits
 - Gives users a clear self-defined spending cap each month
@@ -561,6 +636,8 @@ The Disposable Income Budget section allows users to define how much flexible sp
 This section tracks flexible, non-essential purchases that count against the user's monthly disposable income budget. It provides transparency over where discretionary money is going, helping users stay within self-set limits while still enjoying their budgeted spending freedom.
 
 Displayed in a list below the budget section, it enables fast add/edit/delete actions with real-time updates to the remaining balance in both monthly and weekly summaries.
+
+![Disposable income spending](src/readme_images/Screenshot_16.png)
 
 ### Technical Breakdown
 **Frontend Implementation**
@@ -599,7 +676,6 @@ Displayed in a list below the budget section, it enables fast add/edit/delete ac
         - Disposable Income Budget summary
         - Calendar tile amounts
         - Weekly and Monthly summary totals
-- API endpoint: `/disposable-income-spending/?month=YYYY-MM`
 
 ### UX & Performance Benefits
 - Allows users to track personal, lifestyle-oriented spending distinct from fixed expenses
@@ -612,6 +688,8 @@ Displayed in a list below the budget section, it enables fast add/edit/delete ac
 ## Feature: Settings Dropdown
 ### Overview
 The Settings Dropdown, accessible via a button in the top-left corner of the homepage, provides users with quick access to essential account management tools. Each action is handled within a dedicated modal, preserving context while avoiding unnecessary navigation. These settings support user customization and account maintenance, improving long-term app usability and retention.
+
+![Settings Dropdown](src/readme_images/Screenshot_11.png)
 
 ### Technical Breakdown
 **Frontend Implementation**
@@ -636,12 +714,15 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
 - All endpoints return clear error messages which are parsed and displayed in the frontend
 
 **Change Username Modal**
+
+![Change username modal](src/readme_images/Screenshot_12.png)
+
 - Allows the user to update their username while preserving uniqueness and input format
 - Frontend validates:
     - Non-empty input
     - Max 40 characters
     - Letters, numbers, hyphens, and underscores only
-    - USername is unique
+    - Username is unique
 - Backend returns field-level validation errors if format/uniqueness is violated
 - On success:
     - Updates user context
@@ -649,6 +730,9 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
 - Feedback is immediate and visible without refreshing the page
 
 **Change Email Modal**
+
+![Change email modal](src/readme_images/Screenshot_13.png)
+
 - Enables users to update their email address securely
 - Validates that:
     - Email is in a valid format
@@ -660,6 +744,9 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
     - Email in user context is updated
 
 **Change Password Modal**
+
+![Change pass modal](src/readme_images/Screenshot_14.png)
+
 - Form includes:
     - Current password
     - New password
@@ -674,6 +761,9 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
     - Field-level errors displayed (e.g., incorrect password, too short)
 
 **Currency Selection Modal**
+
+![Change currency](src/readme_images/Screenshot_15.png)
+
 - User can select from a list of supported currencies (e.g., GBP, USD, EUR)
 - Selection updates:
     - Backend: stores user's choice
@@ -681,12 +771,70 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
     - Currency symbol used across summaries, calendar tiles, and entries updates after auto refresh
 - Modal uses a simple dropdown and confirmation button
 
-## UX & Performance Benefits
+### UX & Performance Benefits
 - Keeps account settings readily accessible from any screen
 - Avoids disrupting user flow — all changes happen in context via modals
 - Clear visual hierarchy and feedback promote user confidence
 - Minimizes page reloads and improves perceived performance
 - Modular implementation allows new settings to be added easily
+
+## Feature: Edit Entry Modal
+### Overview
+The Edit Modal allows users to update individual income, expenditure, disposable income entries and the disposable budget from a central UI. The modal appears as a popup over the current list view and lets users update title, amount, date, and (where applicable) type. The system is built to handle both one-time entries and repeating entries, intelligently updating future records where required.
+
+![Edit modal](src/readme_images/Screenshot_10.png)
+
+**Frontend Implementation**
+- All edit buttons open a shared `Modal` pre-populated with existing values via React state.
+- Each list (income, expenditure, spending) passes down the correct entry data and triggers the modal when the edit icon is clicked.
+- The form includes:
+    - Title field
+    - Amount input (with real-time currency formatting)
+    - Date picker
+    - Type selection (for expenditure only)
+- Submitting the form triggers a PUT request to the relevant API endpoint (/income/{id}/, /expenditure/{id}/, etc.).
+
+**Repeat Logic Integration**
+- If the edited entry is part of a repeating group:
+    - If only content is changed (title, amount, type): all future entries in the same group are updated to match and assigned a new group ID.
+    - If the date is changed: the current and all future entries in the group are deleted, and a new entry is created with the updated date. A fresh repeating sequence is then generated from this new date using helper logic.
+- This ensures:
+    - The user can change future financial plans without affecting past data.
+    - Editing a repeat is intuitive and consistent with how calendar logic is applied.
+
+**Backend Implementation**
+- Each financial model’s `perform_update()` method checks whether the updated entry is repeated and whether the date field has changed:
+    - If the date changed, it uses a shared `repeat_on_date_change()` utility function to:
+        - Delete the current and future entries in the group.
+        - Create a new instance with the updated form data.
+        - Regenerate the repeat chain from that new date.
+    - If only other fields changed, future entries are updated in place and assigned a new group ID to track the change.
+- All updates are scoped to the authenticated user and protected by permission classes
+
+### UX & Performance Benefits
+- Keeps modal behavior fast and lightweight with no page transitions.
+- Prevents unexpected group-wide changes by isolating past and future repeats.
+- Provides power and flexibility to users who want to adjust their financial habits dynamically.
+
+## Feature: Month Auto-Detection & Rollover Logic for Repeating Entries
+### Overview
+The financial tracker automatically manages recurring financial entries by detecting when a new month begins and ensuring all applicable weekly and monthly repeating entries are created on the newly available 6th month without manual user intervention. This allows users to set a repeat interval once and rely on the system to maintain future records automatically.
+
+**How Month Auto-Detection Works**
+- When the app initializes or restores a session, it makes a GET request to the `/dj-rest-auth/user/ endpoint`.
+- This triggers the `check_and_run_monthly_repeat()` utility function, which determines whether new repeat entries need to be generated.
+
+**Detection Logic**
+- The system checks a `last_repeat_check` value stored on the user's profile, which tracks the last month repeat logic was executed.
+- If the stored month differs from the current one (i.e. a new month has started), repeat generation is triggered.
+- After running, the `last_repeat_check` is updated to the current month to prevent duplicate runs.
+
+**How Rollover Generation Works**
+- The `generate_6th_month_repeats()` function handles creating new entries for the 6th visible month (i.e. 5 months ahead of the current one).
+- It searches for repeated entries (weekly and monthly) in the 5th visible month, calculates their next due date, and:
+    - Clones the entry to the new date only if it doesn’t already exist.
+    - Uses `bulk_create()` to insert all new entries efficiently.
+- This ensures calendar views, summaries, and budget data are always populated in advance, maintaining app consistency without bloating the database
 
 
 [Back to Table of Contents](#table-of-contents)
