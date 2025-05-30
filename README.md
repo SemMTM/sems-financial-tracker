@@ -10,6 +10,11 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
 
 ![Website - Mobile](src/readme_images/Screenshot_1.png)
 
+
+### Live Site
+[The deployed version Monthly Finance Tracker can be found here](https://www.monthlyfinancetracker.xyz).
+
+
 ### Key Features
 - One-Page Dashboard
     - Toggle between calendar, weekly, and monthly summaries with real-time financial insights.
@@ -1250,21 +1255,48 @@ HSTS is configured to enforce HTTPS for one year and is preload-ready, protectin
 > The Surface Plane
 
 ### Design
+The Finance Tracker was designed with a focus on clarity, simplicity, and usability. The goal was to make tracking finances feel visual and intuitive — even for users who typically find budgeting overwhelming.
+
+### Calendar-First Experience
+The calendar view is the heart of the app. Users can instantly see their daily income and expenses laid out across the month, helping them recognize patterns and plan ahead.
+- Color-coded values (green for income, red for expenses) provide at-a-glance insight
+- Non-interactive past days are visually muted to reduce distraction
+- The current day is outlined, helping users stay oriented
+
+### Clean, Structured Lists
+Under the calendar, financial records are displayed in organized, editable lists:
+- Monthly income and expenditures are grouped and sorted by date
+- Each entry includes an inline Edit button for quick updates
+- A fixed budget section shows remaining disposable income in real time
+
+### Summary Views for Analysis
+In addition to the calendar, users can toggle between monthly and weekly summaries, giving them a breakdown of:
+- Total income and spending
+- Weekly financial performance
+- Remaining budget snapshots
+
+### Intuitive UX by Design
+- Key actions like "Add new expenditure" or "Change view" are placed logically and require minimal clicks
+- Users don’t need to learn the app — it feels natural from the first use
+- The layout adapts to smaller screens without compromising usability
 
 ### Colour Scheme
 
-### Typography
 
 [Back to Table of Contents](#table-of-contents)
 
 # Technologies
-This project combines a modern full-stack architecture built with React, Django REST Framework, and PostgreSQL. The frontend is powered by Vite, React Router, and TanStack React Query for fast, reactive UI rendering and efficient API state management. The backend uses Django with dj-rest-auth and SimpleJWT to provide a secure, token-based authentication system. Deployed on Netlify and Heroku, the application follows current best practices in scalability, performance, and modular code structure.
-
 ## Technology Used
+This project is built using JavaScript (React) on the frontend and Python (Django) on the backend. It follows a modern full-stack architecture, combining React, Vite, and TanStack React Query for responsive, component-driven UI and real-time API state management. The backend is powered by Django REST Framework, PostgreSQL, and secure authentication via dj-rest-auth and SimpleJWT. The app is deployed via Netlify (frontend) and Heroku (backend), with strong emphasis on performance, modularity, and real-world scalability.
 
 ### Full Stack Overview
 | Technology | Purpose |
 |--|--|
+| HTML | 	Markup language for structuring all frontend content |
+| JavaScript | Primary language for Frontend, Client-side logic, UI interactivity, and frontend tooling |
+| CSS | Styling and responsive layout across devices |
+| Python | Primary language for the backend business logic, API development, and data handling |
+| SQL | Relational data management using PostgreSQL |
 | React 19 | Frontend UI framework, used with hooks, modals, context |
 | Django 5 | Backend API framework with authentication and business logic |
 | Django REST Framework | Serializers, ViewSets, and API architecture |
@@ -1274,7 +1306,7 @@ This project combines a modern full-stack architecture built with React, Django 
 | Axios | HTTP requests to backend |
 | Vite | Lightning-fast dev server & build tool |
 | Heroku & Netlify | Deployment of backend and frontend |
-| Git + GitHub | Version control and project tracking |
+| Git + GitHub | Version control, project tracking, commits |
 
 ### Frontend Technologies
 | Tool / Library | Purpose |
@@ -1313,86 +1345,72 @@ This project combines a modern full-stack architecture built with React, Django 
 | re | Regex validation (usernames, etc.) |
 | json | API responses (occasionally in custom views) |
 
+### External Python Packages
+| Package | Version	| Purpose |
+|--|--|--|
+| Django | 5.1.7 | Core backend web framework |
+| djangorestframework | 3.16.0 | REST API structure (serializers, views, permissions) |
+| dj-rest-auth | 7.0.1 | Plug-and-play user authentication with JWT support |
+| djangorestframework-simplejwt | 5.5.0 | JWT token generation, rotation, and blacklisting |
+| django-allauth | 65.7.0 | User account management and extensible auth |
+| dj-database-url | 2.3.0 | Converts DB URL string to Django DATABASES config |
+| django-cors-headers | 4.7.0 | Enables CORS support for frontend/backend communication |
+| psycopg2-binary | 2.9.10 | PostgreSQL database driver |
+| gunicorn | 23.0.0 | WSGI server for production deployment |
+| requests | 2.32.3 | External API consumption (if needed) |
+| PyJWT | 2.9.0 | Handles JWT decoding and encoding |
+| certifi, idna, urllib3 | Various | Secure HTTP requests handling |
+| sqlparse | 0.5.3 | SQL formatting (used by Django shell) |
+| typing-extensions | 4.13.0 | Type hints and static analysis support |
+| tzdata | 2025.2 | Timezone handling (especially for Heroku) |
+| six | 1.17.0 | Compatibility layer for Python 2/3 |
+ cryptography, cffi, pycparser | Various | Underlying JWT + HTTPS dependencies |
+
 [Back to Table of Contents](#table-of-contents)
 
 # Testing
-All testing can be found in the TESTING.md file [HERE.](/TESTING.md)
+All integration tests and unit testing can be found in the TESTING.md file [HERE.](/TESTING.md)
 
 # Bugs
 ### Fixed Bugs
-
 | **Bug** | **Fix** |
-
-
+|--|--|
+| Future repeat entries not updating when base entry was edited | Introduced logic in `perform_update` to detect date changes and regenerate future instances from scratch. |
+| Scroll flicker on mobile when adding entry to a list. | Caused by calendar view rendering loading spinner when data needed updating. Made spinner an overlay after the calendar had been generated |
+| When token refresh would fail, it would endlessly make API calls to try refresh it. This caused the app to be in a continuously loading state. | Implement Axios interceptor to gracefully handle 401 refresh token failures. |
+| Weekly and Monthly summary views only displaying current months data and not responding to month changes | Adjusted views to consume `selectedDate` context and remount when a change is detected |
+| Updates to entries didn't change all matching future entries | Added logic to update only future entries when modifying a repeat group, while preserving past history |
+| Incorrect formatting of amounts (e.g. "not-a-number" accepted) | Added decimal and range validation for amount fields in the serializers |
+| Repeat logic rerunning unnecessarily each time the user logged in | Implemented a `UserProfile` model and timestamp check to ensure repeats are only triggered once per month |
+| incorrect expenditure total in `MonthlySummaryView` caused by partial week overlap | Updated logic to use `get_weeks_in_month_clipped` for accurate weekly boundaries |
+| Error thrown when trying to edit future months disposable budgets | `Overrode get_object()` in `DisposableIncomeBudgetViewSet` to bypass month filtering. Ensures budget entries can be retrieved by ID regardless of selected month |
+| 6th month repeated entires duplication duplicates each entry multiple times | Reworked the weekly repeat logic to only generate new entries from the latest existing entry in each repeat group. Ensured new entries are only created if they fall within the 6th month and don’t already exist |
+| Edit to future repeated entries also change past repeated entries info | ensure repeat edits create a new repeat group to prevent re-overwrites. perform_update now assigns a new `repeat_group_id` when updating a repeated entry |
+| Repeated future entires can't be mass deleted if a past one is deleted | `Overrode get_object()` to bypass monthly filtering and allow full access to incomes by ID |
+| Multiple `DisposableIncomeBudgets` being created for the same month | enforce monthly uniqueness and prevent duplication in `DisposableIncomeBudget` |
 
 ### Unfixed Bugs
-
-| **Bug** | **Reason for being unfixed** |
-|---|---|
-|  |  |
-|  |  |
+At the time of writing, no unfixed bugs have been detected following comprehensive integration and manual testing.
+All implemented features behave as expected across various usage scenarios. This section will be updated if any issues are discovered post-deployment or during future testing rounds.
 
 [Back to Table of Contents](#table-of-contents)
 
 # Deployment
+The Finance Tracker is a full-stack SPA with a `Django` + `PostgreSQL` backend and a `React` + `Vite` frontend deployed with:
+- Frontend on **Netlify**
+- Backend/API on **Heroku**
+- Both apps share the same top-level domain, enabling secure SameSite cookie-based JWT authentication.
 
 ### Version Control
+Version control is managed using `Git` and `GitHub`.
+- -Code is committed incrementally with meaningful messages.
+- GitHub repositories:
+    - [Frontend](https://github.com/SemMTM/sems-financial-tracker)
+    - [Backend](https://github.com/SemMTM/sems-finance-tracker-api)
 
-The website was created using Visual Studio Code editor. The webpage was deployed on Heroku and can be visisted [HERE]().
+### Frontend Deployment
 
-Git was used to push changes in the local enviroment to the remote repository using the following commands:
-
-`git add .` - This command is used to add any changed files to the staging area before they are commited.
-
-`git commit -m "message"` - This command was used to commit changes to the local repository queue ready to be pushed.
-- Commits were made after every small and incremental change to enhance maintainability with a clear commit history.
-- Commit messages were made in alignment with the EU Commissions [Commit guidelines](https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/) for clear and readable message.
-
-`git push` - This command was used to push all committed code to the remote repository on Github.
-
-### Initial Deployment
-#### Getting Set Up
-These are the steps for inital deployment after you have created your Github repository and set up your chosen IDE. 
-
-1. Install Django `pip3 install Django`
-2. Add a requirements.txt file `pip3 freeze --local > requirements.txt`
-3. Create a Django project `django-admin startproject project_name .`
-4. Create an app `python manage.py startapp app_name`
-5. Next, you need to add your app to the INSTALLED_APPS list in your setting.py file in your newly created project
-6. Create an env.py file with the following variables:
-    - os.environ.setdefault(
-        "DATABASE_URL", "your_database_url")
-    - os.environ.setdefault(
-        "CLOUDINARY_URL", "your_cloudinary_url")
-    - os.environ.setdefault(
-        "SECRET_KEY", "your_secret_key"
-    )
-7. Go back to your settiings.py file, import your env.py file and add the following:
-    - `SECRET_KEY = {'default': os.environ.get("SECRET_KEY")}`
-    - `DEBUG = True`
-    - `DATABASES = {'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))}`
-8. Install the packages required to connect to your database of choice, as this project uses PostgreSQL you need to install the following:
-    - `pip3 install dj-database-url psycopg2`
-9. Add them to your requirements file `pip3 freeze --local > requirements.txt`
-10. In your projects settings.py file import the following:
-```
-import os
-import dj_database_url
-if os.path.isfile('env.py'):
-    import env
-```
-11. Create database tables with the following command `python manage.py migrate`
-12. Create a superuser `python manage.py createsuperuser`
-13. Set ALLOWED_HOST for your local server
-14. Create a .gitingore file and add your env.py as well as other sensetive files that should not be deployed
-15. Run the following git commands:
-```
-git add .
-git commit -m "inital commit"
-git push
-```
-
-### Heroku (Production) Deployment
+### Backend Deployment
 The site was deployed to Heroku. The steps to deploy are al follows:
 1. Run the following command `pip3 install gunicorn`. This will allow for Heroku deployment
 2. Add this to your requirements.txt file: `pip3 freeze --local > requirements.txt`
