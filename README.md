@@ -52,7 +52,7 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
     - [Features](#features)
     - [Unimplemented Features](#unimplemented-features)
     - [Future Features](#future-features)
-- [The Skeleton Frame](#the-skeleton-plane)
+- [System Architecture & Design](#system-architecture--design)
     - [Wireframes](#wireframes)
     - [Database Design](#database-design)
     - [Security](#security)
@@ -1017,7 +1017,8 @@ Features that could be implemented in a future iteration are:
 
 [Back to Table of Contents](#table-of-contents)
 
-# The Skeleton Plane
+# System Architecture & Design
+> The Skeleton Plane
 
 ## Wireframes
 ### Add Entry Modal
@@ -1155,11 +1156,85 @@ There were some changes made to the database throughout the project after the En
 | Amount Fields | Shown as `int` | Implemented as `PositiveIntegerField` representing pence (1/100th of a pound). Ensures no negative values are stored and avoids floating-point errors. Formatting into pounds and appending currency symbols is handled in the serializer layer. |
 | Currency Storage | Present but type unspecified | Uses a standard CharField and integrates with a custom currency utility that provides formatting and symbols. |
 
-### Key Models & Their Purpose
-
 
 ## Security
+This financial tracker was built with a production-grade security posture in mind. From JWT cookie-based auth to Django's hardened middleware settings, every layer was implemented to protect user privacy, session integrity, and data ownership.
 
+### Authentication & Session Security
+- JWT-Based Auth with Secure Cookie Storage
+    - Powered by `dj-rest-auth` and `SimpleJWT`
+    - Access and refresh tokens are stored in `HttpOnly`, Secure cookies, not in `localStorage` or `sessionStorage`
+    - Cookies are automatically sent with requests due to proper `SameSite` and `CORS` settings
+    - JWT cookies are configured with:
+        - `HttpOnly = True`
+        - `Secure = True` (disabled only in local dev)
+        - `SameSite = Lax` via `CSRF_COOKIE_SAMESITE` and `SESSION_COOKIE_SAMESITE`
+- Shared Top-Level Domain Architecture
+    - Both the API and frontend are hosted under the same top-level domain
+    - Combined with `SameSite=Lax`, this architecture prevents CSRF attacks while allowing secure cross-path access
+    - Example: cookies set at api.example.com can be sent with requests to app.example.com only when initiated by top-level navigations or safe HTTP methods (like GET)
+- Session Flags Set in `settings.py`:
+
+```
+SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_HTTPONLY = not DEBUG
+SESSION_COOKIE_SAMESITE = os.environ.get("SAME_SITE")
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SAMESITE = os.environ.get("SAME_SITE")
+```
+
+- Short Token Lifetimes
+    - Access tokens expire after 60 minutes
+    - Refresh tokens expire after 7 days, limiting session risk
+- Refresh Token Blacklisting Enabled
+    - When tokens are rotated, old refresh tokens are invalidated and blacklisted
+    - This prevents session hijacking via stolen cookies
+
+### CSRF Protection
+- Django’s built-in CSRF protection is fully enabled and tied to secure cookie settings
+- The frontend makes authenticated requests with `withCredentials: true`, allowing Django to validate the CSRF token
+- This prevents forged `POST/PUT/DELETE` requests from malicious third-party origins
+
+### Django Security Middleware Settings
+HSTS is configured to enforce HTTPS for one year and is preload-ready, protecting against SSL stripping attacks even on first visit when used with a preload list. The following settings are enforced in production via settings.py, making the app compliant with modern security headers and transport standards:
+
+| Setting |	Description |
+|--|--|
+| `SECURE_SSL_REDIRECT` |	Forces HTTPS in production |
+| `SECURE_HSTS_SECONDS = 31536000` | Enforces HTTPS in browsers for 1 year, protecting users from SSL stripping (downgrade) attacks |
+| `SECURE_HSTS_INCLUDE_SUBDOMAINS` | Extends HSTS protection to all subdomains |
+| `SECURE_HSTS_PRELOAD` | Allows the domain to be submitted to the HSTS preload list, ensuring HTTPS is enforced even on a first visit |
+| `SECURE_CONTENT_TYPE_NOSNIFF` | Blocks MIME-type sniffing |
+| `X_FRAME_OPTIONS = "DENY"` | Prevents clickjacking by disallowing iframes |
+| `SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"` | Limits Referer header data on cross-site requests |
+
+### API Access Control
+- Global Authentication Enforcement
+    - All endpoints (calendar, income, budgets, etc.) require `IsAuthenticated`
+    - Anonymous users receive `403` or `401` responses automatically
+- Object-Level Authorization
+    - Each `retrieve`, `update`, or `delete` operation checks if `obj.owner == request.user`
+    - Unauthorized access triggers `PermissionDenied`
+- Scoped Querysets
+    - All financial queries are filtered by `owner=request.user`, fully isolating data between accounts
+
+### Field-Level and Admin Protections
+- Sensitive Serializer Fields Read-Only
+    - Fields like `owner`, `repeat_group_id`, and timestamps are not writeable by the client
+- Admin Route Hidden in Production
+    - The Django admin interface is disabled in production. Attempting to access `/admin/` results in a `404` and a redirect to the homepage
+
+### Security Testing
+- Unit tests verify:
+    - Only authenticated users can access protected endpoints
+    - Users cannot access or modify other users' data
+    - Unauthorized access attempts are properly denied with 403
+- Auth and permission behaviors are validated throughout the backend test suite
+
+### Environment & Secret Management
+- All secrets (e.g. `DATABASE_URL`, `SECRET_KEY`) are stored in environment variables using `env.py`
+- The `.env` and secret files are excluded via `.gitignore`
+- No credentials or tokens have ever been committed to the Git history
 
 [Back to Table of Contents](#table-of-contents)
 
