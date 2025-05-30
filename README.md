@@ -56,7 +56,7 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
     - [Wireframes](#wireframes)
     - [Database Design](#database-design)
     - [Security](#security)
-- [The Surface Plane](#the-surface-plane)
+- [Visual Design & Styling](#visual-design--styling)
     - [Design](#design)
     - [Colour Scheme](#color-scheme)
     - [Typography](#typography)
@@ -805,6 +805,15 @@ The Settings Dropdown, accessible via a button in the top-left corner of the hom
     - Currency symbol used across summaries, calendar tiles, and entries updates after auto refresh
 - Modal uses a simple dropdown and confirmation button
 
+**Light/Dark Mode**
+
+![Light mode/dark mode](src/readme_images/Screenshot_21.png)
+
+- Users can switch between dark and light themes
+- The selected theme is saved in `localStorage` and persists across sessions
+- All UI components adjust styles instantly without requiring a reload
+- Improves accessibility and visual comfort across lighting environments
+
 ### UX & Performance Benefits
 - Keeps account settings readily accessible from any screen
 - Avoids disrupting user flow — all changes happen in context via modals
@@ -1156,7 +1165,6 @@ There were some changes made to the database throughout the project after the En
 | Amount Fields | Shown as `int` | Implemented as `PositiveIntegerField` representing pence (1/100th of a pound). Ensures no negative values are stored and avoids floating-point errors. Formatting into pounds and appending currency symbols is handled in the serializer layer. |
 | Currency Storage | Present but type unspecified | Uses a standard CharField and integrates with a custom currency utility that provides formatting and symbols. |
 
-
 ## Security
 This financial tracker was built with a production-grade security posture in mind. From JWT cookie-based auth to Django's hardened middleware settings, every layer was implemented to protect user privacy, session integrity, and data ownership.
 
@@ -1238,16 +1246,72 @@ HSTS is configured to enforce HTTPS for one year and is preload-ready, protectin
 
 [Back to Table of Contents](#table-of-contents)
 
-# The Surface Plane
+# Visual Design & Styling
+> The Surface Plane
 
+### Design
+
+### Colour Scheme
+
+### Typography
 
 [Back to Table of Contents](#table-of-contents)
 
 # Technologies
+This project combines a modern full-stack architecture built with React, Django REST Framework, and PostgreSQL. The frontend is powered by Vite, React Router, and TanStack React Query for fast, reactive UI rendering and efficient API state management. The backend uses Django with dj-rest-auth and SimpleJWT to provide a secure, token-based authentication system. Deployed on Netlify and Heroku, the application follows current best practices in scalability, performance, and modular code structure.
 
 ## Technology Used
 
+### Full Stack Overview
+| Technology | Purpose |
+|--|--|
+| React 19 | Frontend UI framework, used with hooks, modals, context |
+| Django 5 | Backend API framework with authentication and business logic |
+| Django REST Framework | Serializers, ViewSets, and API architecture |
+| PostgreSQL | Secure, scalable relational database |
+| dj-rest-auth + SimpleJWT | JWT authentication (access & refresh tokens) |
+| React Query | Client-side state syncing with the API |
+| Axios | HTTP requests to backend |
+| Vite | Lightning-fast dev server & build tool |
+| Heroku & Netlify | Deployment of backend and frontend |
+| Git + GitHub | Version control and project tracking |
 
+### Frontend Technologies
+| Tool / Library | Purpose |
+|--|--|
+| React 19 | SPA foundation with Hooks and component-based architecture |
+| React Router v7 | Routing for views like login, settings, and home |
+| TanStack React Query | Caching, syncing, and mutation of API data |
+| Axios	| Promise-based HTTP client for API interactions |
+| date-fns | Lightweight date formatting and manipulation |
+| ESLint | Custom linting via eslint.config.js for React best practices |
+| Vite | High-speed development server and optimized builds |
+| CSS Modules | Component-scoped styles |
+
+### Backend Technologies
+| Tool / Library | Purpose |
+|--|--|
+| Python 3.12 | Core backend language |
+| Django 5.1.7 | Backend web framework for routing, models, and authentication |
+| Django REST Framework (DRF) | API architecture, serializers, ViewSets |
+| dj-rest-auth | User registration, login, and password handling via JWT |
+| SimpleJWT | JWT-based session management with token rotation and blacklist |
+| PostgreSQL | Relational database with user and transaction data |
+| Gunicorn | WSGI server for production deployments |
+| CORS Headers | Cross-origin support for API consumption |
+
+### Python Standard Library Modules Used
+| Module | Use Case |
+|--|--|
+| datetime | Date tracking for financial entries |
+| uuid | Generate repeat group IDs for recurring entries |
+| os | Environment variable and deployment config |
+| time | Timezone-safe comparisons |
+| calendar | Month-based logic (e.g., last day of month) |
+| pathlib | Path manipulation (used in BASE_DIR) |
+| copy | Cloning repeated entry objects |
+| re | Regex validation (usernames, etc.) |
+| json | API responses (occasionally in custom views) |
 
 [Back to Table of Contents](#table-of-contents)
 
