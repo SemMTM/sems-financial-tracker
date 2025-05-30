@@ -27,7 +27,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   --income-text-color: rgba(0, 255, 85, 0.781);
   --modal-bg-color: #252525;
   --input-color: black;
-  --calendar-icon-filter: invert(0);
+  --calendar-icon-filter: white;
   --loading-overlay: rgba(0,0,0,0.3);
 }
 
@@ -41,7 +41,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   --income-text-color: rgb(0 209 35 / 78%);
   --modal-bg-color: #e2e2e2;
   --input-color: white;
-  --calendar-icon-filter: invert(1);
+  --calendar-icon-filter: black;
   --loading-overlay: rgba(202, 202, 202, 0.6);
 }
 

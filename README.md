@@ -62,13 +62,8 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
     - [Database Design](#database-design)
     - [Security](#security)
 - [Visual Design & Styling](#visual-design--styling)
-    - [Design](#design)
-    - [Colour Scheme](#color-scheme)
-    - [Typography](#typography)
 - [Technologies](#technologies)
     - [Technology Used](#technology-used)
-    - [Python Modules Used](#python-standard-modules)
-    - [External Python Modules Used](#external-python-modules)
 - [Testing](#testing)
 - [Bugs](#bugs)
     - [Fixed Bugs](#fixed-bugs)
@@ -1028,6 +1023,7 @@ The unimplemented features include:
 Features that could be implemented in a future iteration are:
 - Option to edit/delete just the current entry instead of all repeated version of the entry
 - Clickable calendar tiles to show a detailed view of each days finances
+- Disable move to next month arrows on date picker until all API data has loaded or don't fetch API data until after a small time delay e.g. 1.5 secs 
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -1257,37 +1253,56 @@ HSTS is configured to enforce HTTPS for one year and is preload-ready, protectin
 ### Design
 The Finance Tracker was designed with a focus on clarity, simplicity, and usability. The goal was to make tracking finances feel visual and intuitive — even for users who typically find budgeting overwhelming.
 
-### Calendar-First Experience
+**Calendar-First Experience**
+
 The calendar view is the heart of the app. Users can instantly see their daily income and expenses laid out across the month, helping them recognize patterns and plan ahead.
 - Color-coded values (green for income, red for expenses) provide at-a-glance insight
 - Non-interactive past days are visually muted to reduce distraction
 - The current day is outlined, helping users stay oriented
 
-### Clean, Structured Lists
+**Clean, Structured Lists**
+
 Under the calendar, financial records are displayed in organized, editable lists:
 - Monthly income and expenditures are grouped and sorted by date
 - Each entry includes an inline Edit button for quick updates
 - A fixed budget section shows remaining disposable income in real time
 
-### Summary Views for Analysis
+**Summary Views for Analysis**
+
 In addition to the calendar, users can toggle between monthly and weekly summaries, giving them a breakdown of:
 - Total income and spending
 - Weekly financial performance
 - Remaining budget snapshots
 
-### Intuitive UX by Design
+**Intuitive UX by Design**
+
 - Key actions like "Add new expenditure" or "Change view" are placed logically and require minimal clicks
 - Users don’t need to learn the app — it feels natural from the first use
 - The layout adapts to smaller screens without compromising usability
 
 ### Colour Scheme
+The app supports both Dark Mode (default) and Light Mode, giving users control over their visual experience.
 
+- Dark Mode:
+    - Used by default to reduce eye strain and provide strong contrast between income (green), expenses (red), and neutral interface elements (white/grey). This mode is ideal for long-term use and suits the modern preference for low-light interfaces.
+- Light Mode:
+    - Offers a clean, neutral appearance with inverted tones. It’s designed for environments with bright lighting or user preference for higher brightness. The same colour cues for income and expenditure are preserved, ensuring consistency across themes.
+
+Colour choices are functional, not just aesthetic:
+- Green: Clearly indicates positive financial movement (income)
+- Red: Signals outflows (expenditure)
+- Grey/Muted: Used for inactive days or secondary information
+- Blue: Used as a visual highlight for selected calendar days
+
+This colour language ensures that users can visually scan their finances without needing to interpret numbers in detail.
 
 [Back to Table of Contents](#table-of-contents)
 
 # Technologies
 ## Technology Used
-This project is built using JavaScript (React) on the frontend and Python (Django) on the backend. It follows a modern full-stack architecture, combining React, Vite, and TanStack React Query for responsive, component-driven UI and real-time API state management. The backend is powered by Django REST Framework, PostgreSQL, and secure authentication via dj-rest-auth and SimpleJWT. The app is deployed via Netlify (frontend) and Heroku (backend), with strong emphasis on performance, modularity, and real-world scalability.
+This project is built using JavaScript (React) on the frontend and Python (Django) on the backend. It follows a modern full-stack architecture, combining React, Vite, and TanStack React Query for responsive, component-driven UI and real-time API state management. 
+
+The backend is powered by Django REST Framework, PostgreSQL, and secure authentication via dj-rest-auth and SimpleJWT. The app is deployed via Netlify (frontend) and Heroku (backend), with strong emphasis on performance, modularity, and real-world scalability.
 
 ### Full Stack Overview
 | Technology | Purpose |
