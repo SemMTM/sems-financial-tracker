@@ -11,28 +11,28 @@ import { useTheme } from '../context/ThemeContext'
 
 
 export default function SettingsDropdown() {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   // 1. Local state for dropdown + modal content
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [modalContent, setModalContent] = useState(null)
-  const [showModal, setShowModal] = useState(false)
-  const [success, setSuccess] = useState('')
-  const [error, setError] = useState('')
-  const dropdownRef = useRef()
-  const { theme, toggleTheme } = useTheme()
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+  const dropdownRef = useRef();
+  const { theme, toggleTheme } = useTheme();
 
   // 2. Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setShowDropdown(false)
+        setShowDropdown(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // 3. Open modal with a given component
   const openModal = (Component) => {
@@ -43,17 +43,17 @@ export default function SettingsDropdown() {
         setError={setError}
       />
     )
-    setShowModal(true)
-    setShowDropdown(false)
+    setShowModal(true);
+    setShowDropdown(false);
   }
 
   // 4. Handle logout
   const handleLogout = async () => {
     try {
-      await logout()
+      await logout();
       navigate('/')
     } catch (err) {
-      console.log('Logout failed:', err)
+      console.log('Logout failed:', err);
     }
   }
 
@@ -143,5 +143,5 @@ export default function SettingsDropdown() {
         </Modal>
       )}
     </div>
-  )
+  );
 }

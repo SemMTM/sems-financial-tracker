@@ -69,7 +69,7 @@ const Home = () => {
         <DisIncomeSpendList />
       </div>
     </div>
-  )
+  );
 }
 
 export default Home
