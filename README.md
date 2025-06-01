@@ -1307,7 +1307,7 @@ The backend is powered by Django REST Framework, PostgreSQL, and secure authenti
 ### Full Stack Overview
 | Technology | Purpose |
 |--|--|
-| HTML | 	Markup language for structuring all frontend content |
+| JSX (HTML-in-JS) | 	Used in React to define component structure and layout. Compiles to browser-rendered HTML |
 | JavaScript | Primary language for Frontend, Client-side logic, UI interactivity, and frontend tooling |
 | CSS | Styling and responsive layout across devices |
 | Python | Primary language for the backend business logic, API development, and data handling |
@@ -1423,30 +1423,76 @@ Version control is managed using `Git` and `GitHub`.
     - [Frontend](https://github.com/SemMTM/sems-financial-tracker)
     - [Backend](https://github.com/SemMTM/sems-finance-tracker-api)
 
-### Frontend Deployment
+### Frontend Deployment (Netlify)
+- Platform: Netlify
+- Host: React frontend (SPA) built with Vite
+- Auth: Works with `HttpOnly` JWT cookies issued by the backend
 
-### Backend Deployment
-The site was deployed to Heroku. The steps to deploy are al follows:
-1. Run the following command `pip3 install gunicorn`. This will allow for Heroku deployment
-2. Add this to your requirements.txt file: `pip3 freeze --local > requirements.txt`
-3. In the root directory of your project add a file with the name `Procfile` with no file extension
-4. In the Procfile, declare this is a web process followed by the command to execute your Django project.
-    - `web: gunicorn my_project.wsgi`
-    - Note: Always set DEBUG to FALSE before deploying a project to a production enviroment
-5. In your settings.py files ALLOWED_HOSTS list, append the Heroku host name to the list `,'.herokuapp.com'`
-6. In your Heroku dashboard, create a new app
-7. Once in your app dashboard, click on the `Settings` tab. It is important to get the settings set up before attemping to deploy the app
-8. Since your env.py file will not be pushed to Github, Heroku cannot read it. This means we need to set them up in Heroku manually:
-    - Navigate to the `Config Vars` section and click `Reveal config vars`
-    - Add the following Keys and their values:
-        - `CLOUDINARY_URL`
-        - `DATABASE_URL`
-        - `SECRET_KEY`
-9. Navigate to the `Deploy` tab and select `GitHub`
-10. Click `Connect to Github` and log in to your GitHub account
-11. Search for your GitHub repository in the `Connect to GitHub section`
-12. Once found click `connect` then click `Deploy`
-13. Once deployment is complete, click `View` to see your deployed project
+#### Setup Steps:
+1. To deploy the Financial Tracker frontend to Netlify, you first need to clone the repo to your own github.
+2. Connect the Github frontend repo to Netlify via the GitHub integration
+3. Configure the build settings:
+    - Build command: `npm run dev`
+    - Publish directory: `src`
+4. In the newly created projects environment variables on Netlify, add the following variable:
+    - VITE_API_BASE_URL: This variable should be set to the API url
+5. Configure vite.config.js (Optional) 
+```
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    allowedHosts: ['your-site.netlify.app'],
+  },
+})
+```
+6. Once Netlify detects the build configuration, it will automatically run the build and publish
+7. For JWT auth to work, the front and backend need to be deployed on the same top level domains. To use different domain, in your backend, set the SameSite variable to "None"
+
+### Backend Deployment (Heroku)
+- Platform: Heroku
+- Host: Django backend API
+- Database: PostgreSQL
+- Auth: Cookie-based JWT via `dj-rest-auth` + `SimpleJWT`
+
+The steps to deploy are as follows:
+1. Clone the API repo to your own GitHub
+2. Add `gunicorn` and `dj-database-url` to requirements.txt
+```
+pip install gunicorn dj-database-url
+pip freeze > requirements.txt
+```
+
+3. Create `Procfile` (no file extension)
+```
+web: gunicorn core.wsgi
+```
+
+4. Create a Heroku app
+    - Go to your Heroku Dashboard, create a new app, and choose a region
+5. Add billing details
+6. Connect GitHub Repo
+    - Navigate to the *Deploy* tab
+    - Select GitHub as the deployment method
+    - Connect your cloned `sems-finance-tracker-api` repository
+7. Set Environment Variables in *Settings* -> *Config Vars*:
+
+| Key | Value |
+|--|--|
+| `SECRET_KEY` | Your Django secret key |
+| `DATABASE_URL` | Your PostgreSQL database link |
+| `SAME_SITE` | Lax or None if using or not using same top level domain |
+| `CORS_ALLOWED_ORIGINS` | urls of all production or development frontend urls that should be allowed access to the API |
+| `CSRF_TRUSTED_ORIGINS` | same urls as `CORS_ALLOWED_ORIGINS` |
+
+8. Navigate to the *Deploy* tab and click `Deploy`
+9. Once deployment is complete, click View to see your deployed api
+10. Security Hardening (in `settings.py`)
+    - `DEBUG = False` in production. In `SETTINGS.py` this is already set to be on or off conditionally depending if the variable `DEV` is present in the environment variables or not
+    - `ALLOWED_HOSTS` includes both Netlify and Heroku domain
+    - All relevant production security settings are activated conditionally:
+        - `SESSION_COOKIE_SECURE = True`
+        - `CSRF_COOKIE_SECURE = True`
+        - `SECURE_HSTS_SECONDS = 31536000`, etc.
 
 ### Run Locally
 Navigate to the GitHub Repository you want to clone to use locally:
