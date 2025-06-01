@@ -16,31 +16,31 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
 
 
 ### Key Features
-- One-Page Dashboard
+- **One-Page Dashboard**
     - Toggle between calendar, weekly, and monthly summaries with real-time financial insights.
-- Dynamic Calendar View
+- **Dynamic Calendar View**
     - Interactive financial calendar with accurate date alignment, showing income and expenditure breakdowns per day.
-- Income and Expense Tracking
+- **Income and Expense Tracking**
   - Log and manage both one-time and recurring income/expenditures, with automatic generation of future instances based on repeat frequency.
   - Create, edit, and delete financial entries with support for recurring transactions (weekly & monthly). Repeats are automatically generated with logic to avoid duplicate or outdated entries.
-- Disposable Income Budgeting
+- **Disposable Income Budgeting**
   - Set and track monthly disposable income budgets. Each new month resets automatically and can be adjusted by the user.
-- Data Privacy and Security
+- **Data Privacy and Security**
   - Each user’s data is completely isolated and protected. Every financial endpoint is protected by ownership-based permissions — ensuring users can only access their own data. No shared access is possible.
-- Currency Personalization
+- **Currency Personalization**
   - Users can choose their preferred currency, which is reflected across all financial data outputs and summaries.
-- JWT Authentication
+- **JWT Authentication**
   - Auth flow is powered by `dj-rest-auth` and `SimpleJWT`, ensuring secure access to all financial data. 
   - Upon login, tokens are stored in secure, `HttpOnly` cookies, protecting them from XSS attacks. Auth state is managed in React context and persists across page reloads by verifying the authenticated user via `/dj-rest-auth/user/`. 
   - This approach offers the security of cookies with the convenience of automatic session restoration, while fully avoiding token exposure to client-side JavaScript.
-- Performance Optimized UI
+- **Performance Optimized UI**
   - Built with reusable React components and minimal re-renders to ensure snappy performance across devices.
 
 ### Tech Stack
 | **Layer** | **Technology** | **Purpose** |
 |--|--|--|
-| Frontend | React, React Router, Axios | SPA interface with dynamic component rendering |
-| Backend | Django, Django REST Framework | REST API with secure user-specific endpoints |
+| Frontend | React, React Router, Axios, JSX, CSS, JavaScript | SPA interface with dynamic component rendering |
+| Backend | Django, Django REST Framework, Python | REST API with secure user-specific endpoints |
 | Auth | dj-rest-auth, SimpleJWT | JWT-based login, logout, password updates |
 | Database | PostgreSQL | Structured, relational financial data |
 | Deployment | Heroku (API), Netlify (Frontend) | Full-stack hosting |
@@ -50,9 +50,9 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
 - [Project Overview](#project-overview)
 - [UX Strategy & Goals](#the-strategy-plane)
     - [Site Goals](#site-goals)
-- [Project Scope & User Stories](#project-scope--user-stories)
+    - [Project Scope & User Stories](#project-scope--user-stories)
     - [Agile Planning](#agile-planning)
-    - [Epics](#epics--user-stories)
+    - [Epics & User Stories](#epics--user-stories)
 - [Application Features & Functionality](#application-features--functionality)
     - [Features](#features)
     - [Unimplemented Features](#unimplemented-features)
@@ -70,8 +70,9 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
     - [Unfixed Bugs](#unfixed-bugs)
 - [Deployment](#deployment)
     - [Version Control](#version-control)
-    - [Heroku Deployment](#heroku-deployment)
-    - [Run Locally](#run-locally)
+    - [Frontend Deployment](#frontend-deployment-netlify)
+    - [Backend Deployment](#backend-deployment-heroku)
+    - [Clone & Run Locally](#clone--run-locally)
     - [Fork Project](#fork-project)
 - [Credits](#credits)
 
@@ -1079,8 +1080,6 @@ Features that could be implemented in a future iteration are:
 
 </details>
 
-[Back to Table of Contents](#table-of-contents)
-
 ## Database Design
 The Financial Tracker app uses a relational PostgreSQL database to manage user-specific financial data with strict data ownership and repeat automation logic. Django’s ORM handles data integrity, model relationships, and query abstraction. All financial models are linked to the authenticated user, ensuring complete data privacy.
 
@@ -1165,6 +1164,8 @@ There were some changes made to the database throughout the project after the En
 | Repeat Group Tracking | Not present | Implemented using `repeat_group_id` (UUID) for grouping repeated entries across time, enabling batch updates/deletes. |
 | Amount Fields | Shown as `int` | Implemented as `PositiveIntegerField` representing pence (1/100th of a pound). Ensures no negative values are stored and avoids floating-point errors. Formatting into pounds and appending currency symbols is handled in the serializer layer. |
 | Currency Storage | Present but type unspecified | Uses a standard CharField and integrates with a custom currency utility that provides formatting and symbols. |
+
+[Back to Table of Contents](#table-of-contents)
 
 ## Security
 This financial tracker was built with a production-grade security posture in mind. From JWT cookie-based auth to Django's hardened middleware settings, every layer was implemented to protect user privacy, session integrity, and data ownership.
@@ -1386,6 +1387,8 @@ The backend is powered by Django REST Framework, PostgreSQL, and secure authenti
 # Testing
 All integration tests and unit testing can be found in the TESTING.md file [HERE.](/TESTING.md)
 
+[Back to Table of Contents](#table-of-contents)
+
 # Bugs
 ### Fixed Bugs
 | **Bug** | **Fix** |
@@ -1418,7 +1421,7 @@ The Finance Tracker is a full-stack SPA with a `Django` + `PostgreSQL` backend a
 
 ### Version Control
 Version control is managed using `Git` and `GitHub`.
-- -Code is committed incrementally with meaningful messages.
+- Code is committed incrementally with meaningful messages.
 - GitHub repositories:
     - [Frontend](https://github.com/SemMTM/sems-financial-tracker)
     - [Backend](https://github.com/SemMTM/sems-finance-tracker-api)
@@ -1494,7 +1497,7 @@ web: gunicorn core.wsgi
         - `CSRF_COOKIE_SECURE = True`
         - `SECURE_HSTS_SECONDS = 31536000`, etc.
 
-### Clone and Run Locally
+### Clone & Run Locally
 To clone and run the projects locally:
 1. Create a new folder for the 2 projects on your desktop
 2. Clone the Repositories using the following commands:
@@ -1574,8 +1577,15 @@ Why Ngrok is Needed:
     - `SameSite=Lax` is used and the origin is trusted
 - Because you're using `HttpOnly` cookies, the frontend must be served over HTTPS even in development. Ngrok provides this.
 
-7. Once you have your Ngrok forwarding url, add it to the `CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS` environment variables
-8. 
+7. Once you have your Ngrok forwarding url, add it to the `CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS` environment variables.
+8. Start the frontend dev server
+    1. Type the following command into your IDE's terminal: `npm run dev`
+    2. Split the terminal and run your Ngrok forwarding url: `ngrok http --url=your-ngrok-url 5173(the dev server port number)`
+9. Verify your setup:
+    - Visit your Ngrok URL
+    - Log in with your test user or superuser
+    - Confirm authenticated requests succeed
+    - Add some entries and verify calendar/summary updates
 
 ### Fork Project
 To fork the repository, follow the steps bellow:
@@ -1586,5 +1596,8 @@ To fork the repository, follow the steps bellow:
 [Back to Table of Contents](#table-of-contents)
 
 # Credits
+- Gareth McGirr – my Code Institute mentor, for valuable feedback, review, and guidance throughout the project.
+- OpenAI ChatGPT – used extensively throughout development for ideation, debugging, and writing support. All architectural decisions and implementations were critically evaluated and adjusted to meet best practices and project goals.
+- Icons8 - icons provided for free were used in a few areas within the project
 
-### Credits:
+[Back to Table of Contents](#table-of-contents)
