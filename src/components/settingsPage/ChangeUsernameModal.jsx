@@ -6,18 +6,18 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
     const { user, setUser } = useAuth();
     const [newUsername, setNewUsername] = useState('');
     const [validationError, setValidationError] = useState('');
-  
-    // Validation rules
-    const isValidUsername = (username) => {
-        const pattern = /^[a-zA-Z0-9_-]+$/
-        return (
-        username &&
-        username.length <= 40 &&
-        pattern.test(username)
-        );
-    }
 
     const handleChange = useCallback(async () => {
+        // Validation rules
+        const isValidUsername = (username) => {
+          const pattern = /^[a-zA-Z0-9_-]+$/
+          return (
+          username &&
+          username.length <= 40 &&
+          pattern.test(username)
+          );
+        }
+
         // 1. Validate before sending request
         if (!newUsername.trim()) {
             setValidationError('Username cannot be blank.');
@@ -52,7 +52,7 @@ const ChangeUsernameModal = ({ onClose, setSuccess, setError }) => {
             setValidationError(msg);
             setError('');
         }
-      }, [newUsername, isValidUsername, setUser, setSuccess, setError, onClose]);
+      }, [newUsername,  setUser, setSuccess, setError, onClose]);
     
         return (
         <div className="popup">
