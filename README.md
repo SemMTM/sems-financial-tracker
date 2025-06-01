@@ -1494,15 +1494,88 @@ web: gunicorn core.wsgi
         - `CSRF_COOKIE_SECURE = True`
         - `SECURE_HSTS_SECONDS = 31536000`, etc.
 
-### Run Locally
-Navigate to the GitHub Repository you want to clone to use locally:
+### Clone and Run Locally
+To clone and run the projects locally:
+1. Create a new folder for the 2 projects on your desktop
+2. Clone the Repositories using the following commands:
+```
+git clone https://github.com/SemMTM/sems-finance-tracker-api.git
+```
+```
+git clone https://github.com/SemMTM/sems-financial-tracker.git
+```
 
-- Click on the code drop down button
-- Click on HTTPS
-- Copy the repository link to the clipboard
-- Open your IDE of choice (git must be installed for the next steps)
-- Type git clone copied-git-url into the IDE terminal
-The project will now have been cloned on your local machine for use.
+#### Backend Setup (Django API)
+1. Navigate into the backend folder
+```
+cd sems-finance-tracker-api
+```
+2. (IMPORTANT) Create and activate a virtual environment:
+> It is very important to create a virtual environment and install the dependencies to it. Without doing this you may encounter a lot of errors and dependency issues.
+
+- Using commands:
+```
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+- Using commands pallette
+    1. Open the command pallette
+    2. Type Python Create Environment
+    3. Click the option and follow the steps 
+
+3. Install dependencies:
+```
+pip install -r requirements.txt
+```
+4. Create a `.env.py` file in the root:
+```
+os.environ['DATABASE_URL'] = "your_postgres_db_url"
+os.environ['SECRET_KEY'] = "your_secret_key"
+os.environ['DEV'] = "1"
+os.environ['CORS_ALLOWED_ORIGINS'] = 'http://localhost:5173(frontend dev url)'
+os.environ['CSRF_TRUSTED_ORIGINS'] = 'http://localhost:5173'
+os.environ['SAME_SITE'] = "Lax"
+os.environ['ALLOWED_HOSTS'] = "herokuapp.com,yourbackendurl.com"
+```
+> Replace `your_postgres_db_url` with your local PostgreSQL connection string.
+
+5. Apply migrations & create superuser:
+```
+python manage.py migrate
+python manage.py createsuperuser
+```
+6.  Start the development server:
+```
+python manage.py runserver
+```
+
+#### Frontend Setup (React + Vite)
+This project uses `HttpOnly` cookie-based JWT authentication, which requires secure HTTPS origins for the browser to accept and send authentication cookies. Since `localhost` does not use HTTPS, we use Ngrok to securely tunnel the frontend to a public HTTPS URL.
+
+1. Navigate to the cloned frontend folder
+2. If you have a `node_modules` folder, delete it
+3. Delete the `package-lock.json` file that was cloned
+4. In your IDEs terminal, run the following command and wait for all dependencies to install:
+```
+npm install
+```
+5. Create a `.env` file in the root and add the following variable:
+```
+VITE_API_BASE_URL=you_api_backend_deployed_url
+```
+6. To allow the frontend dev server to actually connect to the backend, you will need to install and run an `Ngrok` url to allow JWT to use cookie auth via HTTPS.
+
+Ngrok setup guide can be found [here](https://ngrok.com/docs/getting-started/).
+
+Why Ngrok is Needed:
+- Modern browsers block cross-origin cookies unless:
+    - The request is HTTPS
+    - The backend and frontend share a top-level domain (or are explicitly whitelisted)
+    - `SameSite=Lax` is used and the origin is trusted
+- Because you're using `HttpOnly` cookies, the frontend must be served over HTTPS even in development. Ngrok provides this.
+
+7. Once you have your Ngrok forwarding url, add it to the `CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS` environment variables
+8. 
 
 ### Fork Project
 To fork the repository, follow the steps bellow:
