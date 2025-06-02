@@ -25,7 +25,7 @@ export default function MonthlySummary({ setViewMode }) {
       const res = await api.get(
         `/monthly-summary/?month=${getSelectedMonthParam()}`);
       setMonthlySummary(res.data  || {});
-    } catch (err) {
+    } catch {
       setError('Failed to load monthly summary.');
     } finally {
       setIsLoading(false);

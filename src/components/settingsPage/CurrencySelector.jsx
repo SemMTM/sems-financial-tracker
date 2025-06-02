@@ -27,7 +27,7 @@ const CurrencyModal = ({ onClose, setSuccess }) => {
         const res = await api.get('/currency/');
         setCurrency(res.data.currency);
         setCurrencyId(res.data.id);
-      } catch (err) {
+      } catch {
         setError('Could not load your currency setting.');
       }
     }
@@ -44,7 +44,7 @@ const CurrencyModal = ({ onClose, setSuccess }) => {
       setError('');
       onClose();
       window.location.reload();
-    } catch (err) {
+    } catch {
       setError('Failed to update currency. Please try again.');
     } finally {
       setSaving(false);

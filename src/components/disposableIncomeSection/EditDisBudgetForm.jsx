@@ -18,7 +18,7 @@ export default function EditDisBudgetForm(
       });
       onUpdate();
       onClose(); 
-    } catch (err) {
+    } catch {
       setError("Failed to update budget.");
     } finally {
       setIsSubmitting(false)

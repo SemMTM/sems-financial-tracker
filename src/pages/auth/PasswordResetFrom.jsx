@@ -16,7 +16,7 @@ const ResetPasswordForm = () => {
       await api.post('/dj-rest-auth/password/reset/', { email });
       setMessage('Check your email for the password reset link.');
       setErrorMessage('');
-    } catch (error) {
+    } catch {
       setErrorMessage('Failed to send password reset email.');
       setMessage('');
     } finally {

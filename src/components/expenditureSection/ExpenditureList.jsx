@@ -30,7 +30,7 @@ export default function ExpenditureList() {
     try {
       const res = await api.get(`/expenditures/?month=${getSelectedMonthParam()}`);
       setExpenditures(res.data || []);
-    } catch (err) {
+    } catch {
       setError('Failed to load expenditures.');
     } finally {
       setIsLoading(false);

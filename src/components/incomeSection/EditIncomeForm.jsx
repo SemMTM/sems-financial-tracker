@@ -22,7 +22,7 @@ export default function EditIncomeForm(
       });
       onUpdate();
       onClose();
-    } catch (err) {
+    } catch {
       setError("Failed to update income.");
     }
   }, [title, amount, date, item.id, onUpdate, onClose]);

@@ -29,7 +29,7 @@ export default function IncomeList() {
     try {
       const res = await api.get(`/income/?month=${getSelectedMonthParam()}`);
       setIncomes(res.data || []);
-    } catch (err) {
+    } catch {
       setError('Failed to load incomes.');
     } finally {
       setIsLoading(false);

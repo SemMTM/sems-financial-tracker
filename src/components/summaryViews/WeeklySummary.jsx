@@ -27,7 +27,7 @@ export default function WeeklySummary({ setViewMode }) {
     try {
       const res = await api.get(`/weekly-summary/?month=${getSelectedMonthParam()}`);
       setWeeklySummary(res.data || { weeks: []});
-    } catch (err) {
+    } catch {
       setError('Failed to load incomes.');
     } finally {
       setIsLoading(false);

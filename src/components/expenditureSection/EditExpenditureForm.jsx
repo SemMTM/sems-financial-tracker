@@ -30,7 +30,7 @@ export default function EditExpenditureForm(
       onUpdate();
       notifyChange();
       onClose();
-    } catch (err) {
+    } catch {
       setError("Failed to update expenditure.");
     } finally {
       setIsSubmitting(false);
@@ -46,7 +46,7 @@ export default function EditExpenditureForm(
       onUpdate();
       notifyChange();
       onClose();
-    } catch (err) {
+    } catch {
       setError('Failed to delete expenditure.');
     } finally {
       setIsSubmitting(false);

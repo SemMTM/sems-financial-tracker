@@ -24,7 +24,7 @@ export default function EditDisSpendForm(
       });
       onUpdate(); // Refresh list
       onClose(); // Close modal
-    } catch (err) {
+    } catch {
       setError("Failed to update disposable spending.");
     } finally {
       setIsSubmitting(false);
@@ -39,7 +39,7 @@ export default function EditDisSpendForm(
       await api.delete(`/disposable-spending/${item.id}/`);
       onUpdate();
       onClose();
-    } catch (err) {
+    } catch {
       setError('Failed to delete expenditure.');
     } finally {
       setIsSubmitting(false);
