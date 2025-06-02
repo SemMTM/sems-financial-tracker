@@ -61,6 +61,7 @@ Built using React (frontend), Django REST Framework (backend) and PostgreSQL, th
     - [Wireframes](#wireframes)
     - [Database Design](#database-design)
     - [Security](#security)
+    - [React Architecture and Component Reuse](#react-architecture-and-component-reuse)
 - [Visual Design & Styling](#visual-design--styling)
 - [Technologies](#technologies)
     - [Technology Used](#technology-used)
@@ -1245,6 +1246,33 @@ HSTS is configured to enforce HTTPS for one year and is preload-ready, protectin
 - All secrets (e.g. `DATABASE_URL`, `SECRET_KEY`) are stored in environment variables using `env.py`
 - The `.env` and secret files are excluded via `.gitignore`
 - No credentials or tokens have ever been committed to the Git history
+
+##  React Architecture and Component Reuse
+This project follows React’s architectural principle of component reuse and composition, allowing for a clean, modular, and scalable codebase.
+
+Key examples of component reuse:
+
+**Modal Component**
+- A single reusable modal is used across multiple forms (e.g. Change Username, Add Expenditure, Edit Income), with content passed via props. This follows the principle of decoupling logic from presentation.
+
+**ProtectedRoute**
+- A generic wrapper to restrict access to authenticated users across multiple routes. It centralizes access control logic.
+
+**Form Components**
+- Income and Expenditure use similar forms but are composed of shared input structures and submission logic, showcasing DRY principles.
+
+**FinancialSummary Cards**
+- Weekly and monthly summary views reuse a shared layout style and formatting utilities (e.g., **cleanFormattedAmount**) to consistently present financial values.
+
+**Context Providers**
+- The **AuthContext** and **FinancialDataContext** are reused throughout the app using the **useContext** hook, allowing multiple components to consume shared state like **user**, **dataVersion**, or **logout()**.
+
+**CalendarContext**
+- CalendarContext is a centralized store that manages the selected month and date state across the entire application. It enables the following:
+    - Allows the calendar grid, monthly summary, and calendar navigation buttons to all access and update the same **selectedDate**.
+    - Encapsulates month navigation logic in one place, promoting single responsibility and easier maintenance.
+
+These patterns demonstrate an understanding of React’s composition model and support scalability and maintainability across the application.
 
 [Back to Table of Contents](#table-of-contents)
 

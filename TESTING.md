@@ -186,7 +186,7 @@ Extensive unit tests were created for all serializers, views and util files in t
   - [Views unit tests](https://github.com/SemMTM/sems-finance-tracker-api/blob/main/core/tests/test_views.py)
 
 ## User Tests
-5 users were given no instruction on how to use the app and were asked to create an account and use all features.
+4 users were given no instruction on how to use the app and were asked to create an account and use all features.
 | User | Result |
 |--|--|
 | User 1 | I couldn't find any bugs, everything was easy to use. |
@@ -195,9 +195,18 @@ Extensive unit tests were created for all serializers, views and util files in t
 | User 4 | I really like the calendar feature, its very simple to use |
 
 ## PageSpeed Insight Testing
+PageSpeed insight testing was performed after loading a mock test user and mock data into the finance tracker.
+
+**Desktop**
+
+![PageSpeed Insight Testing Desktop](src/readme_images/Screenshot_22.png)
+
+**Mobile**
+
+![PageSpeed Insight Testing Desktop](src/readme_images/Screenshot_23.png)
 
 ## Responsiveness
-All pages were tested to ensure responsiveness on screensizes from 320px and upwards.
+All pages were tested to ensure responsiveness on screen sizes from 320px and upwards.
 
 **Steps to test:**
 
@@ -218,4 +227,13 @@ All pages were tested to ensure responsiveness on screensizes from 320px and upw
 
 **Actual:**
 
-Website behaved as expected. Website was also tested on a number of mobile devices with no issues.
+Website behaved as expected. The app was also tested on a number of mobile devices with no issues.
+
+## Validator Testing
+### Frontend
+All frontend files were run through ESLint, and no significant errors or warnings were found.
+- JSX code follows best practices for syntax, indentation, and structure.
+- All components, hooks, and utilities adhere to consistent naming conventions and formatting.
+- Where necessary, a few safe ESLint rule suppressions were added with comments, but these do not impact functionality or readability.
+
+### Backend
