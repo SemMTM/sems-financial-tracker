@@ -5,24 +5,17 @@ import api from '../api/axiosDefaults'
 
 const AuthContext = createContext();
 
-const TEST_MODE = true;
-
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(TEST_MODE ? { username: "MockUser" } : null);
-  const [isLoading, setIsLoading] = useState(TEST_MODE ? false : true);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
 
   // Login using HttpOnly cookie session
   const login = async (username, password) => {
-      if (TEST_MODE) {
-        setUser({ username });
-        return;
-      }
-
-      await api.post('/dj-rest-auth/login/', { 
-        username, 
-        password, 
+      await api.post('/dj-rest-auth/login/', {
+         username, 
+         password, 
         }
       );
       const res = await api.get('/dj-rest-auth/user/');
@@ -30,12 +23,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = async () => {
-    if (TEST_MODE) {
-      setUser(null);
-      navigate('/signin');
-      return;
-    }
-
     try {
       await api.post('/dj-rest-auth/logout/')
     } catch {
@@ -48,13 +35,6 @@ export const AuthProvider = ({ children }) => {
 
   // 6. On load, restore session using valid access or refresh
   useEffect(() => {
-    if (TEST_MODE) {
-      // Skip real API call and set mock user immediately
-      setUser({ username: "MockUser" });
-      setIsLoading(false);
-      return;
-    }
-
     const loadUser = async () => {
       try {
         const res = await api.get('/dj-rest-auth/user/');
