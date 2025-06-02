@@ -237,3 +237,15 @@ All frontend files were run through ESLint, and no significant errors or warning
 - Where necessary, a few safe ESLint rule suppressions were added with comments, but these do not impact functionality or readability.
 
 ### Backend
+All backend Python files were reviewed and validated to ensure full compliance with the PEP8 style guide.
+
+- Code Formatting:
+  - All models, views, serializers, and utility files follow consistent indentation (4 spaces), spacing around operators, and blank line rules.
+- Naming Conventions:
+  - Functions, variables, and classes use clear and descriptive names that conform to Python standards.
+- Line Length:
+  - All lines were checked to stay within the recommended character range, improving readability across devices.
+- Tooling:
+  - Tools such as flake8 were used during development to auto-format and validate code regularly.
+- Imports:
+  - All imports follow PEP8 import grouping: standard library first, third-party libraries second, and local imports last — with a blank line between each group.
