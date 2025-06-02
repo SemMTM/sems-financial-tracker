@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axiosDefaults'
@@ -12,7 +13,6 @@ export const AuthProvider = ({ children }) => {
 
   // Login using HttpOnly cookie session
   const login = async (username, password) => {
-    try {
       await api.post('/dj-rest-auth/login/', {
          username, 
          password, 
@@ -20,17 +20,13 @@ export const AuthProvider = ({ children }) => {
       );
       const res = await api.get('/dj-rest-auth/user/');
       setUser(res.data);
-    } catch (err) {
-      console.error('Login failed:', err);
-      throw err
-    }
   }
 
   const logout = async () => {
     try {
       await api.post('/dj-rest-auth/logout/')
-    } catch (err) {
-      console.warn('Logout failed:', err);
+    } catch {
+      // Silently ignore logout failures
     } finally {
       setUser(null);
       navigate('/signin');
@@ -43,7 +39,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await api.get('/dj-rest-auth/user/');
         setUser(res.data);
-      } catch (err) {
+      } catch {
         setUser(null);
       } finally {
         setIsLoading(false);
