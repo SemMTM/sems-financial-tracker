@@ -12,6 +12,7 @@
  * @returns {string} - Cleaned formatted string
  */
 export function cleanFormattedAmount(amountStr) {
+  if (typeof amountStr !== 'string') return '0.00';
   return amountStr.replace(/(\.\d{2})$/, (match) =>
     match === '.00' ? '' : match
   );
