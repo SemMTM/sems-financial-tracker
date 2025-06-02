@@ -18,8 +18,6 @@ export default function WeeklySummary({ setViewMode }) {
   const [loading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const year = selectedDate.getFullYear();
-  const month = selectedDate.getMonth();
   const weeklyRanges = useMemo(() => getMonthWeeklyRanges(selectedDate), [selectedDate]);
 
   // Fetch incomes from the backend

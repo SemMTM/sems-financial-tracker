@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import api from '../api/axiosDefaults'
 import { generateCalendarGrid } from '../../src/utils/generateCalendarGrid'
 import styles from "../styles/CalendarView.module.css"
@@ -7,13 +7,6 @@ import { useCalendar } from '../context/CalendarContext'
 import { cleanFormattedAmount } from '../utils/cleanAmount'
 
 export default function CalendarView() {
-
-  const fixedToday = useMemo(() => {
-    const t = new Date()
-    t.setHours(0, 0, 0, 0)
-    return t
-  }, []);
-
   const { getSelectedMonthParam, selectedDate } = useCalendar();
   const { dataVersion } = useFinancialData();
 
@@ -41,6 +34,9 @@ export default function CalendarView() {
 
   // Merges data into generated calendar grid
   useEffect(() => {;
+    const fixedToday = new Date();
+    fixedToday.setHours(0, 0, 0, 0);
+
     const grid = generateCalendarGrid(selectedDate);
   
     const merged = grid.map(cell => {
