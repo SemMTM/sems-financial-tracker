@@ -29,6 +29,9 @@ const ResetPasswordForm = () => {
       <div className={styles['signin-form-outer']}>
         <form onSubmit={handleSubmit} className={styles['signin-form']}>
           <h3>Reset Password</h3>
+          <p>The password reset via email currently does not function as no outbound email address 
+            to send the reset link has been created
+          </p>
           <input
             type="email"
             placeholder="Enter your email"
