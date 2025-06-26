@@ -1,31 +1,30 @@
 # Testing
 ## Integration Testing
 
-| **Test** | **User Story** | **Description** | **How we test it** | **Expected Outcome** | **Result** | **Pass/Fail**
-|--|--|--|--|--|--|--|
-| **Calendar View** |  |  |  |  |  |  |
-| TC001 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar grid aligns the month correctly with the days of the week |  |  |  |  |
-| TC002 | []() | Unused grid spaces are lined and greyed out |  |  |  |  |
-| TC003 | []() | Days on the month that have passed are greyed out |  |  |  |  |
-| TC004 | [USER STORY: Current day is highlighted](https://github.com/SemMTM/sems-financial-tracker/issues/27) | The current day is highlighted |  |  |  |  |
-| TC005 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each day has the correct month number at the top |  |  |  |  |
-| TC006 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each month has the correct number of days |  |  |  |  |
-| TC007 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each day has the correct expenditure total shown |  |  |  |  |
-| TC008 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each day has the correct income total shown |  |  |  |  |
-| TC009 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Incomes are displayed on the correct day |  |  |  |  |
-| TC010 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Expenditures are displayed on the correct day |  |  |  |  |
-| TC011 | []() | No number is shown on days with no values |  |  |  |  |
-| TC012 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates dynamically when an income entry is add/removed/edited |  |  |  |  |
-| TC013 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates dynamically when an expenditure entry is add/removed/edited |  |  |  |  |
-| TC014 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates dynamically when a disposable spending entry is add/removed/edited |  |  |  |  |
-| TC015 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates dynamically when currency is changed |  |  |  |  |
-| TC016 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When month is changed, the correct months data is shown |  |  |  |  |
-| TC017 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When month is changed, the grid regenerates with days of the month aligned correctly |  |  |  |  |
-| TC018 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When month is changed, the loading overlay is displayed until new data is shown |  |  |  |  |
-| TC019 | []() | On days with just one entry, only that entry is shown on the day |  |  |  |  |
-| TC020 | []() | The user can see 5 months in front or behind the current month |  |  |  |  |
-| TC021 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When the current month changes the calendar grid automatically updates to display the new month |  |  |  |  |
-| TC022 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When a new month starts, all repeated entries are automatically duplicated in the correct positions into the new 6th month |  |  |  |  |
+| **Test** | **User Story** | **Description** | **How we test it** | **Expected Outcome** | **Result** |
+|--|--|--|--|--|--|
+| **Calendar View** |  |  |  |  |  |
+| TC001 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar grid aligns the month correctly with the days of the week | Go to calendar view, click the arrow to move over a few months and check the day alignment on each month | Days align properly with day of the week | As expected
+| TC002 | []() | Unused grid spaces are lined and greyed out | Go to calendar view, click the arrow to move over a few months and check the start and end of the grid | Days on the grid where the month does not align are lined out | As expected
+| TC003 | []() | Days on the month that have passed are greyed out | Go to the calendar view and look at the current month, look at previous days | Previous days are greyed out in comparison to future or current day | As expected
+| TC004 | [USER STORY: Current day is highlighted](https://github.com/SemMTM/sems-financial-tracker/issues/27) | The current day is highlighted | Go to calendar view and look at current day. Change your computers date to tomorrow, refresh the app and check the day you set it to is highlighted | The correct day is highlighted | As expected
+| TC005 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each day has the correct month number at the top | Check the top of each box on the calendar grid and check if the number is correct with the month against a calendar. Do this for 2 other months | Each number is correct | As expected
+| TC006 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each month has the correct number of days | Go to calendar view, check 3 months number of days on the grid against a calendar | Each month has correct number of days | As expected
+| TC007 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each day has the correct expenditure total shown | Add 4 expenditures, 2 on the same day, 2 on different days. Check the grid on those days and their totals | Correct expenditure totals shown opn the correct days | As expected
+| TC008 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Each day has the correct income total shown | Add 4 incomes, 2 on the same day, 2 on different days. Check the grid on those days and their totals | Correct income totals shown on the correct days | As expected |  |
+| TC011 | []() | No number is shown on days with no values | Go to the calendar grid and look at days with no data assigned to them | Days are empty with no values | As expected
+| TC012 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates dynamically when an income entry is add/removed/edited | On separate interactions, add, remove and delete an income entry. After each action check the calendar grid has appropriately updated with no refresh | Each action is displayed in the calendar grid with no refresh | As expected
+| TC013 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates dynamically when an expenditure entry is add/removed/edited | On separate interactions, add, remove and delete an expenditure entry. After each action check the calendar grid has appropriately updated with no refresh | Each action is displayed in the calendar grid with no refresh | As expected
+| TC014 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates dynamically when a disposable spending entry is add/removed/edited | On separate interactions, add, remove and delete a disposable spending entry. After each action check the calendar grid has appropriately updated with no refresh | Each action is displayed in the calendar grid with no refresh | As expected
+| TC015 | [User Story: Calendar View](https://github.com/SemMTM/sems-financial-tracker/issues/26) | Calendar view updates when currency is changed | Go to settings dropdown, change the global currency, check the grid | Page refreshes and new currency is displayed on grid | As expected
+| TC016 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When month is changed, the correct months data is shown | Add some repeated entires to the current month. Go to the next month and wait for grid to load. Check 2 other months. | The repeated entires should be displayed | As expected
+| TC017 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When month is changed, the grid regenerates with days of the month aligned correctly | Go to the next month, check the days of the month and days of the week align with the actual month. Do this for 2 more months | Grid is generated properly and months align | As expected
+| TC018 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When month is changed, the loading overlay is displayed until new data is shown | Go to new month | Loading overlay displayed then data shown | As expected
+| TC019 | []() | On days with just one entry, only that entry is shown on the day | Add one income entry to a few different days | Those days on the grid display only those entires | As expected
+| TC020 | []() | The user can see 5 months in front or behind the current month | Use the date changer and click the arrows to go as far forwards and backwards as possible | User can go forward or back 5 months | As expected
+| TC021 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When the current month changes the calendar grid automatically updates to display the new month | Change the month on your device and reload the tracker | The new month is automatically displayed | As expected
+| TC022 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | When a new month starts, all repeated entries are automatically duplicated in the correct positions into the new 6th month | Add repeated entires for the current month, go as far forwards on the months as you can. Change the date on your device to the next month. Go into private mode, go back to the tracker and go as far forwards as you can. The new furthest month should display all repeated data correctly | All repeated results are copied and displayed in the new month. | FAIL - new data was not copied
+| TC022 #2 |  |  |  |  | 
 | TC023 | [USER STORY: Month changes automatically](https://github.com/SemMTM/sems-financial-tracker/issues/28) | The current month is always automatically displayed to the user on load |  |  |  |  |
 | **Monthly Summary View** |  |  |  |  |  |  |
 | TC024 | [USER STORY: Switch between monthly and weekly summaries](https://github.com/SemMTM/sems-financial-tracker/issues/18) | Monthly summary is displayed when "change to summary view" button is pressed |  |  |  |  |
